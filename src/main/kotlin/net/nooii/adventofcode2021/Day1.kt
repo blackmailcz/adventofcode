@@ -11,7 +11,7 @@ class Day1 {
 
         @JvmStatic
         fun main(args : Array<String>) {
-            val measurements = InputLoader().getInput("Day1Input")
+            val measurements = InputLoader().loadInts("Day1Input")
             part1(measurements)
             part2(measurements)
         }
