@@ -85,6 +85,7 @@ class Day4 {
             for (row in 0 until 5) {
                 data.add(mutableListOf())
                 for (column in 0 until 5) {
+                    @Suppress("LeakingThis")
                     data[row].add(initializer)
                 }
             }
