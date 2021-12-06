@@ -12,8 +12,9 @@ class Day6 {
         @JvmStatic
         fun main(args : Array<String>) {
             val input = InputLoader().loadStrings("Day6Input")
-            part1(processInput(input))
-            part2(processInput(input))
+            val fish = processInput(input)
+            part1(fish.copy())
+            part2(fish.copy())
         }
 
         private fun part1(fish : MutableMap<Int, Long>) {
@@ -60,6 +61,8 @@ class Day6 {
         private fun MutableMap<Int,Long>.addFish(day : Int, fishCount : Long) {
             this[day] = (this[day] ?: 0) + fishCount
         }
+        
+        private fun MutableMap<Int,Long>.copy() = mutableMapOf<Int, Long>().also { it.putAll(this) }
 
     }
 
