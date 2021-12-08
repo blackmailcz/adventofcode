@@ -15,7 +15,7 @@ class Day8 {
         val hints : List<String>
     )
 
-    enum class Segment {
+    private enum class Segment {
         TOP_LEFT, TOP, TOP_RIGHT, MIDDLE, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT
     }
 
@@ -112,10 +112,8 @@ class Day8 {
 
         private fun processInput(input : List<String>) : List<Pattern> {
             return input.map { line ->
-                val patternParts = line.split(" | ")
-                val hints = patternParts[0].split(" ")
-                val output = patternParts[1].split(" ")
-                Pattern(output, hints.plus(output))
+                val parts = line.split(" | ").map { it.split(" ") }
+                Pattern(parts[1], parts.flatten())
             }
         }
 
