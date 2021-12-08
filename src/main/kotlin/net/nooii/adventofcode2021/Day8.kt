@@ -11,8 +11,8 @@ import java.lang.Exception
 class Day8 {
 
     private class Pattern(
+        val hints : List<String>,
         val output : List<String>,
-        val hints : List<String>
     )
 
     private enum class Segment {
@@ -113,7 +113,7 @@ class Day8 {
         private fun processInput(input : List<String>) : List<Pattern> {
             return input.map { line ->
                 val parts = line.split(" | ").map { it.split(" ") }
-                Pattern(parts[1], parts.flatten())
+                Pattern(parts[0], parts[1])
             }
         }
 
