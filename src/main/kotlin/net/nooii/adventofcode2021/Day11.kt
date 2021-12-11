@@ -24,24 +24,21 @@ class Day11 {
 
         private fun part2(map : NonNullHashMap<Point, Int>) {
             var steps = 0
-            do {
-                val flashes = processStep(map)
-                steps++
-            } while (flashes != map.size)
+            do { steps++ } while (processStep(map) != map.size)
             println(steps)
         }
 
         private fun processStep(map : NonNullHashMap<Point, Int>) : Int {
-            val flashed = NonNullHashMap<Point, Boolean>()
+            val flashed = mutableSetOf<Point>()
             for (point in map.keys) {
                 inc(point, map, flashed)
             }
             return flashed.size
         }
 
-        private fun flash(point : Point, map : NonNullHashMap<Point, Int>, flashed : NonNullHashMap<Point, Boolean>) {
+        private fun flash(point : Point, map : NonNullHashMap<Point, Int>, flashed : MutableSet<Point>) {
             map[point] = 0
-            flashed[point] = true
+            flashed.add(point)
             for (dy in -1 .. 1) {
                 for (dx in -1 .. 1) {
                     if (dx != 0 || dy != 0) {
@@ -51,8 +48,8 @@ class Day11 {
             }
         }
 
-        private fun inc(point : Point, map : NonNullHashMap<Point, Int>, flashed : NonNullHashMap<Point, Boolean>) {
-            if (!map.contains(point) || (flashed.contains(point) && flashed[point])) {
+        private fun inc(point : Point, map : NonNullHashMap<Point, Int>, flashed : MutableSet<Point>) {
+            if (!map.contains(point) || flashed.contains(point)) {
                 return
             }
             map[point]++
