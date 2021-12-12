@@ -39,26 +39,24 @@ class Day12 {
         }
 
         private fun part1(startCave : Cave) {
-            val paths = mutableListOf<MutableList<Cave>>()
-            next(startCave, mutableListOf(), paths, canVisitSmallAgain = false)
-            println(paths.size)
+            println(next(startCave, canVisitSmallAgain = false))
         }
 
         private fun part2(startCave : Cave) {
-            val paths = mutableListOf<MutableList<Cave>>()
-            next(startCave, mutableListOf(), paths, canVisitSmallAgain = true)
-            println(paths.size)
+            println(next(startCave, canVisitSmallAgain = true))
         }
 
-        private fun next(cave : Cave, path : MutableList<Cave>, paths : MutableList<MutableList<Cave>>, canVisitSmallAgain : Boolean) {
+        private fun next(cave : Cave, path : MutableList<Cave> = mutableListOf(), canVisitSmallAgain : Boolean) : Int {
             path.add(cave)
-            if (cave.id == "end") {
-                paths.add(path)
+            return if (cave.id == "end") {
+                1 // Successful path
             } else {
-                for (nextCave in cave.paths) {
+                cave.paths.sumOf { nextCave ->
                     val visitingSmallAgain = canVisitSmallAgain && !nextCave.isBig && nextCave.id != "start" && path.contains(nextCave)
                     if (nextCave.isBig || !path.contains(nextCave) || visitingSmallAgain) {
-                        next(nextCave, path.toMutableList(), paths, canVisitSmallAgain && !visitingSmallAgain)
+                        next(nextCave, path.toMutableList(), canVisitSmallAgain && !visitingSmallAgain)
+                    } else {
+                        0 // Dead end
                     }
                 }
             }
