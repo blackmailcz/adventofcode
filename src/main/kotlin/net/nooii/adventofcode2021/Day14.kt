@@ -46,7 +46,7 @@ class Day14 {
         private fun solution(polymerInput : PolymerInput, n : Int) {
             var ruleCountMap = getDefaultRuleMap(polymerInput.template)
             val charMap = getDefaultCharMap(polymerInput.template)
-            for (i in 0 until n) {
+            repeat(n) {
                 val newRuleCountMap = mutableMapOf<String, Long>()
                 for ((rule, count) in ruleCountMap) {
                     val insertedChar = polymerInput.rules[rule]
@@ -60,7 +60,7 @@ class Day14 {
         }
 
         private fun processInput(input : List<String>) : PolymerInput {
-            // Assuming there exists replication for each pair of letters to get prettier code
+            // Assuming there exists a replication for each pair of letters to get prettier code
             val template = input.first()
             val rules = input.drop(2).associate { line ->
                 val parts = line.split(" -> ")
