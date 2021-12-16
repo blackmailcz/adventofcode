@@ -71,11 +71,11 @@ class Day16 {
                 if (i + 5 > input.length) {
                     return null
                 }
-                val isEndPacketBit = !bitToBool(input[i])
+                val isLastLiteralDigit = !bitToBool(input[i])
                 i++
                 literal.append(input.substring(i, i + 4))
                 i += 4
-            } while (!isEndPacketBit)
+            } while (!isLastLiteralDigit)
             return Pair(i, Packet.Literal(header, longBinToDec(literal.toString())))
         }
 
