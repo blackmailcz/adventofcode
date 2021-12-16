@@ -32,10 +32,6 @@ class Day16 {
         @JvmStatic
         fun main(args : Array<String>) {
             val input = longHexToBin(InputLoader().loadStrings("Day16Input").first())
-            solution(input)
-        }
-
-        private fun solution(input : String) {
             val (_, packet) = parsePacket(0, input)
             packet!!
             println(countVersionSum(packet))
