@@ -31,11 +31,11 @@ class Day15 {
         fun main(args : Array<String>) {
             val input = InputLoader().loadStrings("Day15Input")
             val input1 = processInput1(input)
-            println(dijkstra(input1)?.distance)
-            println(dijkstra(processInput2(input1))?.distance)
+            println(dijkstra(input1))
+            println(dijkstra(processInput2(input1)))
         }
 
-        private fun dijkstra(input : Input) : DistancePoint? {
+        private fun dijkstra(input : Input) : Int? {
             val queue = PriorityQueue<DistancePoint>()
             queue.add(DistancePoint(0, 0, 0))
             val directions = listOf(Pair(0, 1), Pair(0, -1), Pair(1, 0), Pair(-1, 0))
@@ -47,15 +47,17 @@ class Day15 {
                 }
                 visited.add(point)
                 if (isEndPoint(point, input)) {
-                    return point
+                    return point.distance
                 }
                 for ((dx, dy) in directions) {
                     if (isValidPoint(point.x + dx, point.y + dy, input)) {
-                        queue.add(DistancePoint(
-                            x = point.x + dx,
-                            y = point.y + dy,
-                            distance = point.distance + input.map[point.y + dy][point.x + dx]
-                        ))
+                        queue.add(
+                            DistancePoint(
+                                x = point.x + dx,
+                                y = point.y + dy,
+                                distance = point.distance + input.map[point.y + dy][point.x + dx]
+                            )
+                        )
                     }
                 }
             }
