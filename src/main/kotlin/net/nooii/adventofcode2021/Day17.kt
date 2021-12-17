@@ -26,10 +26,9 @@ class Day17 {
 
         private fun step() {
             point = Point(point.x + vx, point.y + vy)
-            if (vx > 0) {
-                vx--
-            } else if (vx < 0) {
-                vx++
+            when {
+                vx > 0 -> vx--
+                vx < 0 -> vx++
             }
             vy--
             if (point.y > highestY) {
@@ -39,7 +38,7 @@ class Day17 {
 
         private fun isInArea() = point.x >= area.fromX && point.x <= area.toX && point.y >= area.fromY && point.y <= area.toY
 
-        fun shoot() : Boolean {
+        fun launch() : Boolean {
             while (point.y >= area.fromY) {
                 step()
                 if (isInArea()) {
@@ -65,7 +64,7 @@ class Day17 {
             for (vx in 0 until area.toX + 1) {
                 for (vy in area.fromY until (-area.fromY + 1)) {
                     val probe = Probe(vx, vy, area)
-                    if (probe.shoot()) {
+                    if (probe.launch()) {
                         sum++
                         if (probe.highestY > highestY) {
                             highestY = probe.highestY
