@@ -1,7 +1,6 @@
 package net.nooii.adventofcode2021
 
 import net.nooii.adventofcode2021.helpers.InputLoader
-import java.awt.Point
 
 /**
  * Created by Nooii on 17.12.2021
@@ -16,30 +15,33 @@ class Day17 {
     )
 
     private class Probe(
-        var vx : Int,
-        var vy : Int,
-        val area : Area
+        private var vx : Int,
+        private var vy : Int,
+        private val area : Area
     ) {
 
-        var point = Point(0, 0)
+        private var x = 0
+        private var y = 0
         var highestY = 0
+            private set
 
         private fun step() {
-            point = Point(point.x + vx, point.y + vy)
+            x += vx
+            y += vy
             when {
                 vx > 0 -> vx--
                 vx < 0 -> vx++
             }
             vy--
-            if (point.y > highestY) {
-                highestY = point.y
+            if (y > highestY) {
+                highestY = y
             }
         }
 
-        private fun isInArea() = point.x >= area.fromX && point.x <= area.toX && point.y >= area.fromY && point.y <= area.toY
+        private fun isInArea() = x >= area.fromX && x <= area.toX && y >= area.fromY && y <= area.toY
 
         fun launch() : Boolean {
-            while (point.y >= area.fromY) {
+            while (y >= area.fromY) {
                 step()
                 if (isInArea()) {
                     return true
@@ -60,12 +62,12 @@ class Day17 {
 
         private fun solution(area : Area) {
             var highestY = 0
-            var sum = 0
-            for (vx in 0 until area.toX + 1) {
-                for (vy in area.fromY until (-area.fromY + 1)) {
+            var validVelocities = 0
+            for (vx in 0..area.toX) {
+                for (vy in area.fromY..-area.fromY) {
                     val probe = Probe(vx, vy, area)
                     if (probe.launch()) {
-                        sum++
+                        validVelocities++
                         if (probe.highestY > highestY) {
                             highestY = probe.highestY
                         }
@@ -73,7 +75,7 @@ class Day17 {
                 }
             }
             println(highestY)
-            println(sum)
+            println(validVelocities)
         }
 
         private fun processInput(input : List<String>) : Area {
