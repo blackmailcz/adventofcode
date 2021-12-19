@@ -27,6 +27,10 @@ class Day18 {
         }
 
         class Container(level : Int, var left : Fish, var right : Fish) : Fish(level) {
+            init {
+                left.parent = this
+                right.parent = this
+            }
             override fun toString() = "[$left,$right]"
         }
 
@@ -128,8 +132,6 @@ class Day18 {
             val leftFish = Fish.Regular(splittingFish.level + 1, floor(splittingFish.value / 2.0).toInt())
             val rightFish = Fish.Regular(splittingFish.level + 1, ceil(splittingFish.value / 2.0).toInt())
             val newFish = Fish.Container(splittingFish.level, leftFish, rightFish)
-            leftFish.parent = newFish
-            rightFish.parent = newFish
             newFish.parent = splittingFish.parent
             if (isSplittingFishLeftChild) {
                 parent.left = newFish
@@ -154,8 +156,6 @@ class Day18 {
             increaseLevel(fish1)
             increaseLevel(fish2)
             val fish = Fish.Container(0, fish1, fish2)
-            fish1.parent = fish
-            fish2.parent = fish
             while (explode(fish) || split(fish)) {
                 continue
             }
@@ -188,8 +188,6 @@ class Day18 {
             val (ri, rightFish) = parsePairValue(input, i, level)
             i = ri + 1 // Skip ']'
             val fish = Fish.Container(level, leftFish, rightFish)
-            leftFish.parent = fish
-            rightFish.parent = fish
             return Pair(i, fish)
         }
 
