@@ -55,11 +55,8 @@ class Day18 {
         }
 
         private fun part1(fishList : List<Fish>) {
-            var previous = fishList[0]
-            for (fish in fishList.drop(1)) {
-                previous = addAndReduce(previous, fish)
-            }
-            println(magnitude(previous))
+            val lastFish = fishList.reduce { acc, fish -> addAndReduce(acc, fish) }
+            println(magnitude(lastFish))
         }
 
         private fun part2(input : List<String>) {
