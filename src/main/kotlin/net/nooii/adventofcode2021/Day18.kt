@@ -1,6 +1,5 @@
 package net.nooii.adventofcode2021
 
-import net.nooii.adventofcode2021.Day18.Direction.*
 import net.nooii.adventofcode2021.helpers.InputLoader
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -46,8 +45,6 @@ class Day18 {
 
     }
 
-    private enum class Direction { LEFT, RIGHT }
-
     companion object {
 
         @JvmStatic
@@ -58,7 +55,11 @@ class Day18 {
         }
 
         private fun part1(fishList : List<Fish>) {
-            println(magnitude(sum(fishList)))
+            var previous = fishList[0]
+            for (fish in fishList.drop(1)) {
+                previous = addAndReduce(previous, fish)
+            }
+            println(magnitude(previous))
         }
 
         private fun part2(input : List<String>) {
@@ -66,7 +67,8 @@ class Day18 {
             for (a in input) {
                 for (b in input) {
                     if (a != b) {
-                        val magnitude = magnitude(reduce(add(parseFish(a), parseFish(b))))
+                        // We need new instance of fish every time because they get modified
+                        val magnitude = magnitude(addAndReduce(parseFish(a), parseFish(b)))
                         if (magnitude > largestMagnitude) {
                             largestMagnitude = magnitude
                         }
@@ -90,8 +92,14 @@ class Day18 {
             } else {
                 parent.right = newFish
             }
-            propagateExplosion(LEFT, fish, newFish, leftValue)
-            propagateExplosion(RIGHT, fish, newFish, rightValue)
+            // Propagate explosion
+            val infixList = mutableListOf<Fish.Regular>()
+            infix(fish, infixList)
+            val newFishIndex = infixList.indexOf(newFish)
+            if (newFishIndex != -1) {
+                infixList.getOrNull(newFishIndex - 1)?.let { it.value += leftValue }
+                infixList.getOrNull(newFishIndex + 1)?.let { it.value += rightValue }
+            }
             return true
         }
 
@@ -104,18 +112,6 @@ class Day18 {
                 findExplodingFish(fish.right)?.let { return it }
             }
             return null
-        }
-
-        private fun propagateExplosion(direction : Direction, rootFish : Fish, targetFish : Fish, value : Int) {
-            val infixList = mutableListOf<Fish.Regular>()
-            infix(rootFish, infixList)
-            val i = infixList.indexOf(targetFish)
-            if (i != -1) {
-                when (direction) {
-                    LEFT -> infixList.getOrNull(i - 1)?.let { it.value += value }
-                    RIGHT -> infixList.getOrNull(i + 1)?.let { it.value += value }
-                }
-            }
         }
 
         private fun infix(fish : Fish, output : MutableList<Fish.Regular>) {
@@ -134,11 +130,7 @@ class Day18 {
             val isSplittingFishLeftChild = parent.left == splittingFish
             val leftFish = Fish.Regular(splittingFish.level + 1, floor(splittingFish.value / 2.0).toInt())
             val rightFish = Fish.Regular(splittingFish.level + 1, ceil(splittingFish.value / 2.0).toInt())
-            val newFish = Fish.Container(
-                level = splittingFish.level,
-                left = leftFish,
-                right = rightFish
-            )
+            val newFish = Fish.Container(splittingFish.level, leftFish, rightFish)
             leftFish.parent = newFish
             rightFish.parent = newFish
             newFish.parent = splittingFish.parent
@@ -161,12 +153,15 @@ class Day18 {
             return null
         }
 
-        private fun add(fish1 : Fish, fish2 : Fish) : Fish.Container {
+        private fun addAndReduce(fish1 : Fish, fish2 : Fish) : Fish.Container {
             increaseLevel(fish1)
             increaseLevel(fish2)
             val fish = Fish.Container(0, fish1, fish2)
             fish1.parent = fish
             fish2.parent = fish
+            while (explode(fish) || split(fish)) {
+                continue
+            }
             return fish
         }
 
@@ -178,21 +173,6 @@ class Day18 {
             }
         }
 
-        private fun sum(fishList : List<Fish>) : Fish {
-            var previous = fishList[0]
-            for (fish in fishList.drop(1)) {
-                previous = reduce(add(previous, fish))
-            }
-            return previous
-        }
-
-        private fun reduce(fish : Fish) : Fish {
-            while (explode(fish) || split(fish)) {
-                continue
-            }
-            return fish
-        }
-
         private fun magnitude(fish : Fish) : Int {
             return when (fish) {
                 is Fish.Regular -> fish.value
@@ -200,9 +180,7 @@ class Day18 {
             }
         }
 
-        private fun processInput(input : List<String>) : List<Fish> {
-            return input.map { line -> parseFish(line) }
-        }
+        private fun processInput(input : List<String>) = input.map { line -> parseFish(line) }
 
         private fun parseFish(input : String) = parseFish(input, 0, 0).second
 
