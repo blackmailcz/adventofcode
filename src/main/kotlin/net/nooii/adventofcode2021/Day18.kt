@@ -166,7 +166,7 @@ class Day18 {
         }
 
         private fun increaseLevel(fish : Fish) {
-            fish.level += 1
+            fish.level++
             if (fish is Fish.Container) {
                 increaseLevel(fish.left)
                 increaseLevel(fish.right)
