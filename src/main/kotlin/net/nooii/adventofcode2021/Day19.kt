@@ -37,7 +37,7 @@ class Day19 {
 
     private open class Scanner(
         val id : Int,
-        val points : List<Point3D>
+        val points : Set<Point3D>
     ) {
         override fun toString() : String {
             return "----- Scanner -----\n${points.joinToString("\n")}\n"
@@ -59,7 +59,7 @@ class Day19 {
 
     private class CorrectedScanner(
         id : Int,
-        points : List<Point3D>,
+        points : Set<Point3D>,
         val coordinate : Point3D
     ) : Scanner(id, points)
 
@@ -147,13 +147,13 @@ class Day19 {
             return null
         }
 
-        private fun shiftPoints(points : List<Point3D>, by : Point3D) : List<Point3D> {
-            return points.map { Point3D(it.x + by.x, it.y + by.y, it.z + by.z) }
+        private fun shiftPoints(points : Set<Point3D>, by : Point3D) : Set<Point3D> {
+            return points.map { Point3D(it.x + by.x, it.y + by.y, it.z + by.z) }.toSet()
         }
 
         private fun getAllScannerRotations(scanner : Scanner, angles : List<Point3D>) : List<Scanner> {
             return angles.map { (ax, ay, az) ->
-                Scanner(scanner.id, scanner.points.map { rotate(it, ax, ay, az) })
+                Scanner(scanner.id, scanner.points.map { rotate(it, ax, ay, az) }.toSet())
             }
         }
 
@@ -227,7 +227,7 @@ class Day19 {
                     line.startsWith("--") -> continue
                     line.isBlank() -> {
                         if (points.isNotEmpty()) {
-                            scanners.add(Scanner(scanners.size, points.toList()))
+                            scanners.add(Scanner(scanners.size, points.toSet()))
                         }
                         points.clear()
                     }
