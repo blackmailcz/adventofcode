@@ -85,7 +85,7 @@ class Day20 {
         }
 
         private fun processInput(input : List<String>) : Image {
-            val algorithm = toBooleans(input.first())
+            val algorithm = input.first().map { isLitPoint(it) }
             val litPoints = mutableSetOf<Point>()
             val data = input.drop(2)
             val maxX = data.first().length - 1
@@ -101,8 +101,6 @@ class Day20 {
         }
 
         private fun binToDec(bin : String) = bin.toInt(2)
-
-        private fun toBooleans(line : String) = line.map { isLitPoint(it) }
 
         private fun isLitPoint(symbol : Char) = symbol == '#'
 
