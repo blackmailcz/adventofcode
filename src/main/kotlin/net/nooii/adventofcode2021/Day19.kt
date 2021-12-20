@@ -119,6 +119,7 @@ class Day19 {
                                 if (correctedScanners.size == scanners.size) {
                                     return correctedScanners
                                 }
+                                break
                             }
                         }
                     }
