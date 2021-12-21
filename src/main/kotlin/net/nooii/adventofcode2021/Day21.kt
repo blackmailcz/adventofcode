@@ -119,8 +119,7 @@ class Day21 {
 
         fun generateWeightedRolls(diceSides : Int, dices : Int) : Map<Int, Long> {
             var rollMap = mutableMapOf(0 to 1L) // Start with a single roll (= default state) of sum 0
-            var diceBeingRolled = 0
-            while (diceBeingRolled < dices) {
+            repeat(dices) {
                 val newRollMap = mutableMapOf<Int, Long>()
                 for ((rollSum, weight) in rollMap) {
                     for (rollValue in 1..diceSides) {
@@ -128,7 +127,6 @@ class Day21 {
                     }
                 }
                 rollMap = newRollMap
-                diceBeingRolled++
             }
             return rollMap
         }
