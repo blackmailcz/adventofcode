@@ -7,85 +7,68 @@ import net.nooii.adventofcode2021.helpers.InputLoader
  */
 class Day22 {
 
-    private data class Point3D(
-        val x : Int,
-        val y : Int,
-        val z : Int
-    ) {
-        override fun toString() = "[$x,$y,$z]"
-    }
-
     private class Step(
         val on : Boolean,
         val cuboid : Cuboid
     )
 
     private data class Cuboid(
-        val from : Point3D,
-        val to : Point3D
+        val x1 : Int,
+        val x2 : Int,
+        val y1 : Int,
+        val y2 : Int,
+        val z1 : Int,
+        val z2 : Int
     ) {
-        override fun toString() = "($from-$to)"
+        override fun toString() = "([$x1,$y1,$z1]-[$x2,$y2,$z2]"
 
         private fun intersects(other : Cuboid) : Boolean {
-            val x = other.from.x <= this.to.x && other.to.x >= this.from.x
-            val y = other.from.y <= this.to.y && other.to.y >= this.from.y
-            val z = other.from.z <= this.to.z && other.to.z >= this.from.z
+            val x = other.x1 <= x2 && other.x2 >= x1
+            val y = other.y1 <= y2 && other.y2 >= y1
+            val z = other.z1 <= z2 && other.z2 >= z1
             return x && y && z
-        }
-
-        private fun copy(
-            x1 : Int = this.from.x,
-            x2 : Int = this.to.x,
-            y1 : Int = this.from.y,
-            y2 : Int = this.to.y,
-            z1 : Int = this.from.z,
-            z2 : Int = this.to.z
-        ) : Cuboid {
-            return Cuboid(Point3D(x1, y1, z1), Point3D(x2, y2, z2))
         }
 
         fun cut(cutter : Cuboid) : Set<Cuboid> {
             // Cut off slices on each side of each axis. Add the slice and lessen the original
-            var rest = Cuboid(from, to)
+            var rest = copy()
             if (!intersects(cutter)) {
                 return setOf(this)
             }
             val cuts = mutableSetOf<Cuboid>()
             // Cut X left
-            if (cutter.from.x in rest.from.x + 1..rest.to.x) {
-                cuts.add(rest.copy(x2 = cutter.from.x - 1))
-                rest = rest.copy(x1 = cutter.from.x)
+            if (cutter.x1 in rest.x1 + 1..rest.x2) {
+                cuts.add(rest.copy(x2 = cutter.x1 - 1))
+                rest = rest.copy(x1 = cutter.x1)
             }
             // Cut X right
-            if (cutter.to.x in rest.from.x until rest.to.x) {
-                cuts.add(rest.copy(x1 = cutter.to.x + 1))
-                rest = rest.copy(x2 = cutter.to.x)
+            if (cutter.x2 in rest.x1 until rest.x2) {
+                cuts.add(rest.copy(x1 = cutter.x2 + 1))
+                rest = rest.copy(x2 = cutter.x2)
             }
             // Cut Y left
-            if (cutter.from.y in rest.from.y + 1..rest.to.y) {
-                cuts.add(rest.copy(y2 = cutter.from.y - 1))
-                rest = rest.copy(y1 = cutter.from.y)
+            if (cutter.y1 in rest.y1 + 1..rest.y2) {
+                cuts.add(rest.copy(y2 = cutter.y1 - 1))
+                rest = rest.copy(y1 = cutter.y1)
             }
             // Cut Y right
-            if (cutter.to.y in rest.from.y until rest.to.y) {
-                cuts.add(rest.copy(y1 = cutter.to.y + 1))
-                rest = rest.copy(y2 = cutter.to.y)
+            if (cutter.y2 in rest.y1 until rest.y2) {
+                cuts.add(rest.copy(y1 = cutter.y2 + 1))
+                rest = rest.copy(y2 = cutter.y2)
             }
             // Cut Z left
-            if (cutter.from.z in rest.from.z + 1..rest.to.z) {
-                cuts.add(rest.copy(z2 = cutter.from.z - 1))
-                rest = rest.copy(z1 = cutter.from.z)
+            if (cutter.z1 in rest.z1 + 1..rest.z2) {
+                cuts.add(rest.copy(z2 = cutter.z1 - 1))
+                rest = rest.copy(z1 = cutter.z1)
             }
             // Cut Z right
-            if (cutter.to.z in rest.from.z until rest.to.z) {
-                cuts.add(rest.copy(z1 = cutter.to.z + 1))
+            if (cutter.z2 in rest.z1 until rest.z2) {
+                cuts.add(rest.copy(z1 = cutter.z2 + 1))
             }
             return cuts
         }
 
-        fun size() : Long {
-            return (to.x - from.x + 1).toLong() * (to.y - from.y + 1).toLong() * (to.z - from.z + 1).toLong()
-        }
+        fun volume() = (x2 - x1 + 1).toLong() * (y2 - y1 + 1).toLong() * (z2 - z1 + 1).toLong()
 
     }
 
@@ -93,7 +76,7 @@ class Day22 {
 
         private val part1filter : (step : Step) -> Boolean = { step ->
             with(step.cuboid) {
-                !mutableListOf(from.x, from.y, from.z, to.x, to.y, to.z).any { it !in -50..50 }
+                !mutableListOf(x1, y1, z1, x2, y2, z2).any { it !in -50..50 }
             }
         }
 
@@ -119,7 +102,7 @@ class Day22 {
                 }
                 onCuboids = nextOnCuboids
             }
-            println(onCuboids.sumOf { it.size() })
+            println(onCuboids.sumOf { it.volume() })
         }
 
         private fun processInput(input : List<String>) : List<Step> {
@@ -131,7 +114,7 @@ class Day22 {
                     .drop(1)
                 val willTurnOn = matches[0] == "on"
                 val c = matches.drop(1).map { it.toInt() }
-                Step(willTurnOn, Cuboid(Point3D(c[0], c[2], c[4]), Point3D(c[1], c[3], c[5])))
+                Step(willTurnOn, Cuboid(c[0], c[1], c[2], c[3], c[4], c[5]))
             }
         }
 
