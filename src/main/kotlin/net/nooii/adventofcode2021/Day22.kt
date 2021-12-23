@@ -76,7 +76,7 @@ class Day22 {
 
         private val part1filter : (step : Step) -> Boolean = { step ->
             with(step.cuboid) {
-                !mutableListOf(x1, y1, z1, x2, y2, z2).any { it !in -50..50 }
+                mutableListOf(x1, y1, z1, x2, y2, z2).all { it in -50..50 }
             }
         }
 
