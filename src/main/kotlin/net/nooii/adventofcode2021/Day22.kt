@@ -52,32 +52,32 @@ class Day22 {
             }
             val cuts = mutableSetOf<Cuboid>()
             // Cut X left
-            if (cutter.from.x in rest.from.x..rest.to.x) {
+            if (cutter.from.x in rest.from.x + 1..rest.to.x) {
                 cuts.add(rest.copy(x2 = cutter.from.x - 1))
                 rest = rest.copy(x1 = cutter.from.x)
             }
             // Cut X right
-            if (cutter.to.x in rest.from.x..rest.to.x) {
+            if (cutter.to.x in rest.from.x until rest.to.x) {
                 cuts.add(rest.copy(x1 = cutter.to.x + 1))
                 rest = rest.copy(x2 = cutter.to.x)
             }
             // Cut Y left
-            if (cutter.from.y in rest.from.y..rest.to.y) {
+            if (cutter.from.y in rest.from.y + 1..rest.to.y) {
                 cuts.add(rest.copy(y2 = cutter.from.y - 1))
                 rest = rest.copy(y1 = cutter.from.y)
             }
             // Cut Y right
-            if (cutter.to.y in rest.from.y..rest.to.y) {
+            if (cutter.to.y in rest.from.y until rest.to.y) {
                 cuts.add(rest.copy(y1 = cutter.to.y + 1))
                 rest = rest.copy(y2 = cutter.to.y)
             }
             // Cut Z left
-            if (cutter.from.z in rest.from.z..rest.to.z) {
+            if (cutter.from.z in rest.from.z + 1..rest.to.z) {
                 cuts.add(rest.copy(z2 = cutter.from.z - 1))
                 rest = rest.copy(z1 = cutter.from.z)
             }
             // Cut Z right
-            if (cutter.to.z in rest.from.z..rest.to.z) {
+            if (cutter.to.z in rest.from.z until rest.to.z) {
                 cuts.add(rest.copy(z1 = cutter.to.z + 1))
             }
             return cuts
