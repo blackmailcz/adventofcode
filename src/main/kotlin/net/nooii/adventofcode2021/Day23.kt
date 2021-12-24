@@ -11,11 +11,6 @@ import kotlin.math.sign
  */
 class Day23 {
 
-    private class InitialConfiguration(
-        val topRoom : List<Amphipod>,
-        val bottomRoom : List<Amphipod>
-    )
-
     private sealed class Amphipod(val x : Int, val cost : Long) {
         class Amber : Amphipod(3, 1) {
             override fun toString() = "A"
@@ -34,33 +29,13 @@ class Day23 {
         }
     }
 
-    private class WeightedField(
-        val cost : Int,
-        val field : Field
-    ) {
-        override fun equals(other : Any?) : Boolean {
-            if (this === other) return true
-            if (other !is WeightedField) return false
-
-            if (field != other.field) return false
-
-            return true
-        }
-
-        override fun hashCode() : Int {
-            return field.hashCode()
-        }
-    }
-
     private sealed class Field(val point : Point) {
 
         class Hallway(point : Point) : Field(point) {
             override fun toString() = "."
         }
 
-        class Room(point : Point, val accepts : Class<out Amphipod>) : Field(point) {
-            override fun toString() = accepts.simpleName
-        }
+        class Room(point : Point, val accepts : Class<out Amphipod>) : Field(point)
 
         override fun equals(other : Any?) : Boolean {
             if (this === other) return true
@@ -84,8 +59,6 @@ class Day23 {
         val pointsToAmphipods : Map<Point, Amphipod>
     ) {
 
-        var prev : State? = null
-
         fun copy(cost : Long, target : Field, amphipod : Amphipod) : State {
             // Create a copy of state where amphipod is moved to target point
             return State(
@@ -98,7 +71,7 @@ class Day23 {
                     amphipodsToPoints[amphipod]?.let { m.remove(it) }
                     m[target.point] = amphipod
                 }
-            ).also { it.prev = this }
+            )
         }
 
         fun isEndState() : Boolean {
@@ -119,23 +92,30 @@ class Day23 {
             return pointsToAmphipods.containsKey(field.point)
         }
 
+        private fun canStayInRoom(from : Field.Room) : Boolean {
+            var current : Field.Room? = from
+            while (current is Field.Room) {
+                val amphipodOnField = pointsToAmphipods[current.point]
+                if (!current.accepts.isInstance(amphipodOnField)) {
+                    return false
+                }
+                current = fields[Point(current.point.x, current.point.y + 1)] as? Field.Room
+            }
+            return true
+        }
+
         private fun moveToJunctionAbove(amphipod : Amphipod, from : Field.Room) : Pair<Long, Field>? {
-            // Find junction above
-            val fieldOneAbove = fields[Point(from.point.x, from.point.y - 1)] ?: throw IllegalStateException("No point above")
-            val costToJunction : Long
-            val junction : Field
-            if (fieldOneAbove is Field.Hallway) {
-                costToJunction = amphipod.cost
-                junction = fieldOneAbove
-            } else {
-                if (isFieldBlocked(fieldOneAbove)) {
+            // Check points above for a free way
+            var current : Field = from
+            var cost = 0L
+            while (current is Field.Room) {
+                current = fields[Point(current.point.x, current.point.y - 1)]!!
+                cost += amphipod.cost
+                if (isFieldBlocked(current)) {
                     return null
                 }
-                junction = fields[Point(from.point.x, from.point.y - 2)] ?: throw IllegalStateException("No junction above")
-                assert(junction is Field.Hallway)
-                costToJunction = amphipod.cost * 2
             }
-            return Pair(costToJunction, junction)
+            return Pair(cost, current)
         }
 
         private fun moveInHallway(
@@ -168,9 +148,9 @@ class Day23 {
         }
 
         private fun findDestinationRoom(amphipod : Amphipod, from : Field) : Pair<Long, Field>? {
-            // The amphipod is in hallway
-            val junction = Point(amphipod.x, from.point.y)
-            val distance = junction.x - from.point.x
+            // Move the amphipod to junction above its room
+            val junction = fields[Point(amphipod.x, from.point.y)] ?: return null
+            val distance = junction.point.x - from.point.x
             val costToJunction = abs(distance) * amphipod.cost
             var diff = distance.sign
             while (diff != distance) {
@@ -179,24 +159,33 @@ class Day23 {
                 }
                 diff += distance.sign
             }
-            // Move down
-            val oneFieldBelow = fields[Point(junction.x, from.point.y + 1)] as? Field.Room ?: return null
-            val twoFieldsBelow = fields[Point(junction.x, from.point.y + 2)] as? Field.Room ?: return null
-            // Check one field below
-            if (isFieldBlocked(oneFieldBelow)) {
+            // Move down as far as possible
+            var costToRoom = 0L
+            var targetField = junction
+            while (true) {
+                val fieldBelowTarget = fields[Point(targetField.point.x, targetField.point.y + 1)]
+                if (fieldBelowTarget != null && !isFieldBlocked(fieldBelowTarget)) {
+                    costToRoom += amphipod.cost
+                    targetField = fieldBelowTarget
+                } else {
+                    break
+                }
+            }
+            // First room is blocked, no need to check further
+            if (costToRoom == 0L) {
                 return null
             }
-            //if (oneFieldBelow.accepts.isInstance(amphipod) && twoFieldsBelow.accepts.isInstance(amphipod)) {
-            if (isFieldBlocked(twoFieldsBelow)) {
-                val amphipodTwoFieldsBelow = pointsToAmphipods[twoFieldsBelow.point]
-                if (twoFieldsBelow.accepts.isInstance(amphipodTwoFieldsBelow)) {
-                    return Pair(costToJunction + amphipod.cost, oneFieldBelow)
+            // Check fields below
+            var fieldBelowTarget = targetField
+            while (true) {
+                val nextFieldBelow = fields[Point(fieldBelowTarget.point.x, fieldBelowTarget.point.y + 1)] as? Field.Room ?: break
+                val amphipodAtField = pointsToAmphipods[nextFieldBelow.point] ?: continue
+                if (!nextFieldBelow.accepts.isInstance(amphipodAtField)) {
+                    return null
                 }
-            } else {
-                return Pair(costToJunction + amphipod.cost * 2, twoFieldsBelow)
+                fieldBelowTarget = nextFieldBelow
             }
-            //}
-            return null
+            return Pair(costToJunction + costToRoom, targetField)
         }
 
         fun getNextStates(amphipod : Amphipod) : Collection<State> {
@@ -205,15 +194,8 @@ class Day23 {
             val nextStates = mutableSetOf<State>()
             // Inside
             if (field is Field.Room) {
-                // Eliminate correct cases
-                if (field.accepts.isInstance(amphipod)) {
-                    val fieldOneBelow = fields[Point(point.x, point.y + 1)] ?: return emptySet()
-                    if (fieldOneBelow is Field.Room) {
-                        val amphipodOneBelow = pointsToAmphipods[fieldOneBelow.point]
-                        if (fieldOneBelow.accepts.isInstance(amphipodOneBelow)) {
-                            return emptySet()
-                        }
-                    }
+                if (canStayInRoom(field)) {
+                    return emptySet()
                 }
                 findHallwayDestinations(amphipod, field) { targetCost, target ->
                     nextStates.add(copy(cost + targetCost, target, amphipod))
@@ -247,32 +229,16 @@ class Day23 {
             return amphipodsToPoints.hashCode()
         }
 
-        fun print() {
-            println("------------- State (cost = $cost) --------------")
-            for (y in 0..4) {
-                for (x in 0..12) {
-                    val point = Point(x, y)
-                    val amphipod = pointsToAmphipods[point]
-                    val symbol = when {
-                        amphipod != null -> amphipod.toString()
-                        fields.containsKey(point) -> "."
-                        else -> "#"
-                    }
-                    print(symbol)
-                }
-                println()
-            }
-        }
-
     }
 
     companion object {
 
         @JvmStatic
         fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day23Input")
-            val state = processInput(input)
-            println(solution(state))
+            val input1 = InputLoader().loadStrings("Day23Input")
+            val input2 = InputLoader().loadStrings("Day23Input2")
+            println(solution(processInput(input1)))
+            println(solution(processInput(input2)))
         }
 
         private fun solution(initialState : State) : Long {
@@ -286,17 +252,6 @@ class Day23 {
                 }
                 visited.add(state)
                 if (state.isEndState()) {
-                    val states = mutableListOf<State>()
-                    var s = state
-                    while(s != null) {
-                        states.add(s)
-                        s = s.prev
-                    }
-                    states.reverse()
-                    states.forEach {
-                        it.print()
-                        println()
-                    }
                     return state.cost
                 }
                 queue.addAll(state.getNextStates())
