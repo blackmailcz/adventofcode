@@ -14,10 +14,31 @@ class Day25 {
         val east : MutableSet<Point>,
         val south : MutableSet<Point>
     ) {
-        fun isFree(point : Point) = point !in east && point !in south
+        private fun isFree(point : Point) = point !in east && point !in south
+        private fun nextEast(cucumber : Point) = Point((cucumber.x + 1) % w, cucumber.y)
+        private fun nextSouth(cucumber : Point) = Point(cucumber.x, (cucumber.y + 1) % h)
 
-        fun nextEast(cucumber : Point) = Point((cucumber.x + 1) % w, cucumber.y)
-        fun nextSouth(cucumber : Point) = Point(cucumber.x, (cucumber.y + 1) % h)
+        private fun move(horde : MutableSet<Point>, nextMove : (Point) -> Point) : Boolean {
+            var moved = false
+            val nextHorde = horde.map {
+                val next = nextMove.invoke(it)
+                if (isFree(next)) {
+                    moved = true
+                    next
+                } else {
+                    it
+                }
+            }
+            horde.clear()
+            horde.addAll(nextHorde)
+            return moved
+        }
+
+        fun move() : Boolean {
+            val e = move(east) { nextEast(it) }
+            val s = move(south) { nextSouth(it) }
+            return e || s
+        }
     }
 
     companion object {
@@ -31,38 +52,8 @@ class Day25 {
 
         private fun part1(cucumber : Cucumbers) {
             var steps = 0
-            do { steps++ } while (step(cucumber) > 0)
+            do { steps++ } while (cucumber.move())
             println(steps)
-        }
-
-        private fun step(cucumbers : Cucumbers) : Long {
-            // Move east first
-            var moves = 0L
-            with(cucumbers) {
-                val nextEast = east.map { c ->
-                    val next = nextEast(c)
-                    if (isFree(next)) {
-                        moves++
-                        next
-                    } else {
-                        c
-                    }
-                }
-                east.clear()
-                east.addAll(nextEast)
-                val nextSouth = south.map { c ->
-                    val next = nextSouth(c)
-                    if (isFree(next)) {
-                        moves++
-                        next
-                    } else {
-                        c
-                    }
-                }
-                south.clear()
-                south.addAll(nextSouth)
-                return moves
-            }
         }
 
         private fun processInput(input : List<String>) : Cucumbers {
