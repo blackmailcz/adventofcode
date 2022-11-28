@@ -60,8 +60,8 @@ class Day20 {
 
         private fun transcodePoint(point: Point, image: Image): Boolean {
             val binaryNumber = StringBuilder()
-            for (y in point.y - 1..point.y + 1) {
-                for (x in point.x - 1..point.x + 1) {
+            for (y in point.y - 1 until point.y + 2) {
+                for (x in point.x - 1 until point.x + 2) {
                     val newPoint = Point(x, y)
                     val value = if (isOutsidePoint(newPoint, image)) {
                         image.outsidePointValue
