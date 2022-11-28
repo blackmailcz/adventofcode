@@ -1,3 +1,6 @@
-# adventofcode2021
+# Advent of Code
 
-My solution of Advent Of Code 2021
+My solution of Advent Of Code years:
+
+2021
+2022
