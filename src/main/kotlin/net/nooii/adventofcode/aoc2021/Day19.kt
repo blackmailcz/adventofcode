@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 import kotlin.math.abs
 
 /**
@@ -9,14 +10,14 @@ import kotlin.math.abs
 class Day19 {
 
     private data class Point3D(
-        val x : Int,
-        val y : Int,
-        val z : Int
+        val x: Int,
+        val y: Int,
+        val z: Int
     ) {
 
         override fun toString() = "[$x,$y,$z]"
 
-        override fun equals(other : Any?) : Boolean {
+        override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is Point3D) return false
 
@@ -27,7 +28,7 @@ class Day19 {
             return true
         }
 
-        override fun hashCode() : Int {
+        override fun hashCode(): Int {
             var result = x
             result = 31 * result + y
             result = 31 * result + z
@@ -36,14 +37,14 @@ class Day19 {
     }
 
     private open class Scanner(
-        val id : Int,
-        val points : Set<Point3D>
+        val id: Int,
+        val points: Set<Point3D>
     ) {
-        override fun toString() : String {
+        override fun toString(): String {
             return "----- Scanner -----\n${points.joinToString("\n")}\n"
         }
 
-        override fun equals(other : Any?) : Boolean {
+        override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is Scanner) return false
 
@@ -52,22 +53,22 @@ class Day19 {
             return true
         }
 
-        override fun hashCode() : Int {
+        override fun hashCode(): Int {
             return id
         }
     }
 
     private class CorrectedScanner(
-        id : Int,
-        points : Set<Point3D>,
-        val coordinate : Point3D
+        id: Int,
+        points: Set<Point3D>,
+        val coordinate: Point3D
     ) : Scanner(id, points)
 
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day19Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day19Input")
             val scanners = processInput(input)
             val angles = getAllRotationAngles()
             val correctedScanners = correctScanners(scanners, angles)
@@ -75,11 +76,11 @@ class Day19 {
             part2(correctedScanners)
         }
 
-        private fun part1(scanners : Set<CorrectedScanner>) {
+        private fun part1(scanners: Set<CorrectedScanner>) {
             println(scanners.map { it.points }.flatten().distinct().size)
         }
 
-        private fun part2(scanners : Set<CorrectedScanner>) {
+        private fun part2(scanners: Set<CorrectedScanner>) {
             val coordinates = scanners.map { it.coordinate }
             var maxDistance = 0
             for (c1 in coordinates) {
@@ -93,11 +94,11 @@ class Day19 {
             println(maxDistance)
         }
 
-        private fun computeManhattanDistance(c1 : Point3D, c2 : Point3D) : Int {
+        private fun computeManhattanDistance(c1: Point3D, c2: Point3D): Int {
             return abs(c1.x - c2.x) + abs(c1.y - c2.y) + abs(c1.z - c2.z)
         }
 
-        private fun correctScanners(scanners : List<Scanner>, angles : List<Point3D>) : Set<CorrectedScanner> {
+        private fun correctScanners(scanners: List<Scanner>, angles: List<Point3D>): Set<CorrectedScanner> {
             val scanner0 = CorrectedScanner(scanners[0].id, scanners[0].points, Point3D(0, 0, 0))
             val correctedScanners = mutableSetOf(scanner0)
             while (true) {
@@ -127,7 +128,7 @@ class Day19 {
             }
         }
 
-        private fun computeAbsoluteCoordinates(s1 : CorrectedScanner, s2 : Scanner) : Point3D? {
+        private fun computeAbsoluteCoordinates(s1: CorrectedScanner, s2: Scanner): Point3D? {
             for ((x1, y1, z1) in s1.points) {
                 for ((x2, y2, z2) in s2.points) {
                     val shift = Point3D(x1 - x2, y1 - y2, z1 - z2)
@@ -148,17 +149,17 @@ class Day19 {
             return null
         }
 
-        private fun shiftPoints(points : Set<Point3D>, by : Point3D) : Set<Point3D> {
+        private fun shiftPoints(points: Set<Point3D>, by: Point3D): Set<Point3D> {
             return points.map { Point3D(it.x + by.x, it.y + by.y, it.z + by.z) }.toSet()
         }
 
-        private fun getAllScannerRotations(scanner : Scanner, angles : List<Point3D>) : List<Scanner> {
+        private fun getAllScannerRotations(scanner: Scanner, angles: List<Point3D>): List<Scanner> {
             return angles.map { (ax, ay, az) ->
                 Scanner(scanner.id, scanner.points.map { rotate(it, ax, ay, az) }.toSet())
             }
         }
 
-        private fun getAllRotationAngles() : List<Point3D> {
+        private fun getAllRotationAngles(): List<Point3D> {
             val allAngles = listOf(0, 90, 180, 270)
             val angles = mutableListOf<Point3D>()
             // Do not process mirror angles
@@ -175,26 +176,26 @@ class Day19 {
             return angles
         }
 
-        private fun rotate(point : Point3D, ax : Int, ay : Int, az : Int) : Point3D {
+        private fun rotate(point: Point3D, ax: Int, ay: Int, az: Int): Point3D {
             return rotateX(rotateY(rotateZ(point, az), ay), ax)
         }
 
-        private fun rotateX(point : Point3D, deg : Int) : Point3D {
+        private fun rotateX(point: Point3D, deg: Int): Point3D {
             val matrix = arrayOf(arrayOf(1, 0, 0), arrayOf(0, cos(deg), -sin(deg)), arrayOf(0, sin(deg), cos(deg)))
             return performRotate(point, matrix)
         }
 
-        private fun rotateY(point : Point3D, deg : Int) : Point3D {
+        private fun rotateY(point: Point3D, deg: Int): Point3D {
             val matrix = arrayOf(arrayOf(cos(deg), 0, sin(deg)), arrayOf(0, 1, 0), arrayOf(-sin(deg), 0, cos(deg)))
             return performRotate(point, matrix)
         }
 
-        private fun rotateZ(point : Point3D, deg : Int) : Point3D {
+        private fun rotateZ(point: Point3D, deg: Int): Point3D {
             val matrix = arrayOf(arrayOf(cos(deg), -sin(deg), 0), arrayOf(sin(deg), cos(deg), 0), arrayOf(0, 0, 1))
             return performRotate(point, matrix)
         }
 
-        private fun performRotate(point : Point3D, matrix : Array<Array<Int>>) : Point3D {
+        private fun performRotate(point: Point3D, matrix: Array<Array<Int>>): Point3D {
             return Point3D(
                 x = point.x * matrix[0][0] + point.y * matrix[0][1] + point.z * matrix[0][2],
                 y = point.x * matrix[1][0] + point.y * matrix[1][1] + point.z * matrix[1][2],
@@ -202,7 +203,7 @@ class Day19 {
             )
         }
 
-        private fun sin(deg : Int) : Int {
+        private fun sin(deg: Int): Int {
             return when (deg) {
                 0, 180 -> 0
                 90 -> 1
@@ -211,7 +212,7 @@ class Day19 {
             }
         }
 
-        private fun cos(deg : Int) : Int {
+        private fun cos(deg: Int): Int {
             return when (deg) {
                 0 -> 1
                 90, 270 -> 0
@@ -220,7 +221,7 @@ class Day19 {
             }
         }
 
-        private fun processInput(input : List<String>) : List<Scanner> {
+        private fun processInput(input: List<String>): List<Scanner> {
             val scanners = mutableListOf<Scanner>()
             val points = mutableListOf<Point3D>()
             for (line in input.plus("")) {

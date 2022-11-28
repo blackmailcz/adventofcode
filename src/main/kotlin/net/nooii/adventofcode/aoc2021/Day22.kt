@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 
 /**
  * Created by Nooii on 22.12.2021
@@ -8,28 +9,28 @@ import net.nooii.adventofcode2021.helpers.InputLoader
 class Day22 {
 
     private class Step(
-        val on : Boolean,
-        val cuboid : Cuboid
+        val on: Boolean,
+        val cuboid: Cuboid
     )
 
     private data class Cuboid(
-        val x1 : Int,
-        val x2 : Int,
-        val y1 : Int,
-        val y2 : Int,
-        val z1 : Int,
-        val z2 : Int
+        val x1: Int,
+        val x2: Int,
+        val y1: Int,
+        val y2: Int,
+        val z1: Int,
+        val z2: Int
     ) {
         override fun toString() = "([$x1,$y1,$z1]-[$x2,$y2,$z2]"
 
-        private fun intersects(other : Cuboid) : Boolean {
+        private fun intersects(other: Cuboid): Boolean {
             val x = other.x1 <= x2 && other.x2 >= x1
             val y = other.y1 <= y2 && other.y2 >= y1
             val z = other.z1 <= z2 && other.z2 >= z1
             return x && y && z
         }
 
-        fun cut(cutter : Cuboid) : Set<Cuboid> {
+        fun cut(cutter: Cuboid): Set<Cuboid> {
             // Cut off slices on each side of each axis. Add the slice and lessen the original
             var rest = copy()
             if (!intersects(cutter)) {
@@ -74,21 +75,21 @@ class Day22 {
 
     companion object {
 
-        private val part1filter : (step : Step) -> Boolean = { step ->
+        private val part1filter: (step: Step) -> Boolean = { step ->
             with(step.cuboid) {
                 mutableListOf(x1, y1, z1, x2, y2, z2).all { it in -50..50 }
             }
         }
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day22Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day22Input")
             val steps = processInput(input)
             solution(steps.filter(part1filter))
             solution(steps)
         }
 
-        private fun solution(steps : List<Step>) {
+        private fun solution(steps: List<Step>) {
             var onCuboids = mutableSetOf<Cuboid>()
             for (step in steps) {
                 val nextOnCuboids = mutableSetOf<Cuboid>()
@@ -105,7 +106,7 @@ class Day22 {
             println(onCuboids.sumOf { it.volume() })
         }
 
-        private fun processInput(input : List<String>) : List<Step> {
+        private fun processInput(input: List<String>): List<Step> {
             return input.map { line ->
                 val matches = Regex("(on|off) x=(-?\\d+)..(-?\\d+),y=(-?\\d+)..(-?\\d+),z=(-?\\d+)..(-?\\d+)")
                     .findAll(line, 0)

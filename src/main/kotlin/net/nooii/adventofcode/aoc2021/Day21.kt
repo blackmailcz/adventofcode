@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 import kotlin.math.max
 
 /**
@@ -16,10 +17,10 @@ class Day21 {
             private const val WIN_SCORE = 1000
         }
 
-        private class Player(val id : Int, var position : Int, var score : Int = 0) {
+        private class Player(val id: Int, var position: Int, var score: Int = 0) {
             fun isWinner() = score >= WIN_SCORE
 
-            override fun equals(other : Any?) : Boolean {
+            override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is Player) return false
 
@@ -28,7 +29,7 @@ class Day21 {
                 return true
             }
 
-            override fun hashCode() : Int {
+            override fun hashCode(): Int {
                 return id
             }
         }
@@ -38,14 +39,14 @@ class Day21 {
             var rolls = 0
                 private set
 
-            fun roll() : Int {
+            fun roll(): Int {
                 position = (position - 1) % DICE_SIDES + 2
                 rolls++
                 return position
             }
         }
 
-        private class Game(val p1 : Player, val p2 : Player) {
+        private class Game(val p1: Player, val p2: Player) {
             val dice = Dice()
             private var isP1Turn = true
 
@@ -62,7 +63,7 @@ class Day21 {
             fun getLoser() = setOf(p1, p2).minByOrNull { it.score }!!
         }
 
-        fun solution(p1position : Int, p2position : Int) {
+        fun solution(p1position: Int, p2position: Int) {
             val game = Game(Player(1, p1position), Player(2, p2position))
             while (!game.isOver()) {
                 game.turn()
@@ -79,19 +80,19 @@ class Day21 {
             private const val FIELDS = 10
         }
 
-        private data class Player(val position : Int, val score : Int) {
+        private data class Player(val position: Int, val score: Int) {
             fun copy() = Player(position, score)
             fun isWinner() = score >= WIN_SCORE
         }
 
-        private data class Universe(val p1 : Player, val p2 : Player)
+        private data class Universe(val p1: Player, val p2: Player)
 
         private class WonUniverses {
-            var p1 : Long = 0L
-            var p2 : Long = 0L
+            var p1: Long = 0L
+            var p2: Long = 0L
         }
 
-        fun solution(p1position : Int, p2position : Int) {
+        fun solution(p1position: Int, p2position: Int) {
             var universes = mutableMapOf<Universe, Long>(
                 Universe(Player(p1position, 0), Player(p2position, 0)) to 1,
             )
@@ -117,7 +118,7 @@ class Day21 {
             println(max(wonUniverses.p1, wonUniverses.p2))
         }
 
-        fun generateWeightedRolls(diceSides : Int, dices : Int) : Map<Int, Long> {
+        fun generateWeightedRolls(diceSides: Int, dices: Int): Map<Int, Long> {
             var rollMap = mutableMapOf(0 to 1L) // Start with a single roll (= default state) of sum 0
             repeat(dices) {
                 val newRollMap = mutableMapOf<Int, Long>()
@@ -131,7 +132,7 @@ class Day21 {
             return rollMap
         }
 
-        private fun cloneUniverse(isP1Playing : Boolean, universe : Universe, roll : Int) : Universe {
+        private fun cloneUniverse(isP1Playing: Boolean, universe: Universe, roll: Int): Universe {
             return if (isP1Playing) {
                 Universe(performRoll(universe.p1, roll), universe.p2.copy())
             } else {
@@ -139,13 +140,13 @@ class Day21 {
             }
         }
 
-        private fun performRoll(player : Player, roll : Int) : Player {
+        private fun performRoll(player: Player, roll: Int): Player {
             val nextPosition = (player.position + roll - 1) % FIELDS + 1
             val nextScore = player.score + nextPosition
             return Player(nextPosition, nextScore)
         }
 
-        private fun <K> MutableMap<K, Long>.add(k : K, v : Long) {
+        private fun <K> MutableMap<K, Long>.add(k: K, v: Long) {
             this[k] = getOrDefault(k, 0) + v
         }
     }
@@ -153,18 +154,18 @@ class Day21 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day21Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day21Input")
             val (p1position, p2position) = processInput(input)
             Part1().solution(p1position, p2position)
             Part2().solution(p1position, p2position)
         }
 
-        private fun processInput(input : List<String>) : Pair<Int, Int> {
+        private fun processInput(input: List<String>): Pair<Int, Int> {
             return Pair(parsePosition(input[0]), parsePosition(input[1]))
         }
 
-        private fun parsePosition(line : String) = line.split(":")[1].trim().toInt()
+        private fun parsePosition(line: String) = line.split(":")[1].trim().toInt()
 
     }
 }

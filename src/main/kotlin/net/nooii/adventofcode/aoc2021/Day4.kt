@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 import java.awt.Point
 
 /**
@@ -9,24 +10,24 @@ import java.awt.Point
 class Day4 {
 
     private class Bingo(
-        val numbers : List<Int>,
-        val boards : List<BingoBoard>
+        val numbers: List<Int>,
+        val boards: List<BingoBoard>
     )
 
     private class BingoBoard(
-        val id : Int,
-        val numbers : Board.Numbers,
-        val marks : Board.Marks
+        val id: Int,
+        val numbers: Board.Numbers,
+        val marks: Board.Marks
     ) {
 
-        fun mark(number : Int) {
+        fun mark(number: Int) {
             val point = numbers.find(number)
             if (point != null) {
                 marks.data[point.y][point.x] = true
             }
         }
 
-        fun isWinning() : Boolean {
+        fun isWinning(): Boolean {
             // Check by row
             for (row in marks.data) {
                 if (!row.contains(false)) {
@@ -48,7 +49,7 @@ class Day4 {
             return false
         }
 
-        fun getNonWinningSum() : Int {
+        fun getNonWinningSum(): Int {
             var sum = 0
             for (r in 0 until 5) {
                 for (c in 0 until 5) {
@@ -60,7 +61,7 @@ class Day4 {
             return sum
         }
 
-        override fun equals(other : Any?) : Boolean {
+        override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is BingoBoard) return false
 
@@ -69,7 +70,7 @@ class Day4 {
             return true
         }
 
-        override fun hashCode() : Int {
+        override fun hashCode(): Int {
             return id
         }
 
@@ -77,9 +78,9 @@ class Day4 {
 
     private sealed class Board<I : Any> {
 
-        val data : MutableList<MutableList<I>> = mutableListOf()
+        val data: MutableList<MutableList<I>> = mutableListOf()
 
-        abstract val initializer : I
+        abstract val initializer: I
 
         init {
             for (row in 0 until 5) {
@@ -94,7 +95,7 @@ class Day4 {
         class Numbers : Board<Int>() {
             override val initializer = 0
 
-            fun find(number : Int) : Point? {
+            fun find(number: Int): Point? {
                 for ((rowIndex, row) in data.withIndex()) {
                     val index = row.indexOf(number)
                     if (index != -1) {
@@ -109,7 +110,7 @@ class Day4 {
             override val initializer = false
         }
 
-        override fun toString() : String {
+        override fun toString(): String {
             val out = StringBuilder()
             for (r in 0 until 5) {
                 for (c in 0 until 5) {
@@ -126,16 +127,16 @@ class Day4 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day4Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day4Input")
             val bingo = processBingoBoards(input)
             part1(bingo)
             part2(bingo)
         }
 
-        private fun part1(bingo : Bingo) {
-            var winningBoard : BingoBoard? = null
-            var winningNumber : Int? = null
+        private fun part1(bingo: Bingo) {
+            var winningBoard: BingoBoard? = null
+            var winningNumber: Int? = null
             outer@
             for (number in bingo.numbers) {
                 for (board in bingo.boards) {
@@ -152,10 +153,10 @@ class Day4 {
             }
         }
 
-        private fun part2(bingo : Bingo) {
+        private fun part2(bingo: Bingo) {
             val wonBoards = mutableListOf<Int>()
-            var lastWinningNumber : Int? = null
-            var lastWinningBoard : BingoBoard? = null
+            var lastWinningNumber: Int? = null
+            var lastWinningBoard: BingoBoard? = null
             for (number in bingo.numbers) {
                 for (board in bingo.boards) {
                     if (board.id in wonBoards) {
@@ -177,7 +178,7 @@ class Day4 {
         }
 
 
-        private fun processBingoBoards(input : List<String>) : Bingo {
+        private fun processBingoBoards(input: List<String>): Bingo {
             val numbers = mutableListOf<Int>()
             var boardId = 0
             var currentBoardStart = -1

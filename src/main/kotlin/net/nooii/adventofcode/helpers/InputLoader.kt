@@ -1,17 +1,17 @@
-package net.nooii.adventofcode2021.helpers
+package net.nooii.adventofcode.helpers
 
 /**
  * Created by Nooii on 01.12.2021
  */
-class InputLoader {
+class InputLoader(private val year: AoCYear) {
 
-    fun loadInts(resource: String) : List<Int> {
+    fun loadInts(resource: String): List<Int> {
         return loadStrings(resource).map { it.toInt() }
     }
 
     fun loadStrings(resource: String): List<String> {
         return javaClass
-            .getResource("/$resource")!!
+            .getResource("/${year.resourcePath}/$resource")!!
             .readText()
             .lines()
     }

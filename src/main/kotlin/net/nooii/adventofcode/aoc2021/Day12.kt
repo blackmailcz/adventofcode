@@ -1,18 +1,19 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 
 /**
  * Created by Nooii on 12.12.2021
  */
 class Day12 {
 
-    private class Cave(val id : String) {
+    private class Cave(val id: String) {
 
         val isBig = id.any { it.isUpperCase() }
         val paths = mutableSetOf<Cave>()
 
-        override fun equals(other : Any?) : Boolean {
+        override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is Cave) return false
 
@@ -21,7 +22,7 @@ class Day12 {
             return true
         }
 
-        override fun hashCode() : Int {
+        override fun hashCode(): Int {
             return id.hashCode()
         }
 
@@ -31,22 +32,22 @@ class Day12 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day12Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day12Input")
             val startCave = processInput(input)
             part1(startCave)
             part2(startCave)
         }
 
-        private fun part1(startCave : Cave) {
+        private fun part1(startCave: Cave) {
             println(next(startCave, canVisitSmallAgain = false))
         }
 
-        private fun part2(startCave : Cave) {
+        private fun part2(startCave: Cave) {
             println(next(startCave, canVisitSmallAgain = true))
         }
 
-        private fun next(cave : Cave, path : MutableList<Cave> = mutableListOf(), canVisitSmallAgain : Boolean) : Int {
+        private fun next(cave: Cave, path: MutableList<Cave> = mutableListOf(), canVisitSmallAgain: Boolean): Int {
             path.add(cave)
             return if (cave.id == "end") {
                 1 // Successful path
@@ -62,7 +63,7 @@ class Day12 {
             }
         }
 
-        private fun processInput(input : List<String>) : Cave {
+        private fun processInput(input: List<String>): Cave {
             val caves = mutableMapOf<String, Cave>()
             for (path in input) {
                 val pathData = path.split("-")
@@ -74,7 +75,7 @@ class Day12 {
             return caves["start"]!!
         }
 
-        private fun getOrCreateCave(id : String, caves : MutableMap<String, Cave>) : Cave {
+        private fun getOrCreateCave(id: String, caves: MutableMap<String, Cave>): Cave {
             return caves[id] ?: Cave(id).also { caves[id] = it }
         }
 

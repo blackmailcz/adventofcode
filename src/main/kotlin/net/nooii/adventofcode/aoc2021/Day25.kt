@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 import java.awt.Point
 
 /**
@@ -9,16 +10,16 @@ import java.awt.Point
 class Day25 {
 
     private class Cucumbers(
-        val w : Int,
-        val h : Int,
-        val east : MutableSet<Point>,
-        val south : MutableSet<Point>
+        val w: Int,
+        val h: Int,
+        val east: MutableSet<Point>,
+        val south: MutableSet<Point>
     ) {
-        private fun isFree(point : Point) = point !in east && point !in south
-        private fun nextEast(cucumber : Point) = Point((cucumber.x + 1) % w, cucumber.y)
-        private fun nextSouth(cucumber : Point) = Point(cucumber.x, (cucumber.y + 1) % h)
+        private fun isFree(point: Point) = point !in east && point !in south
+        private fun nextEast(cucumber: Point) = Point((cucumber.x + 1) % w, cucumber.y)
+        private fun nextSouth(cucumber: Point) = Point(cucumber.x, (cucumber.y + 1) % h)
 
-        private fun move(horde : MutableSet<Point>, nextMove : (Point) -> Point) : Boolean {
+        private fun move(horde: MutableSet<Point>, nextMove: (Point) -> Point): Boolean {
             var moved = false
             val nextHorde = horde.map {
                 val next = nextMove.invoke(it)
@@ -34,7 +35,7 @@ class Day25 {
             return moved
         }
 
-        fun move() : Boolean {
+        fun move(): Boolean {
             val e = move(east) { nextEast(it) }
             val s = move(south) { nextSouth(it) }
             return e || s
@@ -44,19 +45,21 @@ class Day25 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day25Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day25Input")
             val cucumbers = processInput(input)
             part1(cucumbers)
         }
 
-        private fun part1(cucumber : Cucumbers) {
+        private fun part1(cucumber: Cucumbers) {
             var steps = 0
-            do { steps++ } while (cucumber.move())
+            do {
+                steps++
+            } while (cucumber.move())
             println(steps)
         }
 
-        private fun processInput(input : List<String>) : Cucumbers {
+        private fun processInput(input: List<String>): Cucumbers {
             val east = mutableSetOf<Point>()
             val south = mutableSetOf<Point>()
             val w = input.first().length

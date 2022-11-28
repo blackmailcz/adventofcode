@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 import java.awt.Point
 
 /**
@@ -9,30 +10,30 @@ import java.awt.Point
 class Day13 {
 
     private class Manual(
-        val points : Set<Point>,
-        val folds : List<Fold>
+        val points: Set<Point>,
+        val folds: List<Fold>
     )
 
     private class Fold(
-        val isVertical : Boolean,
-        val coordinate : Int
+        val isVertical: Boolean,
+        val coordinate: Int
     )
 
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day13Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day13Input")
             val manual = processInput(input)
             part1(manual)
             part2(manual)
         }
 
-        private fun part1(manual : Manual) {
+        private fun part1(manual: Manual) {
             println(performFold(manual.points, manual.folds.first()).size)
         }
 
-        private fun part2(manual : Manual) {
+        private fun part2(manual: Manual) {
             var points = manual.points
             for (fold in manual.folds) {
                 points = performFold(points, fold)
@@ -40,18 +41,18 @@ class Day13 {
             printPoints(points)
         }
 
-        private fun printPoints(points : Set<Point>) {
+        private fun printPoints(points: Set<Point>) {
             val maxX = points.maxOf { it.x }
             val maxY = points.maxOf { it.y }
-            for (y in 0 .. maxY) {
-                for (x in 0 .. maxX) {
+            for (y in 0..maxY) {
+                for (x in 0..maxX) {
                     print(if (points.contains(Point(x, y))) "#" else " ")
                 }
                 println()
             }
         }
 
-        private fun performFold(points : Set<Point>, fold : Fold) : Set<Point> {
+        private fun performFold(points: Set<Point>, fold: Fold): Set<Point> {
             return points.map { point ->
                 when {
                     fold.isVertical && point.y > fold.coordinate -> {
@@ -67,7 +68,7 @@ class Day13 {
             }.toSet()
         }
 
-        private fun processInput(input : List<String>) : Manual {
+        private fun processInput(input: List<String>): Manual {
             val points = mutableSetOf<Point>()
             val folds = mutableListOf<Fold>()
             val foldPrefix = "fold along "

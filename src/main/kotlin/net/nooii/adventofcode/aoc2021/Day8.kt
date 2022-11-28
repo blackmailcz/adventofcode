@@ -1,8 +1,9 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.Day8.Segment.*
-import net.nooii.adventofcode2021.helpers.InputLoader
-import net.nooii.adventofcode2021.helpers.NonNullHashMap
+import net.nooii.adventofcode.aoc2021.Day8.Segment.*
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.NonNullHashMap
 import java.lang.Exception
 
 /**
@@ -11,8 +12,8 @@ import java.lang.Exception
 class Day8 {
 
     private class Pattern(
-        val hints : List<String>,
-        val output : List<String>,
+        val hints: List<String>,
+        val output: List<String>,
     )
 
     private enum class Segment {
@@ -22,26 +23,26 @@ class Day8 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day8Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day8Input")
             val patterns = processInput(input)
             part1(patterns)
             part2(patterns)
         }
 
-        private fun part1(patterns : List<Pattern>) {
+        private fun part1(patterns: List<Pattern>) {
             val uniqueSizes = listOf(2, 3, 4, 7)
             println(patterns.sumOf { pattern -> pattern.output.count { it.length in uniqueSizes } })
         }
 
-        private fun part2(patterns : List<Pattern>) {
+        private fun part2(patterns: List<Pattern>) {
             println(patterns.sumOf { pattern ->
                 val map = decodeSegments(pattern)
                 pattern.output.joinToString("") { digit -> decodeDigit(digit, map) }.toInt()
             })
         }
 
-        private fun decodeSegments(pattern : Pattern) : NonNullHashMap<Segment, Char> {
+        private fun decodeSegments(pattern: Pattern): NonNullHashMap<Segment, Char> {
             val map = NonNullHashMap<Segment, Char>()
             val one = pattern.hints.find { it.length == 2 }!!
             val seven = pattern.hints.find { it.length == 3 }!!
@@ -73,7 +74,7 @@ class Day8 {
             return map
         }
 
-        private fun decodeDigit(digit : String, map : NonNullHashMap<Segment, Char>) : String {
+        private fun decodeDigit(digit: String, map: NonNullHashMap<Segment, Char>): String {
             return when {
                 isMadeOf(digit, map, TOP_LEFT, TOP, TOP_RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT) -> "0"
                 digit.length == 2 -> "1"
@@ -89,28 +90,28 @@ class Day8 {
             }
         }
 
-        private fun isMadeOf(encodedDigit : String, map : NonNullHashMap<Segment, Char>, vararg segments : Segment) : Boolean {
+        private fun isMadeOf(encodedDigit: String, map: NonNullHashMap<Segment, Char>, vararg segments: Segment): Boolean {
             if (encodedDigit.length != segments.size) {
                 return false
             }
             return !segments.any { segment -> !encodedDigit.contains(map[segment]) }
         }
 
-        private fun getMissingSegmentFromList(patterns : List<String>, vararg segments : Char) : Char {
+        private fun getMissingSegmentFromList(patterns: List<String>, vararg segments: Char): Char {
             val number = patterns.find { it.toList().containsAll(segments.toList()) }!!
             return getMissingSegment(number, *segments)
         }
 
-        private fun getMissingSegment(number : String, vararg segments : Char) : Char {
+        private fun getMissingSegment(number: String, vararg segments: Char): Char {
             return number.toList().minus(segments.toSet()).first()
         }
 
-        private fun getBottomRight(patternsOfSizeSix : List<String>, one : String) : Char {
+        private fun getBottomRight(patternsOfSizeSix: List<String>, one: String): Char {
             val six = patternsOfSizeSix.find { !(it.contains(one[0]) && it.contains(one[1])) }!!
             return if (six.contains(one[0])) one[0] else one[1]
         }
 
-        private fun processInput(input : List<String>) : List<Pattern> {
+        private fun processInput(input: List<String>): List<Pattern> {
             return input.map { line ->
                 val parts = line.split(" | ").map { it.split(" ") }
                 Pattern(parts[0], parts[1])

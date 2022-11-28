@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 
 /**
  * Created by Nooii on 17.12.2021
@@ -8,16 +9,16 @@ import net.nooii.adventofcode2021.helpers.InputLoader
 class Day17 {
 
     private class Area(
-        val fromX : Int,
-        val toX : Int,
-        val fromY : Int,
-        val toY : Int
+        val fromX: Int,
+        val toX: Int,
+        val fromY: Int,
+        val toY: Int
     )
 
     private class Probe(
-        private var vx : Int,
-        private var vy : Int,
-        private val area : Area
+        private var vx: Int,
+        private var vy: Int,
+        private val area: Area
     ) {
 
         private var x = 0
@@ -40,7 +41,7 @@ class Day17 {
 
         private fun isInArea() = x >= area.fromX && x <= area.toX && y >= area.fromY && y <= area.toY
 
-        fun launch() : Boolean {
+        fun launch(): Boolean {
             while (y >= area.fromY) {
                 step()
                 if (isInArea()) {
@@ -54,13 +55,13 @@ class Day17 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day17Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day17Input")
             val area = processInput(input)
             solution(area)
         }
 
-        private fun solution(area : Area) {
+        private fun solution(area: Area) {
             var highestY = 0
             var validVelocities = 0
             for (vx in 0..area.toX) {
@@ -78,7 +79,7 @@ class Day17 {
             println(validVelocities)
         }
 
-        private fun processInput(input : List<String>) : Area {
+        private fun processInput(input: List<String>): Area {
             val matches = Regex("x=(-?\\d+)..(-?\\d+), y=(-?\\d+)..(-?\\d+)")
                 .findAll(input.first(), 0)
                 .first()

@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 import java.util.*
 
 /**
@@ -11,14 +12,14 @@ class Day10 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day10Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day10Input")
             val opening = listOf('(', '[', '{', '<')
             val closing = listOf(')', ']', '}', '>')
             solution(input, opening, closing)
         }
 
-        private fun solution(input : List<String>, opening : List<Char>, closing : List<Char>) {
+        private fun solution(input: List<String>, opening: List<Char>, closing: List<Char>) {
             var corruptedSum = 0
             val completionScores = mutableListOf<Long>()
             lines@
@@ -49,11 +50,11 @@ class Day10 {
             println(completionScores[completionScores.size / 2])
         }
 
-        private fun matchesBracket(openingChar : Char, closingChar : Char, opening : List<Char>, closing : List<Char>) : Boolean {
+        private fun matchesBracket(openingChar: Char, closingChar: Char, opening: List<Char>, closing: List<Char>): Boolean {
             return opening.indices.any { opening[it] == openingChar && closing[it] == closingChar }
         }
 
-        private fun computeCorruptionPoints(closingChar : Char, closing : List<Char>) : Int {
+        private fun computeCorruptionPoints(closingChar: Char, closing: List<Char>): Int {
             return when (closing.indexOf(closingChar)) {
                 0 -> 3
                 1 -> 57
@@ -63,7 +64,7 @@ class Day10 {
             }
         }
 
-        private fun computeCompletions(stack : Stack<Char>, opening : List<Char>) : Long {
+        private fun computeCompletions(stack: Stack<Char>, opening: List<Char>): Long {
             var sum = 0L
             while (stack.isNotEmpty()) {
                 sum = sum * 5 + computeCompletionPoints(stack.pop(), opening)
@@ -71,7 +72,7 @@ class Day10 {
             return sum
         }
 
-        private fun computeCompletionPoints(openingChar : Char, opening : List<Char>) : Int {
+        private fun computeCompletionPoints(openingChar: Char, opening: List<Char>): Int {
             return opening.indexOf(openingChar).takeIf { it >= 0 }?.let { it + 1 } ?: 0
         }
 

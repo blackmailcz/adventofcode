@@ -1,7 +1,8 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.Day16.SubPacketMethod.*
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.aoc2021.Day16.SubPacketMethod.*
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 
 /**
  * Created by Nooii on 16.12.2021
@@ -9,18 +10,18 @@ import net.nooii.adventofcode2021.helpers.InputLoader
 class Day16 {
 
     private class PacketHeader(
-        val version : Int,
-        val type : Int
+        val version: Int,
+        val type: Int
     ) {
         override fun toString() = "($version|$type)"
     }
 
-    private sealed class Packet(val header : PacketHeader) {
-        class Literal(header : PacketHeader, val value : Long) : Packet(header) {
+    private sealed class Packet(val header: PacketHeader) {
+        class Literal(header: PacketHeader, val value: Long) : Packet(header) {
             override fun toString() = "$header {$value}"
         }
 
-        class Container(header : PacketHeader, val packets : List<Packet>) : Packet(header) {
+        class Container(header: PacketHeader, val packets: List<Packet>) : Packet(header) {
             override fun toString() = "$header <$packets>"
         }
     }
@@ -30,15 +31,15 @@ class Day16 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = longHexToBin(InputLoader().loadStrings("Day16Input").first())
+        fun main(args: Array<String>) {
+            val input = longHexToBin(InputLoader(AoCYear.AOC_2021).loadStrings("Day16Input").first())
             val (_, packet) = parsePacket(0, input)
             packet!!
             println(countVersionSum(packet))
             println(compute(packet))
         }
 
-        private fun parsePacket(initialI : Int, input : String) : Pair<Int, Packet?> {
+        private fun parsePacket(initialI: Int, input: String): Pair<Int, Packet?> {
             val none = Pair(input.length, null)
             var i = initialI
             val (nextI, header) = parseHeader(i, input) ?: return none
@@ -55,7 +56,7 @@ class Day16 {
             }
         }
 
-        private fun parseHeader(i : Int, input : String) : Pair<Int, PacketHeader>? {
+        private fun parseHeader(i: Int, input: String): Pair<Int, PacketHeader>? {
             if (i + 6 > input.length) {
                 return null
             }
@@ -64,7 +65,7 @@ class Day16 {
             return Pair(i + 6, PacketHeader(version, type))
         }
 
-        private fun parseLiteral(initialI : Int, input : String, header : PacketHeader) : Pair<Int, Packet>? {
+        private fun parseLiteral(initialI: Int, input: String, header: PacketHeader): Pair<Int, Packet>? {
             val literal = StringBuilder()
             var i = initialI
             do {
@@ -79,14 +80,14 @@ class Day16 {
             return Pair(i, Packet.Literal(header, longBinToDec(literal.toString())))
         }
 
-        private fun parseSubPacketMethod(i : Int, input : String) : SubPacketMethod? {
+        private fun parseSubPacketMethod(i: Int, input: String): SubPacketMethod? {
             if (i >= input.length) {
                 return null
             }
             return if (bitToBool(input[i])) BY_COUNT else BY_LENGTH
         }
 
-        private fun parseSubPacketsByLength(initialI : Int, input : String, header : PacketHeader) : Pair<Int, Packet>? {
+        private fun parseSubPacketsByLength(initialI: Int, input: String, header: PacketHeader): Pair<Int, Packet>? {
             var i = initialI
             if (i + 15 > input.length) {
                 return null
@@ -103,7 +104,7 @@ class Day16 {
             return Pair(i, Packet.Container(header, subPackets))
         }
 
-        private fun parseSubPacketsByCount(initialI : Int, input : String, header : PacketHeader) : Pair<Int, Packet>? {
+        private fun parseSubPacketsByCount(initialI: Int, input: String, header: PacketHeader): Pair<Int, Packet>? {
             var i = initialI
             if (i + 11 > input.length) {
                 return null
@@ -121,7 +122,7 @@ class Day16 {
             return Pair(i, Packet.Container(header, subPackets))
         }
 
-        private fun countVersionSum(packet : Packet) : Int {
+        private fun countVersionSum(packet: Packet): Int {
             val nestedSum = when (packet) {
                 is Packet.Literal -> 0
                 is Packet.Container -> packet.packets.sumOf { countVersionSum(it) }
@@ -129,7 +130,7 @@ class Day16 {
             return packet.header.version + nestedSum
         }
 
-        private fun compute(packet : Packet) : Long {
+        private fun compute(packet: Packet): Long {
             return when (packet) {
                 is Packet.Literal -> packet.value
                 is Packet.Container -> {
@@ -148,17 +149,17 @@ class Day16 {
             }
         }
 
-        private fun longHexToBin(hex : String) : String {
+        private fun longHexToBin(hex: String): String {
             return hex
                 .map { it.toString().toInt(16).toString(2).padStart(4, '0') }
                 .joinToString("")
         }
 
-        private fun binToDec(bin : String) = bin.toInt(2)
+        private fun binToDec(bin: String) = bin.toInt(2)
 
-        private fun longBinToDec(bin : String) = bin.toLong(2)
+        private fun longBinToDec(bin: String) = bin.toLong(2)
 
-        private fun bitToBool(bit : Char) = bit == '1'
+        private fun bitToBool(bit: Char) = bit == '1'
 
         private fun Boolean.toLong() = if (this) 1L else 0L
 

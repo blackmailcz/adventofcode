@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 
 /**
  * Created by Nooii on 06.12.2021
@@ -10,24 +11,24 @@ class Day6 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day6Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day6Input")
             val fish = processInput(input)
             part1(fish.copy())
             part2(fish.copy())
         }
 
-        private fun part1(fish : MutableMap<Int, Long>) {
+        private fun part1(fish: MutableMap<Int, Long>) {
             processDays(fish, 80)
             println(countFish(fish))
         }
 
-        private fun part2(fish : MutableMap<Int, Long>) {
+        private fun part2(fish: MutableMap<Int, Long>) {
             processDays(fish, 256)
             println(countFish(fish))
         }
 
-        private fun processInput(rawInput : List<String>) : MutableMap<Int, Long> {
+        private fun processInput(rawInput: List<String>): MutableMap<Int, Long> {
             val input = rawInput.first().split(",").map { it.toInt() }.toMutableList()
             val dayMap = mutableMapOf<Int, Long>()
             for (day in input) {
@@ -36,7 +37,7 @@ class Day6 {
             return dayMap
         }
 
-        private fun processDay(dayMap : MutableMap<Int, Long>) {
+        private fun processDay(dayMap: MutableMap<Int, Long>) {
             val newDayMap = mutableMapOf<Int, Long>()
             for ((daysLeft, fish) in dayMap) {
                 if (daysLeft == 0) {
@@ -50,19 +51,19 @@ class Day6 {
             dayMap.putAll(newDayMap)
         }
 
-        private fun processDays(dayMap : MutableMap<Int, Long>, days : Long) {
+        private fun processDays(dayMap: MutableMap<Int, Long>, days: Long) {
             for (i in 0 until days) {
                 processDay(dayMap)
             }
         }
 
-        private fun countFish(fish : MutableMap<Int, Long>) = fish.values.sum()
+        private fun countFish(fish: MutableMap<Int, Long>) = fish.values.sum()
 
-        private fun MutableMap<Int,Long>.addFish(day : Int, fishCount : Long) {
+        private fun MutableMap<Int, Long>.addFish(day: Int, fishCount: Long) {
             this[day] = (this[day] ?: 0) + fishCount
         }
-        
-        private fun MutableMap<Int,Long>.copy() = mutableMapOf<Int, Long>().also { it.putAll(this) }
+
+        private fun MutableMap<Int, Long>.copy() = mutableMapOf<Int, Long>().also { it.putAll(this) }
 
     }
 

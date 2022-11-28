@@ -1,6 +1,7 @@
-package net.nooii.adventofcode2021
+package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode2021.helpers.InputLoader
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
 
 /**
  * Created by Nooii on 03.12.2021
@@ -10,15 +11,15 @@ class Day3 {
     companion object {
 
         @JvmStatic
-        fun main(args : Array<String>) {
-            val input = InputLoader().loadStrings("Day3Input")
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day3Input")
             val size = computeSize(input)
             val editedInput = convertToBooleans(input)
             part1(size, editedInput)
             part2(size, editedInput)
         }
 
-        private fun part1(size : Int, input : List<List<Boolean>>) {
+        private fun part1(size: Int, input: List<List<Boolean>>) {
             val bits = mutableListOf<Boolean>()
             for (bitIndex in 0 until size) {
                 bits += computeSignificantBit(input, bitIndex)
@@ -28,13 +29,13 @@ class Day3 {
             println(gamma * epsilon)
         }
 
-        private fun part2(size : Int, input : List<List<Boolean>>) {
+        private fun part2(size: Int, input: List<List<Boolean>>) {
             val oxygen = computePart2(size, input, true)
             val scrubber = computePart2(size, input, false)
             println(oxygen * scrubber)
         }
 
-        private fun computePart2(size : Int, input : List<List<Boolean>>, sig : Boolean) : Int {
+        private fun computePart2(size: Int, input: List<List<Boolean>>, sig: Boolean): Int {
             var currentInput = input
             val bits = mutableListOf<Boolean>()
             for (bitIndex in 0 until size) {
@@ -46,11 +47,11 @@ class Day3 {
             return binArray2dec(bits)
         }
 
-        private fun computeSize(input : List<String>) : Int {
+        private fun computeSize(input: List<String>): Int {
             return input.first().length
         }
 
-        private fun convertToBooleans(input : List<String>) : List<List<Boolean>> {
+        private fun convertToBooleans(input: List<String>): List<List<Boolean>> {
             return input.map { line ->
                 line.mapNotNull {
                     when (it) {
@@ -62,7 +63,7 @@ class Day3 {
             }
         }
 
-        private fun computeSignificantBit(input : List<List<Boolean>>, index : Int) : Boolean {
+        private fun computeSignificantBit(input: List<List<Boolean>>, index: Int): Boolean {
             var (zeroes, ones) = Pair(0, 0)
             input.forEach { line ->
                 if (line[index]) ones++ else zeroes++
@@ -70,7 +71,7 @@ class Day3 {
             return ones > zeroes
         }
 
-        private fun filter(input : List<List<Boolean>>, bitIndex : Int, sig : Boolean) : List<List<Boolean>> {
+        private fun filter(input: List<List<Boolean>>, bitIndex: Int, sig: Boolean): List<List<Boolean>> {
             val zeroes = input.count { !it[bitIndex] }
             val ones = input.count { it[bitIndex] }
             val filterBy = when {
@@ -83,7 +84,7 @@ class Day3 {
             }
         }
 
-        private fun binArray2dec(bits : List<Boolean>, mod : (bit : Boolean) -> Boolean = { it }) : Int {
+        private fun binArray2dec(bits: List<Boolean>, mod: (bit: Boolean) -> Boolean = { it }): Int {
             return bits.joinToString(separator = "", transform = { mod(it).toInt().toString() }).toInt(2)
         }
 
