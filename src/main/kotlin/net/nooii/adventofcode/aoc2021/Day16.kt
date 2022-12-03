@@ -1,8 +1,7 @@
 package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.aoc2021.Day16.SubPacketMethod.*
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.*
 
 /**
  * Created by Nooii on 16.12.2021
@@ -60,8 +59,8 @@ class Day16 {
             if (i + 6 > input.length) {
                 return null
             }
-            val version = binToDec(input.substring(i, i + 3))
-            val type = binToDec(input.substring(i + 3, i + 6))
+            val version = binToDecInt(input.substring(i, i + 3))
+            val type = binToDecInt(input.substring(i + 3, i + 6))
             return Pair(i + 6, PacketHeader(version, type))
         }
 
@@ -77,7 +76,7 @@ class Day16 {
                 literal.append(input.substring(i, i + 4))
                 i += 4
             } while (!isLastLiteralDigit)
-            return Pair(i, Packet.Literal(header, longBinToDec(literal.toString())))
+            return Pair(i, Packet.Literal(header, binToDecLong(literal.toString())))
         }
 
         private fun parseSubPacketMethod(i: Int, input: String): SubPacketMethod? {
@@ -92,7 +91,7 @@ class Day16 {
             if (i + 15 > input.length) {
                 return null
             }
-            val subPacketLength = binToDec(input.substring(i, i + 15))
+            val subPacketLength = binToDecInt(input.substring(i, i + 15))
             i += 15
             val subPackets = mutableListOf<Packet>()
             val subPacketEnd = i + subPacketLength
@@ -109,7 +108,7 @@ class Day16 {
             if (i + 11 > input.length) {
                 return null
             }
-            val totalSubPackets = binToDec(input.substring(i, i + 11))
+            val totalSubPackets = binToDecInt(input.substring(i, i + 11))
             i += 11
             var subPacketCount = 0
             val subPackets = mutableListOf<Packet>()
@@ -155,13 +154,6 @@ class Day16 {
                 .joinToString("")
         }
 
-        private fun binToDec(bin: String) = bin.toInt(2)
-
-        private fun longBinToDec(bin: String) = bin.toLong(2)
-
         private fun bitToBool(bit: Char) = bit == '1'
-
-        private fun Boolean.toLong() = if (this) 1L else 0L
-
     }
 }

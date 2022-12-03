@@ -2,6 +2,7 @@ package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.binToDecInt
 import java.awt.Point
 
 /**
@@ -71,7 +72,7 @@ class Day20 {
                     binaryNumber.append(booleanToDigit(value))
                 }
             }
-            val index = binToDec(binaryNumber.toString())
+            val index = binToDecInt(binaryNumber.toString())
             return image.algorithm[index]
         }
 
@@ -81,7 +82,7 @@ class Day20 {
 
         private fun getNextOutsidePointValue(image: Image): Boolean {
             val binary = booleanToDigit(image.outsidePointValue).repeat(9)
-            val index = binToDec(binary)
+            val index = binToDecInt(binary)
             return image.algorithm[index]
         }
 
@@ -100,8 +101,6 @@ class Day20 {
             }
             return Image(algorithm, litPoints, 0, 0, maxX, maxY, false)
         }
-
-        private fun binToDec(bin: String) = bin.toInt(2)
 
         private fun isLitPoint(symbol: Char) = symbol == '#'
 

@@ -3,6 +3,7 @@ package net.nooii.adventofcode.aoc2021
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
 import net.nooii.adventofcode.helpers.NonNullHashMap
+import net.nooii.adventofcode.helpers.add
 
 /**
  * Created by Nooii on 14.12.2021
@@ -68,10 +69,6 @@ class Day14 {
                 parts[0] to parts[1][0]
             }
             return PolymerInput(template, NonNullHashMap(rules.toMutableMap()))
-        }
-
-        private fun <K> MutableMap<K, Long>.add(k: K, count: Long) {
-            this[k] = getOrDefault(k, 0) + count
         }
     }
 

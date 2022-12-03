@@ -2,6 +2,8 @@ package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.add
+import net.nooii.adventofcode.helpers.copy
 
 /**
  * Created by Nooii on 06.12.2021
@@ -32,7 +34,7 @@ class Day6 {
             val input = rawInput.first().split(",").map { it.toInt() }.toMutableList()
             val dayMap = mutableMapOf<Int, Long>()
             for (day in input) {
-                dayMap.addFish(day, 1)
+                dayMap.add(day, 1)
             }
             return dayMap
         }
@@ -41,10 +43,10 @@ class Day6 {
             val newDayMap = mutableMapOf<Int, Long>()
             for ((daysLeft, fish) in dayMap) {
                 if (daysLeft == 0) {
-                    newDayMap.addFish(6, fish)
-                    newDayMap.addFish(8, fish)
+                    newDayMap.add(6, fish)
+                    newDayMap.add(8, fish)
                 } else {
-                    newDayMap.addFish(daysLeft - 1, fish)
+                    newDayMap.add(daysLeft - 1, fish)
                 }
             }
             dayMap.clear()
@@ -58,12 +60,6 @@ class Day6 {
         }
 
         private fun countFish(fish: MutableMap<Int, Long>) = fish.values.sum()
-
-        private fun MutableMap<Int, Long>.addFish(day: Int, fishCount: Long) {
-            this[day] = (this[day] ?: 0) + fishCount
-        }
-
-        private fun MutableMap<Int, Long>.copy() = mutableMapOf<Int, Long>().also { it.putAll(this) }
 
     }
 

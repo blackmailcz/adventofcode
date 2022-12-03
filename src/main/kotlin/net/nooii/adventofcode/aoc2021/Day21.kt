@@ -2,6 +2,7 @@ package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.add
 import kotlin.math.max
 
 /**
@@ -144,10 +145,6 @@ class Day21 {
             val nextPosition = (player.position + roll - 1) % FIELDS + 1
             val nextScore = player.score + nextPosition
             return Player(nextPosition, nextScore)
-        }
-
-        private fun <K> MutableMap<K, Long>.add(k: K, v: Long) {
-            this[k] = getOrDefault(k, 0) + v
         }
     }
 

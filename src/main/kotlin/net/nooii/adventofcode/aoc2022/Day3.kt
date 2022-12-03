@@ -2,6 +2,7 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.multiIntersection
 
 class Day3 {
 
@@ -37,12 +38,6 @@ class Day3 {
             val startValue = (if (item.isLowerCase()) 'a' else 'A').code
             val scoreOffset = if (item.isLowerCase()) 1 else 27
             return item.code - startValue + scoreOffset
-        }
-
-        private fun <T> multiIntersection(data: List<MutableSet<T>>): Set<T> {
-            return data.reduce { acc, it ->
-                acc.apply { retainAll(it) }
-            }
         }
     }
 }
