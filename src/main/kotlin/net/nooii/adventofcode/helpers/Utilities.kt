@@ -60,6 +60,14 @@ fun String.splitToPair(delimiter: String): Pair<String, String> {
 }
 
 /**
+ * Splits string into two objects by given delimiter and transformation.
+ */
+fun <T> String.splitToPair(delimiter: String, transform: (String) -> T): Pair<T, T> {
+    val (v1, v2) = splitToPair(delimiter)
+    return Pair(transform(v1), transform(v2))
+}
+
+/**
  * Splits string into three strings by given delimiter.
  */
 fun String.splitToTriple(delimiter: String): Triple<String, String, String> {
@@ -68,4 +76,12 @@ fun String.splitToTriple(delimiter: String): Triple<String, String, String> {
         throw IllegalArgumentException("Cannot split to triple - ${parts.size} parts detected")
     }
     return Triple(parts[0], parts[1], parts[2])
+}
+
+/**
+ * Splits string into three objects by given delimiter and transformation.
+ */
+fun <T> String.splitToTriple(delimiter: String, transform: (String) -> T): Triple<T, T, T> {
+    val (v1, v2, v3) = splitToTriple(delimiter)
+    return Triple(transform(v1), transform(v2), transform(v3))
 }

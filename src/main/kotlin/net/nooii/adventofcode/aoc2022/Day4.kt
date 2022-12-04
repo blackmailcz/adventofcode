@@ -40,17 +40,14 @@ class Day4 {
 
         private fun parseInput(input: List<String>): List<RangePair> {
             return input.map { line ->
-                val (r1, r2) = line.splitToPair(",")
-                RangePair(
-                    parseElfRange(r1),
-                    parseElfRange(r2)
-                )
+                val (r1, r2) = line.splitToPair(",") { parseElfRange(it) }
+                RangePair(r1, r2)
             }
         }
 
         private fun parseElfRange(elfRange: String): IntRange {
-            val (from, toInclusive) = elfRange.splitToPair("-")
-            return IntRange(from.toInt(), toInclusive.toInt())
+            val (from, toInclusive) = elfRange.splitToPair("-") { it.toInt() }
+            return IntRange(from, toInclusive)
         }
     }
 }
