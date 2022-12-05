@@ -85,3 +85,11 @@ fun <T> String.splitToTriple(delimiter: String, transform: (String) -> T): Tripl
     val (v1, v2, v3) = splitToTriple(delimiter)
     return Triple(transform(v1), transform(v2), transform(v3))
 }
+
+fun <T> Regex.captureFirstMatch(input: String, transform: (String) -> T): List<T> {
+    return findAll(input)
+        .first()
+        .groupValues
+        .drop(1)
+        .map { transform.invoke(it) }
+}

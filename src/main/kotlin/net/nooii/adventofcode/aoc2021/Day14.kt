@@ -2,7 +2,7 @@ package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullHashMap
+import net.nooii.adventofcode.helpers.NonNullMap
 import net.nooii.adventofcode.helpers.add
 
 /**
@@ -12,7 +12,7 @@ class Day14 {
 
     private class PolymerInput(
         val template: String,
-        val rules: NonNullHashMap<String, Char>
+        val rules: NonNullMap<String, Char>
     )
 
     companion object {
@@ -68,7 +68,7 @@ class Day14 {
                 val parts = line.split(" -> ")
                 parts[0] to parts[1][0]
             }
-            return PolymerInput(template, NonNullHashMap(rules.toMutableMap()))
+            return PolymerInput(template, NonNullMap(rules.toMutableMap()))
         }
     }
 
