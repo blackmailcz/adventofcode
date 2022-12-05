@@ -60,15 +60,15 @@ class Day5 {
         }
 
         private fun parseInput(input: List<String>): Crane {
-            // First, find line index with the number that indicates box definitions.
-            val boxDefinitionsLine = input.indexOfFirst { it[1].isDigit() }
-            // Parse boxes bottom to top
+            // First, find empty line that splits the boxes from instructions
+            val emptyLine = input.indexOfFirst { it.isEmpty() }
+            // Parse boxes bottom to top (-1 for skipping boxes numbering that we don't need)
             val stacks = sortedMapOf<Int, Stack<Char>>()
-            input.take(boxDefinitionsLine).reversed().forEach {
+            input.take(emptyLine - 1).reversed().forEach {
                 parseBoxLineAndAddBoxes(it, stacks)
             }
-            // Parse instructions (shift by 2 to skip that line and also following empty line)
-            val instructions = input.drop(boxDefinitionsLine + 2).map {
+            // Parse instructions
+            val instructions = input.drop(emptyLine + 1).map {
                 parseInstruction(it)
             }
             return Crane(NonNullMap(stacks), instructions)
