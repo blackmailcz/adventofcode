@@ -16,7 +16,7 @@ class Day6 {
 
         private fun solution(input: String, sequenceLength: Int) {
             for ((index, sequence) in input.windowed(sequenceLength, 1).withIndex()) {
-                if (sequence.toList().distinct().size == sequenceLength) {
+                if (sequence.toSet().size == sequenceLength) {
                     println(index + sequenceLength)
                     return
                 }
