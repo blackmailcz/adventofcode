@@ -24,7 +24,7 @@ class Day7 {
             parent: Directory?,
         ) : FSItem(name, parent) {
 
-            private val files = mutableListOf<File>()
+            private val files = mutableSetOf<File>()
             val subdirectories = mutableSetOf<Directory>()
 
             // Lazy implementation to speed up processing time. The size is not changed anymore.
