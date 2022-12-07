@@ -11,7 +11,7 @@ class Day7 {
         val path: String = "${parent?.path?.trimEnd('/') ?: ""}/$name"
 
         // FS is read only, first the FS is built and then size is evaluated lazily
-        abstract val size: Long // Expensive operation
+        abstract val size: Long
 
         class File(
             name: String,
@@ -160,7 +160,6 @@ class Day7 {
                 ".." -> {
                     currentDirectory.parent ?: throw IllegalStateException("Cannot navigate up")
                 }
-
                 "/" -> root
                 else -> {
                     currentDirectory.getSubdirectory(target)
