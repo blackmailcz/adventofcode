@@ -10,6 +10,7 @@ class Day7 {
 
         val path: String = "${parent?.path?.trimEnd('/') ?: ""}/$name"
 
+        // FS is read only, first the FS is built and then size is evaluated lazily
         abstract val size: Long // Expensive operation
 
         class File(
@@ -23,21 +24,24 @@ class Day7 {
             parent: Directory?,
         ) : FSItem(name, parent) {
 
-            private val children = mutableSetOf<FSItem>()
+            private val files = mutableListOf<File>()
+            val subdirectories = mutableSetOf<Directory>()
 
-            override val size: Long
-                get() = children.sumOf { it.size }
+            // Lazy implementation to speed up processing time. The size is not changed anymore.
+            // In r/w FS, we should not use lazy implementation but rather use get()
+            override val size: Long by lazy {
+                files.sumOf { it.size } + subdirectories.sumOf { it.size }
+            }
 
             fun addChild(child: FSItem) {
-                children.add(child)
+                when (child) {
+                    is File -> files.add(child)
+                    is Directory -> subdirectories.add(child)
+                }
             }
 
             fun getSubdirectory(name: String): Directory? {
-                return getSubdirectories().find { it.name == name }
-            }
-
-            fun getSubdirectories(): List<Directory> {
-                return children.filterIsInstance<Directory>()
+                return subdirectories.find { it.name == name }
             }
         }
 
@@ -73,12 +77,11 @@ class Day7 {
             while (dirs.isNotEmpty()) {
                 val nextDirs = mutableListOf<FSItem.Directory>()
                 for (dir in dirs) {
-                    val dirSize = dir.size
                     // Note: Files can be counted more than once - we count already processed subdirectories again towards their parents
-                    if (dirSize <= directorySizeLimit) {
-                        accumulatedSize += dirSize
+                    if (dir.size <= directorySizeLimit) {
+                        accumulatedSize += dir.size
                     }
-                    nextDirs.addAll(dir.getSubdirectories())
+                    nextDirs.addAll(dir.subdirectories)
                 }
                 dirs = nextDirs
             }
@@ -88,26 +91,24 @@ class Day7 {
         private fun part2(root: FSItem.Directory) {
             val totalSpace = 70_000_000
             val requiredSpace = 30_000_000
-            val rootSize = root.size
-            val minimumSpaceToFree = rootSize - totalSpace + requiredSpace
+            val minimumSpaceToFree = root.size - totalSpace + requiredSpace
             if (minimumSpaceToFree <= 0) {
                 println("There is already enough space")
                 return
             }
-            var targetDirectorySize = rootSize // By default, entire file system is marked for deletion
+            var targetDirectorySize = root.size // By default, entire file system is marked for deletion
             var dirs = listOf(root)
             // DFS
             while (dirs.isNotEmpty()) {
                 val nextDirs = mutableListOf<FSItem.Directory>()
                 for (dir in dirs) {
-                    val dirSize = dir.size
                     // Find the smallest single directory to be deleted
-                    if (dirSize >= minimumSpaceToFree) {
-                        if (dirSize < targetDirectorySize) {
-                            targetDirectorySize = dirSize
+                    if (dir.size >= minimumSpaceToFree) {
+                        if (dir.size < targetDirectorySize) {
+                            targetDirectorySize = dir.size
                         }
                         // Only process subdirectories of folders big enough
-                        nextDirs.addAll(dir.getSubdirectories())
+                        nextDirs.addAll(dir.subdirectories)
                     }
                 }
                 dirs = nextDirs
