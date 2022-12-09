@@ -1,5 +1,7 @@
 package net.nooii.adventofcode.helpers
 
+import java.awt.Point
+
 /**
  * Finds all elements presents in all provided sets.
  */
@@ -92,4 +94,11 @@ fun <T> Regex.captureFirstMatch(input: String, transform: (String) -> T): List<T
         .groupValues
         .drop(1)
         .map { transform.invoke(it) }
+}
+
+/**
+ * Computes difference between two points represented by a point.
+ */
+fun Point.diff(other: Point): Point {
+    return Point(other.x - x, other.y - y)
 }
