@@ -2,7 +2,6 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.splitToPair
 
 class Day10 {
 
@@ -40,8 +39,8 @@ class Day10 {
         }
 
         fun draw() {
-            pixels.windowed(width, width).forEach {
-                println(it.joinToString(""))
+            for (line in pixels.windowed(width, width)) {
+                println(pixels.joinToString(""))
             }
         }
     }
@@ -70,10 +69,7 @@ class Day10 {
             return input.map { line ->
                 when {
                     line == "noop" -> Instruction(1, 0)
-                    line.startsWith("addx") -> {
-                        val (_, increment) = line.splitToPair(" ")
-                        Instruction(2, increment.toInt())
-                    }
+                    line.startsWith("addx") -> Instruction(2, line.drop(5).toInt()) // drop "addx "
                     else -> throw IllegalStateException("Unknown instruction")
                 }
             }
