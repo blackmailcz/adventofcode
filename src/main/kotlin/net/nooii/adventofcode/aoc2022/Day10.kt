@@ -40,7 +40,7 @@ class Day10 {
 
         fun draw() {
             for (line in pixels.windowed(width, width)) {
-                println(pixels.joinToString(""))
+                println(line.joinToString(""))
             }
         }
     }
