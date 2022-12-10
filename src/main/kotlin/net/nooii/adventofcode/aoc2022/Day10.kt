@@ -1,0 +1,83 @@
+package net.nooii.adventofcode.aoc2022
+
+import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.splitToPair
+
+class Day10 {
+
+    private class Instruction(val ticks: Int, val increment: Int)
+
+    private class CPU {
+
+        private val strengthOffset = 20
+        private val width = 40
+        private var x = 1
+        private var cycle = 0
+        var strength = 0
+            private set
+        private val pixels = mutableListOf<Char>()
+
+        private fun tick() {
+            // Cycle
+            cycle++
+            // Strength
+            if ((cycle - 1 + strengthOffset) / width != (cycle + strengthOffset) / width) {
+                strength += cycle * x
+            }
+            // Pixel
+            val symbol = if (pixels.size % width in x - 1..x + 1) '*' else ' '
+            pixels.add(symbol)
+        }
+
+        fun execute(instructions: List<Instruction>) {
+            for (instruction in instructions) {
+                repeat(instruction.ticks) {
+                    tick()
+                }
+                x += instruction.increment
+            }
+        }
+
+        fun draw() {
+            pixels.windowed(width, width).forEach {
+                println(it.joinToString(""))
+            }
+        }
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day10Input")
+            val instructions = parseInput(input)
+            val cpu = CPU()
+            cpu.execute(instructions)
+            part1(cpu)
+            part2(cpu)
+        }
+
+        private fun part1(cpu: CPU) {
+            println(cpu.strength)
+        }
+
+        private fun part2(cpu: CPU) {
+            cpu.draw()
+        }
+
+        private fun parseInput(input: List<String>): List<Instruction> {
+            return input.map { line ->
+                when {
+                    line == "noop" -> Instruction(1, 0)
+                    line.startsWith("addx") -> {
+                        val (_, increment) = line.splitToPair(" ")
+                        Instruction(2, increment.toInt())
+                    }
+                    else -> throw IllegalStateException("Unknown instruction")
+                }
+            }
+        }
+    }
+
+}
