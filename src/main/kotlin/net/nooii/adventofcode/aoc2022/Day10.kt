@@ -22,7 +22,7 @@ class Day10 {
             // Cycle
             cycle++
             // Strength
-            if ((cycle - 1 + strengthOffset) / width != (cycle + strengthOffset) / width) {
+            if ((cycle + strengthOffset) % width == 0) {
                 strength += cycle * x
             }
             // Pixel
