@@ -102,3 +102,13 @@ fun <T> Regex.captureFirstMatch(input: String, transform: (String) -> T): List<T
 fun Point.diff(other: Point): Point {
     return Point(other.x - x, other.y - y)
 }
+
+/**
+ * Produces product of all items in the list.
+ */
+fun Collection<Int>.product() = reduce { acc, i -> acc * i }
+
+/**
+ * Produces product of all items in the list.
+ */
+fun Collection<Long>.product() = reduce { acc, i -> acc * i }
