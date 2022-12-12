@@ -100,8 +100,8 @@ class Day8 {
 
         private fun parseTrees(input: List<String>): PointMap<Tree> {
             val map = mutableMapOf<Point, Tree>()
-            input.withIndex().map { (y, line) ->
-                line.withIndex().map { (x, value) ->
+            for ((y, line) in input.withIndex()) {
+                for ((x, value) in line.withIndex()) {
                     val point = Point(x, y)
                     map[point] = Tree(point, value.digitToInt())
                 }
