@@ -48,7 +48,7 @@ class Day13 {
         }
 
         private fun part1(packets: List<Packet>) {
-            val sum = packets.windowed(2,2).withIndex().sumOf { (index, pair) ->
+            val sum = packets.windowed(2, 2).withIndex().sumOf { (index, pair) ->
                 val (left, right) = pair
                 if (left < right) index + 1 else 0 // Pairs are "indexed" from 1
             }
