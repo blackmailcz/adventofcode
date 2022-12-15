@@ -1,6 +1,7 @@
 package net.nooii.adventofcode.helpers
 
 import java.awt.Point
+import kotlin.math.abs
 
 /**
  * Finds all elements presents in all provided sets.
@@ -88,6 +89,9 @@ fun <T> String.splitToTriple(delimiter: String, transform: (String) -> T): Tripl
     return Triple(transform(v1), transform(v2), transform(v3))
 }
 
+/**
+ * Returns all captures from target [String] based on this [Regex] and [transform]s them to a single type.
+ */
 fun <T> Regex.captureFirstMatch(input: String, transform: (String) -> T): List<T> {
     return findAll(input)
         .first()
@@ -112,3 +116,22 @@ fun Collection<Int>.product() = reduce { acc, i -> acc * i }
  * Produces product of all items in the list.
  */
 fun Collection<Long>.product() = reduce { acc, i -> acc * i }
+
+/**
+ * Computes Manhattan distance to other [Point].
+ */
+fun Point.manhattanDistance(other: Point): Int {
+    return abs(x - other.x) + abs(y - other.y)
+}
+
+/**
+ * Compute size of IntRange. More effective than [IntRange.count].
+ */
+fun IntRange.size() = last - first + 1
+
+/**
+ * Compute if two ranges overlap. More effective than [IntRange.intersect].
+ */
+fun IntRange.overlaps(range: IntRange): Boolean {
+    return range.first in this || range.last in this
+}
