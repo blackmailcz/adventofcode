@@ -21,9 +21,9 @@ class Day15 {
         }
 
         fun computeBeaconRange(y: Int): IntRange? {
-            // Get straight line distance first
+            // Get straight line distance
             val a = sensor.manhattanDistance(Point(sensor.x, y))
-            // Check if y close enough to the beacon
+            // Check if y is close enough to the beacon
             if (a > distanceToBeacon) {
                 return null
             }
@@ -40,6 +40,7 @@ class Day15 {
             val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day15Input")
             val sensors = parseInput(input)
             part1(sensors, 2_000_000)
+            // Runtime ~ 1500 ms
             part2(sensors, IntRange(0, 4_000_000))
         }
 
@@ -86,8 +87,8 @@ class Day15 {
                 1 -> {
                     val range = ranges.first()
                     when {
-                        range.first != target.first && range.last == target.last -> range.first
-                        range.first == target.first && range.last != target.last -> range.last
+                        range.first != target.first && range.last >= target.last -> range.first
+                        range.first <= target.first && range.last != target.last -> range.last
                         else -> null
                     }
                 }
