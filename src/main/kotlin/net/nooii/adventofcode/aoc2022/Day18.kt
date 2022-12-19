@@ -31,12 +31,20 @@ class Day18 {
         }
 
         private fun part2(lavaPoints: Set<Point3D>) {
-            val min = lavaPoints.minOf { min(min(it.x, it.y), it.z) } - 1
-            val max = lavaPoints.maxOf { max(max(it.x, it.y), it.z) } + 1
+            val min = Point3D(
+                lavaPoints.minOf { it.x } - 1,
+                lavaPoints.minOf { it.y } - 1,
+                lavaPoints.minOf { it.z } - 1
+            )
+            val max = Point3D(
+                lavaPoints.maxOf { it.x } + 1,
+                lavaPoints.maxOf { it.y } + 1,
+                lavaPoints.maxOf { it.z } + 1
+            )
             val touches = mutableMapOf<Point3D, Int>()
             val visited = mutableSetOf<Point3D>()
             var waterPoints = mutableSetOf(
-                Point3D(min, min, min)
+                Point3D(min.x, min.y, min.z)
             )
             while (waterPoints.isNotEmpty()) {
                 val nextWaterPoints = mutableSetOf<Point3D>()
@@ -46,7 +54,7 @@ class Day18 {
                     }
                     visited.add(waterPoint)
                     for (adjacentPoint in waterPoint.getAdjacentSidePoints()) {
-                        if (adjacentPoint.x in min..max && adjacentPoint.y in min..max && adjacentPoint.z in min..max) {
+                        if (adjacentPoint.x in min.x..max.x && adjacentPoint.y in min.y..max.y && adjacentPoint.z in min.z..max.z) {
                             if (adjacentPoint in lavaPoints) {
                                 touches.add(adjacentPoint, 1)
                             } else {
