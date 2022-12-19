@@ -2,39 +2,13 @@ package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.Point3D
 import kotlin.math.abs
 
 /**
  * Created by Nooii on 19.12.2021
  */
 class Day19 {
-
-    private data class Point3D(
-        val x: Int,
-        val y: Int,
-        val z: Int
-    ) {
-
-        override fun toString() = "[$x,$y,$z]"
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is Point3D) return false
-
-            if (x != other.x) return false
-            if (y != other.y) return false
-            if (z != other.z) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = x
-            result = 31 * result + y
-            result = 31 * result + z
-            return result
-        }
-    }
 
     private open class Scanner(
         val id: Int,
