@@ -1,8 +1,6 @@
 package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.*
-import kotlin.math.max
-import kotlin.math.min
 
 class Day18 {
 
