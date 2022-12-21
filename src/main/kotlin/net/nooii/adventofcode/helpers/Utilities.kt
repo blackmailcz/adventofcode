@@ -135,3 +135,29 @@ fun IntRange.size() = last - first + 1
 fun IntRange.overlaps(range: IntRange): Boolean {
     return range.first in this || range.last in this
 }
+
+/**
+ * Splits the list into smaller lists, using the elements matching [predicate] as delimiter, removing it in process.
+ */
+fun <I> List<I>.splitBy(predicate: (I) -> Boolean): List<List<I>> {
+    val lists = mutableListOf<List<I>>()
+    var lastBreak = -1
+    val addSubList = { i: Int ->
+        subList(lastBreak + 1, i).takeIf { it.isNotEmpty() }?.let { lists.add(it) }
+        lastBreak = i
+    }
+    for ((i, item) in withIndex()) {
+        if (predicate.invoke(item)) {
+            addSubList.invoke(i)
+        }
+    }
+    if (lastBreak < size) {
+        addSubList(size)
+    }
+    return lists
+}
+
+/**
+ * Splits the list of strings by empty lines.
+ */
+fun List<String>.splitByEmptyLine() = splitBy { it == "" }
