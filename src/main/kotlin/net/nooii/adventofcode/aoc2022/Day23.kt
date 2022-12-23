@@ -13,7 +13,6 @@ class Day23 {
     private class Game(
         var elves: Set<Point>,
         val movementDirs: List<PointDirectionDiagonal>,
-        val allDirs: List<PointDirectionDiagonal>,
         var firstMovementDir: Int,
     )
 
@@ -26,12 +25,9 @@ class Day23 {
             val movementDirs = mutableListOf(
                 NORTH, SOUTH, WEST, EAST
             )
-            val allDirs = mutableListOf(
-                NORTH_WEST, NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST
-            )
-            part1(Game(elves, movementDirs, allDirs, 0))
+            part1(Game(elves, movementDirs, 0))
             // Runtime ~ 1250 ms
-            part2(Game(elves, movementDirs, allDirs, 0))
+            part2(Game(elves, movementDirs, 0))
         }
 
         private fun part1(game: Game) {
@@ -64,25 +60,25 @@ class Day23 {
         private fun round(game: Game) {
             val proposed = NonNullMap<Point, Point>()
             val forbidden = mutableSetOf<Point>()
-            val nextPoints = mutableSetOf<Point>()
+            val notMoving = mutableSetOf<Point>()
             for (elf in game.elves) {
                 when (val next = getNextPoint(game, elf)) {
-                    elf, in forbidden -> nextPoints.add(elf)
+                    elf, in forbidden -> notMoving.add(elf)
                     in proposed -> {
-                        nextPoints.add(elf)
-                        nextPoints.add(proposed[next])
+                        notMoving.add(elf)
+                        notMoving.add(proposed[next])
                         proposed.remove(next)
                         forbidden.add(next)
                     }
                     else -> proposed[next] = elf
                 }
             }
-            game.elves = nextPoints + proposed.keys
+            game.elves = notMoving + proposed.keys
             game.firstMovementDir = (game.firstMovementDir + 1) % game.movementDirs.size
         }
 
         private fun getNextPoint(game: Game, elf: Point): Point {
-            if (game.allDirs.none { it.next(elf) in game.elves }) {
+            if (PointDirectionDiagonal.values().none { it.next(elf) in game.elves }) {
                 return elf
             }
             for (i in game.movementDirs.indices) {
@@ -100,7 +96,7 @@ class Day23 {
                 SOUTH -> listOf(SOUTH, SOUTH_EAST, SOUTH_WEST)
                 WEST -> listOf(WEST, NORTH_WEST, SOUTH_WEST)
                 EAST -> listOf(EAST, NORTH_EAST, SOUTH_EAST)
-                else -> error("...")
+                else -> error("Unsupported movement direction")
             }
         }
 
