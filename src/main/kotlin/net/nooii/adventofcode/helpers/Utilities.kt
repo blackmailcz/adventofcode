@@ -161,3 +161,15 @@ fun <I> List<I>.splitBy(predicate: (I) -> Boolean): List<List<I>> {
  * Splits the list of strings by empty lines.
  */
 fun List<String>.splitByEmptyLine() = splitBy { it == "" }
+
+/**
+ * Finds the Greatest Common Divisor of two numbers.
+ */
+fun gcd(a: Int, b: Int): Int {
+    var aa = a
+    var bb = b
+    while (aa != bb) {
+        if (aa > bb) aa -= bb else bb -= aa
+    }
+    return aa
+}

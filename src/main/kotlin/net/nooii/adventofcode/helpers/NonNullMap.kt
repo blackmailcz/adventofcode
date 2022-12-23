@@ -16,4 +16,9 @@ data class NonNullMap<K : Any, V : Any>(
     override fun toString(): String {
         return underlying.toString()
     }
+
+    companion object {
+
+        fun <K: Any, V: Any> fromMap(map: Map<K, V>) = NonNullMap(map.toMutableMap())
+    }
 }

@@ -12,10 +12,28 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int) {
         return Point(point.x + xDiff * step, point.y + yDiff * step)
     }
 
+    fun rotateCW(): PointDirection {
+        return when (this) {
+            UP -> RIGHT
+            RIGHT -> DOWN
+            DOWN -> LEFT
+            LEFT -> UP
+        }
+    }
+
+    fun rotateCCW(): PointDirection {
+        return when (this) {
+            UP -> LEFT
+            LEFT -> DOWN
+            DOWN -> RIGHT
+            RIGHT -> UP
+        }
+    }
+
     companion object {
 
         fun fromLetter(letter: String): PointDirection {
-            return when(letter) {
+            return when (letter) {
                 "U" -> UP
                 "D" -> DOWN
                 "L" -> LEFT
