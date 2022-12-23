@@ -10,7 +10,7 @@ class Day9 {
     private class Rope(numberOfTails: Int) {
 
         private var head = Point(0, 0)
-        private val tails = Array(numberOfTails) { Point(0, 0) }.toMutableList()
+        private val tails = MutableList(numberOfTails) { Point(0, 0) }
 
         fun move(direction: PointDirection) {
             head = direction.next(head)
