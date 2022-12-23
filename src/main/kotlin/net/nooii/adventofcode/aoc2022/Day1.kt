@@ -2,6 +2,7 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.splitByEmptyLine
 
 class Day1 {
 
@@ -16,20 +17,9 @@ class Day1 {
         }
 
         private fun computeElves(input: List<String>): List<Int> {
-            // Ensure last elf is processed as well
-            val lines = if (input.lastOrNull()?.isNotEmpty() == true) input.plus("") else input
-            val elves = mutableListOf<Int>()
-            var calories = 0
-            for (line in lines) {
-                if (line.isEmpty()) {
-                    elves.add(calories)
-                    calories = 0
-                } else {
-                    calories += line.toInt()
-                }
-            }
-            elves.sortDescending()
-            return elves
+            return input.splitByEmptyLine()
+                .map { elf -> elf.sumOf { it.toInt() } }
+                .sortedDescending()
         }
 
         private fun part1(sortedElves: List<Int>) {
