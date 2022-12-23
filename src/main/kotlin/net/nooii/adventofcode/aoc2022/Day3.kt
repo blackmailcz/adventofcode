@@ -17,8 +17,8 @@ class Day3 {
 
         private fun part1(input: List<String>) {
             val sum = input.sumOf { line ->
-                val firstHalf = line.toCharArray().toList().subList(0, line.length / 2)
-                val secondHalf = line.toCharArray().toList().subList(line.length / 2, line.length)
+                val firstHalf = line.toList().subList(0, line.length / 2)
+                val secondHalf = line.toList().subList(line.length / 2, line.length)
                 val intersection = firstHalf.intersect(secondHalf.toSet()).first()
                 computeScore(intersection)
             }
@@ -28,7 +28,7 @@ class Day3 {
         private fun part2(input: List<String>) {
             val windows = input.windowed(3, 3)
             val sum = windows.sumOf { window ->
-                val intersection = multiIntersection(window.map { it.toCharArray().toMutableSet() }).first()
+                val intersection = multiIntersection(window.map { it.toList().toMutableSet() }).first()
                 computeScore(intersection)
             }
             println(sum)
