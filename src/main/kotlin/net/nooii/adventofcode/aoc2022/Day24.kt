@@ -3,30 +3,27 @@ package net.nooii.adventofcode.aoc2022
 import net.nooii.adventofcode.helpers.*
 import net.nooii.adventofcode.helpers.PointDirection.*
 import java.awt.Point
-import java.util.PriorityQueue
 
 class Day24 {
 
     private class Blizzard(
-        val direction: PointDirection,
-        var point: Point
+        val direction: PointDirection
     )
 
     private class Area(
-        val w: Int,
-        val h: Int,
+        val width: Int,
+        val height: Int,
         val start: Point,
         val end: Point,
         val walls: Set<Point>,
-        var blizzard: NonNullMap<Point, MutableSet<Blizzard>>,
-        val md: NonNullMap<Point, Int>
+        var blizzard: NonNullMap<Point, MutableSet<Blizzard>>
     ) {
 
         fun blow() {
             val nextBlizzard = NonNullMap<Point, MutableSet<Blizzard>>()
             for ((point, blizzards) in blizzard) {
                 for (blizzard in blizzards) {
-                    val next = nextPoint(point, blizzard.direction)
+                    val next = nextBlizzardPoint(point, blizzard.direction)
                     if (next !in nextBlizzard) {
                         nextBlizzard[next] = mutableSetOf()
                     }
@@ -36,13 +33,13 @@ class Day24 {
             blizzard = nextBlizzard
         }
 
-        fun nextPoint(point: Point, direction: PointDirection): Point {
+        private fun nextBlizzardPoint(point: Point, direction: PointDirection): Point {
             val rawNext = direction.next(point)
             return if (rawNext in walls) {
-                when(direction) {
-                    LEFT -> Point(w - 2, point.y)
+                when (direction) {
+                    LEFT -> Point(width - 2, point.y)
                     RIGHT -> Point(1, point.y)
-                    UP -> Point(point.x, h - 2)
+                    UP -> Point(point.x, height - 2)
                     DOWN -> Point(point.x, 1)
                 }
             } else {
@@ -50,85 +47,71 @@ class Day24 {
             }
         }
 
-        fun draw(you: Point?) {
-            for (y in 0 until h) {
-                for (x in 0 until w) {
-                    val point = Point(x, y)
-                    val symbol = when {
-                        point == you -> "E"
-                        point in blizzard -> if (blizzard[point].size > 1) blizzard[point].size else toSymbol(blizzard[point].first().direction)
-                        point in walls -> "#"
-                        else -> "."
-                    }
-                    print(symbol)
-                }
-                println()
-            }
-            println()
-            println()
+        fun getPhaseX(time: Int): Int {
+            return time % (width - 2)
         }
 
+        fun getPhaseY(time: Int): Int {
+            return time % (height - 2)
+        }
     }
 
-    private class Node(
+    private data class State(
         val point: Point,
-        val md: Int
-    ): Comparable<Node> {
-
-        override fun compareTo(other: Node): Int {
-            return md.compareTo(other.md)
-        }
-    }
+        val phaseX: Int,
+        val phaseY: Int
+    )
 
     companion object {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Test")
-            //val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day24Input")
-            val area = parseInput(input)
-            println(area.w)
-            println(area.h)
-            //solution(area)
+            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day24Input")
+            part1(parseInput(input))
+            part2(parseInput(input))
         }
 
-        private fun solution(area: Area) {
-            var time = 0
-            var q = listOf(
-                Node(area.start, area.md[area.start])
+        private fun part1(area: Area) {
+            val time = solution(area, area.start, area.end, 0)
+            println(time)
+        }
+
+        private fun part2(area: Area) {
+            // We have to stop for 1 time unit in the destination state before going back again.
+            val t1 = solution(area, area.start, area.end, 0)
+            val t2 = solution(area, area.end, area.start, t1 + 1)
+            val t3 = solution(area, area.start, area.end, t2 + 1)
+            println(t3)
+        }
+
+        private fun solution(area: Area, from: Point, to: Point, t: Int): Int {
+            var time = t
+            var states = setOf(
+                State(from, area.getPhaseX(t), area.getPhaseX(t))
             )
-            area.draw(area.start)
-            while (q.isNotEmpty()) {
-                println("t=$time nodes=${q.size},md=${q.first().md}")
-//                println("*******BLOW******")
-//                println()
+            while (states.isNotEmpty()) {
+                val phaseX = area.getPhaseX(time)
+                val phaseY = area.getPhaseY(time)
                 area.blow()
-//                area.draw(null)
-//                println("****************")
-                // Compute next moves
-                val nextQ = mutableListOf<Node>()
-                for (node in q.take(1)) {
-                    if (node.point == area.end) {
-                        println("END IN $time")
-                        return
+                val nextStates = mutableSetOf<State>()
+                for (state in states) {
+                    if (state.point == to) {
+                        return time
                     }
                     for (dir in PointDirection.values()) {
-                        val next = dir.next(node.point)
-                        if (next !in area.blizzard && next !in area.walls && next.x > 0 && next.y > 0) {
-//                            println("===============")
-//                            area.draw(node.point)
-//                            area.draw(next)
-//                            println("===============")
-                            nextQ.add(Node(next, area.md[next]))
+                        val next = dir.next(state.point)
+                        if (next !in area.blizzard && next !in area.walls && next.x in 0 until area.width && next.y in 0 until area.height) {
+                            nextStates.add(State(next, phaseX, phaseY))
                         }
                     }
-                    nextQ.add(Node(node.point, area.md[node.point]))
+                    if (state.point !in area.blizzard) {
+                        nextStates.add(State(state.point, phaseX, phaseY))
+                    }
                 }
-                nextQ.sort()
-                q = nextQ
+                states = nextStates
                 time++
             }
-            println("NOPE")
+            error("Can't reach destination")
         }
 
         private fun parseInput(input: List<String>): Area {
@@ -139,59 +122,37 @@ class Day24 {
             for ((y, line) in input.withIndex()) {
                 for ((x, char) in line.withIndex()) {
                     val point = Point(x, y)
-                    when(char) {
+                    when (char) {
                         '#' -> walls.add(point)
                         '.' -> continue
                         else -> {
                             if (point !in blizzard) {
                                 blizzard[point] = mutableSetOf()
                             }
-                            blizzard[point].add(Blizzard(fromSymbol(char), point))
+                            blizzard[point].add(Blizzard(fromSymbol(char)))
                         }
                     }
                 }
             }
 
             return Area(
-                w = input.first().length,
-                h = input.size,
+                width = input.first().length,
+                height = input.size,
                 start = Point(startX, 0),
-                end = Point(endX, input.size),
+                end = Point(endX, input.size - 1),
                 walls = walls,
-                blizzard = blizzard,
-                md = precomputeMD(input.size, input.first().length, Point(endX, input.size))
+                blizzard = blizzard
             )
         }
 
-        private fun precomputeMD(maxY: Int, maxX: Int, target: Point): NonNullMap<Point, Int> {
-            val mds = NonNullMap<Point, Int>()
-            for (y in 0..maxY) {
-                for (x in 0..maxX) {
-                    val point = Point(x, y)
-                    mds[point] = point.manhattanDistance(target)
-                }
-            }
-            return mds
-        }
-
         private fun fromSymbol(char: Char): PointDirection {
-            return when(char) {
+            return when (char) {
                 '>' -> RIGHT
                 '<' -> LEFT
                 'v' -> DOWN
                 '^' -> UP
-                else -> error("...")
-            }
-        }
-
-        private fun toSymbol(dir: PointDirection): String {
-            return when(dir) {
-                LEFT -> "<"
-                RIGHT -> ">"
-                DOWN -> "v"
-                UP -> "^"
+                else -> error("Invalid symbol")
             }
         }
     }
-
 }
