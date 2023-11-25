@@ -26,8 +26,8 @@ class Day22 {
 
     private sealed class Instruction {
         class Move(val by: Int) : Instruction()
-        object CCW : Instruction()
-        object CW : Instruction()
+        data object CCW : Instruction()
+        data object CW : Instruction()
     }
 
     private class CubeSide(

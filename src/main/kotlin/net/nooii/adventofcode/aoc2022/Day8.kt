@@ -61,7 +61,7 @@ class Day8 {
 
         private fun computeScore(trees: PointMap<Tree>, candidate: Tree): Int {
             var score = 1
-            for (direction in values()) {
+            for (direction in entries) {
                 score *= computeViewDistance(trees, candidate, direction)
             }
             return score

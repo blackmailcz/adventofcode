@@ -6,6 +6,7 @@ package net.nooii.adventofcode.helpers
 enum class AoCYear(val resourcePath: String) {
 
     AOC_2021("aoc2021"),
-    AOC_2022("aoc2022")
+    AOC_2022("aoc2022"),
+    AOC_2023("aoc2023")
 
 }

@@ -78,7 +78,7 @@ class Day23 {
         }
 
         private fun getNextPoint(game: Game, elf: Point): Point {
-            if (PointDirectionDiagonal.values().none { it.next(elf) in game.elves }) {
+            if (PointDirectionDiagonal.entries.none { it.next(elf) in game.elves }) {
                 return elf
             }
             for (i in game.movementDirs.indices) {

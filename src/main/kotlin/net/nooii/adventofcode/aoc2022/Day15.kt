@@ -105,14 +105,14 @@ class Day15 {
             val merged = mutableListOf<IntRange>()
             var current: IntRange? = null
             for ((i, range) in ranges.withIndex()) {
-                when {
-                    current == null -> current = range
+                current = when {
+                    current == null -> range
                     i < ranges.size - 1 && range.first in current || current.last == range.first -> {
-                        current = IntRange(min(current.first, range.first), max(current.last, range.last))
+                        IntRange(min(current.first, range.first), max(current.last, range.last))
                     }
                     else -> {
                         merged.add(current)
-                        current = range
+                        range
                     }
                 }
             }

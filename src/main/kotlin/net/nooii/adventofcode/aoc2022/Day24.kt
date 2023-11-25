@@ -98,7 +98,7 @@ class Day24 {
                     if (state.point == to) {
                         return time
                     }
-                    for (dir in PointDirection.values()) {
+                    for (dir in PointDirection.entries) {
                         val next = dir.next(state.point)
                         if (next !in area.blizzard && next !in area.walls && next.x in 0 until area.width && next.y in 0 until area.height) {
                             nextStates.add(State(next, phaseX, phaseY))

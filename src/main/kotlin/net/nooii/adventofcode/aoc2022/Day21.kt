@@ -12,7 +12,7 @@ class Day21 {
 
         companion object {
 
-            fun from(sign: String) = values().first { it.sign == sign }
+            fun from(sign: String) = entries.first { it.sign == sign }
         }
     }
 

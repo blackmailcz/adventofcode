@@ -37,7 +37,7 @@ class Day12 {
                 isEnd = { _, item -> item == area.end },
                 itemDistance = { 1 },
                 nextItems = { current ->
-                    PointDirection.values().mapNotNull { direction ->
+                    PointDirection.entries.mapNotNull { direction ->
                         direction.next(current).takeIf { isValidMove(area, current, it) }
                     }
                 }
