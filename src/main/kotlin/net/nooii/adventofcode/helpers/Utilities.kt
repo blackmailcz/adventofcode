@@ -101,6 +101,13 @@ fun <T> Regex.captureFirstMatch(input: String, transform: (String) -> T): List<T
 }
 
 /**
+ * Returns all captures from target [String] based on this [Regex].
+ */
+fun Regex.captureFirstMatch(input: String): List<String> {
+    return captureFirstMatch(input) { it }
+}
+
+/**
  * Computes difference between two points represented by a point.
  */
 fun Point.diff(other: Point): Point {

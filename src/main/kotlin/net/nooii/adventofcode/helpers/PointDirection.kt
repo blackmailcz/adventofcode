@@ -41,5 +41,15 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int) {
                 else -> throw IllegalArgumentException("Invalid direction ($letter)")
             }
         }
+
+        fun fromArrow(arrow: String): PointDirection {
+            return when(arrow) {
+                ">" -> RIGHT
+                "<" -> LEFT
+                "v" -> DOWN
+                "^" -> UP
+                else -> throw IllegalArgumentException("Invalid direction ($arrow)")
+            }
+        }
     }
 }
