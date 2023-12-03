@@ -11,4 +11,8 @@ class PointMap<T: Any>(
     override fun get(key: Point): T {
         return underlying[key]!!
     }
+
+    fun isInRange(point: Point): Boolean {
+        return point.x in 0 until width && point.y in 0 until height
+    }
 }
