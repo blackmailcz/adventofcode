@@ -2,6 +2,7 @@ package net.nooii.adventofcode.helpers
 
 import java.awt.Point
 import kotlin.math.abs
+import kotlin.math.pow
 
 /**
  * Finds all elements presents in all provided sets.
@@ -180,3 +181,13 @@ fun gcd(a: Int, b: Int): Int {
     }
     return aa
 }
+
+/**
+ * Raises this value to the integer power [exponent].
+ */
+infix fun Int.pow(exponent: Int) = this.toDouble().pow(exponent).toInt()
+
+/**
+ * Raises this value to the integer power [exponent].
+ */
+infix fun Long.pow(exponent: Int) = this.toDouble().pow(exponent).toLong()
