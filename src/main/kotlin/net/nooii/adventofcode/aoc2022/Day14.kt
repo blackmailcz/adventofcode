@@ -84,7 +84,7 @@ class Day14 {
 
         private fun addPath(map: MutableMap<Point, Tile>, line: String) {
             val path = line.split(" -> ").map { coordinates ->
-                val (x, y) = coordinates.splitToPair(",") { it.toInt() }
+                val (x, y) = coordinates.split(",").map { it.toInt() }
                 Point(x, y)
             }
             path.windowed(2, 1).forEach { (from, to) ->

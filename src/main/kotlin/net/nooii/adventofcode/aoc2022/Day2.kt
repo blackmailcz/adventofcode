@@ -3,7 +3,6 @@ package net.nooii.adventofcode.aoc2022
 import net.nooii.adventofcode.aoc2022.Day2.RPS.*
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.splitToPair
 
 class Day2 {
 
@@ -55,7 +54,7 @@ class Day2 {
 
         private fun part1(input: List<String>) {
             val rounds = input.map { line ->
-                val (opponentSymbol, yourSymbol) = line.splitToPair(" ")
+                val (opponentSymbol, yourSymbol) = line.split(" ")
                 val opponent = parseOpponent(opponentSymbol)
                 val you = when (yourSymbol) {
                     "X" -> ROCK
@@ -70,7 +69,7 @@ class Day2 {
 
         private fun part2(input: List<String>) {
             val rounds = input.map { line ->
-                val (opponentSymbol, yourSymbol) = line.splitToPair(" ")
+                val (opponentSymbol, yourSymbol) = line.split(" ")
                 val opponent = parseOpponent(opponentSymbol)
                 val you = when (yourSymbol) {
                     "X" -> opponent.strongAgainst()

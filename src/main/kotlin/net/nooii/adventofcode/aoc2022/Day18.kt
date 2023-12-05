@@ -69,7 +69,7 @@ class Day18 {
 
         private fun parseInput(input: List<String>): Set<Point3D> {
             return input.map { line ->
-                val (x, y, z) = line.splitToTriple(",") { it.toInt() }
+                val (x, y, z) = line.split(",").map { it.toInt() }
                 Point3D(x, y, z)
             }.toSet()
         }

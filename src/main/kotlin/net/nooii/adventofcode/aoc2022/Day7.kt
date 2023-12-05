@@ -2,7 +2,6 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.splitToPair
 
 class Day7 {
 
@@ -138,7 +137,7 @@ class Day7 {
                 if (line.startsWith("$")) {
                     return i - 1
                 } else {
-                    val (size, name) = line.splitToPair(" ")
+                    val (size, name) = line.split(" ")
                     val newItem = if (size == "dir") {
                         FSItem.Directory(name, directory)
                     } else {

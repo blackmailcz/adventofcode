@@ -3,7 +3,6 @@ package net.nooii.adventofcode.aoc2022
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
 import net.nooii.adventofcode.helpers.product
-import net.nooii.adventofcode.helpers.splitToPair
 
 class Day11 {
 
@@ -50,7 +49,7 @@ class Day11 {
         private fun parseInput(input: List<String>): List<Monkey> {
             return input.plus("").windowed(7, 7).map { lines ->
                 val items = lines[1].trimStart().drop("Starting items: ".length).split(", ").map { it.toLong() }.toMutableList()
-                val operation = lines[2].trimStart().drop("Operation: new = old ".length).splitToPair(" ")
+                val operation = lines[2].trimStart().drop("Operation: new = old ".length).split(" ")
                     .let { (op, opValue) ->
                         { it: Long ->
                             val value = if (opValue == "old") it else opValue.toLong()

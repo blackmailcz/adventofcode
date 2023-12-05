@@ -49,7 +49,7 @@ class Day9 {
         private fun parseInput(input: List<String>): List<PointDirection> {
             val directions = mutableListOf<PointDirection>()
             for (line in input) {
-                val (direction, step) = line.splitToPair(" ")
+                val (direction, step) = line.split(" ")
                 repeat(step.toInt()) {
                     directions += PointDirection.fromLetter(direction)
                 }

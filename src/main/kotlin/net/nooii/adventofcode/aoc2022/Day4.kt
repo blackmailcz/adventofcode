@@ -2,7 +2,7 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.splitToPair
+import net.nooii.adventofcode.helpers.overlaps
 
 class Day4 {
 
@@ -16,7 +16,7 @@ class Day4 {
         }
 
         fun partiallyOverlap(): Boolean {
-            return r1.first in r2 || r1.last in r2 || r2.first in r1 || r2.last in r1
+            return r1.overlaps(r2)
         }
     }
 
@@ -40,13 +40,13 @@ class Day4 {
 
         private fun parseInput(input: List<String>): List<RangePair> {
             return input.map { line ->
-                val (r1, r2) = line.splitToPair(",") { parseElfRange(it) }
+                val (r1, r2) = line.split(",").map { parseElfRange(it) }
                 RangePair(r1, r2)
             }
         }
 
         private fun parseElfRange(elfRange: String): IntRange {
-            val (from, toInclusive) = elfRange.splitToPair("-") { it.toInt() }
+            val (from, toInclusive) = elfRange.split("-").map { it.toInt() }
             return IntRange(from, toInclusive)
         }
     }
