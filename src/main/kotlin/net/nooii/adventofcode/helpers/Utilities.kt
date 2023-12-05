@@ -2,6 +2,8 @@ package net.nooii.adventofcode.helpers
 
 import java.awt.Point
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 
 /**
@@ -141,7 +143,29 @@ fun IntRange.size() = last - first + 1
  * Compute if two ranges overlap. More effective than [IntRange.intersect].
  */
 fun IntRange.overlaps(range: IntRange): Boolean {
-    return range.first in this || range.last in this
+    return range.first in this || range.last in this || first in range || last in range
+}
+
+/**
+ * Computes size of LongRange. More effective than [LongRange.count].
+ */
+fun LongRange.size(): Long = last - first + 1
+
+/**
+ * Compute if two ranges overlap. More effective than [LongRange.intersect].
+ */
+fun LongRange.overlaps(range: LongRange): Boolean {
+    return range.first in this || range.last in this || first in range || last in range
+}
+
+/**
+ * Computes intersection of two ranges. Ranges must overlap [overlaps]. More effective than [LongRange.intersect].
+ */
+fun LongRange.fastIntersect(range: LongRange): LongRange {
+    if (!this.overlaps(range)) {
+        throw IllegalArgumentException("Ranges do not overlap")
+    }
+    return LongRange(max(first, range.first), min(last, range.last))
 }
 
 /**
