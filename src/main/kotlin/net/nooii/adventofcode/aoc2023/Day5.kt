@@ -57,7 +57,7 @@ class Day5 {
                             // Intersection found
                             val intersection = remaining.fastIntersect(shift.srcRange)
                             val from = shift.dst + (intersection.first - shift.src)
-                            // "to" is exclusive here, we only map ${intersection.size()} elements.
+                            // We only map ${intersection.size()} elements (that's why -1, because ranges are inclusive)
                             val to = from + intersection.size() - 1
                             // Shift the intersection to the destination range
                             nextSeedRanges.add(LongRange(from, to))
