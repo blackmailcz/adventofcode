@@ -65,18 +65,18 @@ class Day7 {
 
         private fun part2(hands: List<Hand>) {
             val newHands = hands.map { hand ->
+                // Find jokers and mark their indexes, they will have lower priority in sorting
                 val jokerIndices = hand.hand.indices.filter { hand.hand[it] == 'J' }.toSet()
-                // Find the symbol with the highest occurrence and add n to it, where n is the number of jokers
-                val charMap = createCharMap(hand.hand).toMutableMap()
-                charMap.remove('J')
-                charMap.add(charMap.maxByOrNull { it.value }?.key ?: 'A', jokerIndices.size)
-                val type = computeHandType(charMap)
-                Hand(
-                    hand.hand,
-                    type,
-                    hand.bet,
-                    jokerIndices
-                )
+                if (jokerIndices.isNotEmpty()) {
+                    // Find the symbol with the highest occurrence and add n to it, where n is the number of jokers
+                    val charMap = createCharMap(hand.hand)
+                    charMap.remove('J')
+                    charMap.add(charMap.maxByOrNull { it.value }?.key ?: 'A', jokerIndices.size)
+                    val type = computeHandType(charMap)
+                    Hand(hand.hand, type, hand.bet, jokerIndices)
+                } else {
+                    hand
+                }
             }
             computeScore(newHands.sorted())
         }
@@ -89,16 +89,12 @@ class Day7 {
             println(sum)
         }
 
-        private fun createCharMap(hand: String): Map<Char, Int> {
+        private fun createCharMap(hand: String): MutableMap<Char, Int> {
             val map = mutableMapOf<Char, Int>()
             for (symbol in hand) {
                 map.add(symbol, 1)
             }
             return map
-        }
-
-        private fun computeHandType(hand: String): HandType {
-            return computeHandType(createCharMap(hand))
         }
 
         private fun computeHandType(charMap: Map<Char, Int>): HandType {
@@ -118,7 +114,7 @@ class Day7 {
         private fun processInput(input: List<String>): List<Hand> {
             return input.map {
                 val (hand, bet) = it.split(" ")
-                Hand(hand, computeHandType(hand), bet.toInt())
+                Hand(hand, computeHandType(createCharMap(hand)), bet.toInt())
             }
         }
     }
