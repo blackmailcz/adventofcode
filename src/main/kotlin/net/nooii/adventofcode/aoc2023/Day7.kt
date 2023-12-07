@@ -16,9 +16,7 @@ class Day7 {
 
         companion object {
 
-            private val symbolPriority = listOf(
-                '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'
-            )
+            private const val PRIORITIES = "23456789TJQKA"
         }
 
         override fun compareTo(other: Hand): Int {
@@ -27,8 +25,8 @@ class Day7 {
                 return typeComparison
             } else {
                 for (c in hand.indices) {
-                    val thisPriority = if (c in jokerIndices) -1 else symbolPriority.indexOf(hand[c])
-                    val otherPriority = if (c in other.jokerIndices) -1 else symbolPriority.indexOf(other.hand[c])
+                    val thisPriority = if (c in jokerIndices) -1 else PRIORITIES.indexOf(hand[c])
+                    val otherPriority = if (c in other.jokerIndices) -1 else PRIORITIES.indexOf(other.hand[c])
                     val charComparison = thisPriority.compareTo(otherPriority)
                     if (charComparison != 0) {
                         return charComparison
@@ -71,6 +69,7 @@ class Day7 {
                     // Find the symbol with the highest occurrence and add n to it, where n is the number of jokers
                     val charMap = createCharMap(hand.hand)
                     charMap.remove('J')
+                    // Default key "A" (the highest possible), in case there are five jokers
                     charMap.add(charMap.maxByOrNull { it.value }?.key ?: 'A', jokerIndices.size)
                     val type = computeHandType(charMap)
                     Hand(hand.hand, type, hand.bet, jokerIndices)
