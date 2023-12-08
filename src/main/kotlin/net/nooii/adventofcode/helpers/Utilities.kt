@@ -159,13 +159,22 @@ fun List<String>.splitByEmptyLine() = splitBy { it == "" }
 /**
  * Finds the Greatest Common Divisor of two numbers.
  */
-fun gcd(a: Int, b: Int): Int {
-    var aa = a
-    var bb = b
-    while (aa != bb) {
-        if (aa > bb) aa -= bb else bb -= aa
-    }
-    return aa
+fun gcd(x: Long, y: Long): Long {
+    return if (y == 0L) x else gcd(y, x % y)
+}
+
+/**
+ * Finds the Greatest Common Divisor of collection of [numbers].
+ */
+fun gcd(numbers: Collection<Long>): Long {
+    return numbers.toSet().fold(0) { x, y -> gcd(x, y) }
+}
+
+/**
+ * Finds the Least Common Multiple of collection of [numbers].
+ */
+fun lcm(numbers: Collection<Long>): Long {
+    return numbers.toSet().fold(1) { x, y -> x * (y / gcd(x, y)) }
 }
 
 /**
