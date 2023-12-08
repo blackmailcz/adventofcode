@@ -56,7 +56,7 @@ class Day15 {
                 ingredients.indices.sumOf { ingredients[it].flavor * state[it] }.takeIf { it > 0 },
                 ingredients.indices.sumOf { ingredients[it].texture * state[it] }.takeIf { it > 0 }
             )
-            return output.product().takeIf { it > 0 } ?: 0
+            return output.product()
         }
 
         private fun computeCalories(ingredients: List<Ingredient>, state: List<Long>): Long {
@@ -64,8 +64,7 @@ class Day15 {
         }
 
         private fun processInput(input: List<String>): List<Ingredient> {
-            val regex =
-                Regex("(\\w+): capacity (-?\\d+), durability (-?\\d+), flavor (-?\\d+), texture (-?\\d+), calories (-?\\d+)")
+            val regex = Regex("(\\w+): capacity (-?\\d+), durability (-?\\d+), flavor (-?\\d+), texture (-?\\d+), calories (-?\\d+)")
             return input.map { line ->
                 // No "component 6" - cannot destruct
                 val data = regex.captureFirstMatch(line)
