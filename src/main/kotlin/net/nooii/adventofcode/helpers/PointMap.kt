@@ -16,3 +16,9 @@ class PointMap<T: Any>(
         return point.x in 0 until width && point.y in 0 until height
     }
 }
+
+fun <T : Any> PointMap<T>.copy(): PointMap<T> {
+    return PointMap<T>(this.width, this.height).also {
+        it.putAll(this)
+    }
+}
