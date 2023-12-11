@@ -2,11 +2,11 @@ package net.nooii.adventofcode.helpers
 
 import java.awt.Point
 
-enum class PointDirection(val xDiff: Int, val yDiff: Int) {
-    UP(0, -1),
-    DOWN(0, 1),
-    LEFT(-1, 0),
-    RIGHT(1, 0);
+enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
+    UP(0, -1, Axis.VERTICAL),
+    DOWN(0, 1, Axis.VERTICAL),
+    LEFT(-1, 0, Axis.HORIZONTAL),
+    RIGHT(1, 0, Axis.HORIZONTAL);
 
     fun next(point: Point, step: Int = 1): Point {
         return Point(point.x + xDiff * step, point.y + yDiff * step)
@@ -27,6 +27,15 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int) {
             LEFT -> DOWN
             DOWN -> RIGHT
             RIGHT -> UP
+        }
+    }
+
+    fun mirror(): PointDirection {
+        return when (this) {
+            UP -> DOWN
+            DOWN -> UP
+            LEFT -> RIGHT
+            RIGHT -> LEFT
         }
     }
 
