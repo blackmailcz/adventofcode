@@ -177,6 +177,25 @@ fun lcm(numbers: Collection<Long>): Long {
     return numbers.toSet().fold(1) { x, y -> x * (y / gcd(x, y)) }
 }
 
+fun Long.factors(): List<Long> {
+    return ((1..this/2).asSequence().filter { this % it == 0L } + this).toList()
+}
+
+fun Long.primeFactors(primeCache: List<Long>): Map<Long, Int> {
+    val primeFactors = mutableMapOf<Long, Int>()
+    var number = this
+    while (number > 1) {
+        for (prime in primeCache) {
+            if (number % prime == 0L) {
+                primeFactors[prime] = (primeFactors[prime]?: 0) + 1
+                number /= prime
+                break
+            }
+        }
+    }
+    return primeFactors
+}
+
 /**
  * Raises this value to the integer power [exponent].
  */
