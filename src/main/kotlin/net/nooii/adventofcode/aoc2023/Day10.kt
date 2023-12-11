@@ -79,7 +79,7 @@ class Day10 {
             // Save visited points
             val visited = mutableSetOf<Point>()
             // Save visited tunnel entrances
-            val closedEntrances = mutableSetOf<Set<Point>>()
+            val closedEntrances = mutableSetOf<Entrance>()
             while (points.isNotEmpty()) {
                 val nextPoints = mutableSetOf<Point>()
                 for (point in points) {
@@ -97,69 +97,9 @@ class Day10 {
                             in visited -> continue
                             !in mainLoop -> nextPoints.add(nextPoint)
                             else -> {
-                                val pipe = pipeMap[nextPoint]!!
-                                if (direction in pipe.pipeType.entranceDirections) {
-                                    var entrances = mutableSetOf<Entrance>()
-                                    // Check if CW point in the given direction contains entrance
-                                    val cwPoint = direction.rotateCW().next(pipe.point)
-                                    if (pipeMap.containsKey(cwPoint) && isTunnelAccessible(listOf(pipe, pipeMap[cwPoint]!!), direction)) {
-                                        entrances.add(Entrance(setOf(nextPoint, cwPoint), direction))
-                                    }
-                                    // Check if CCW point in the given direction contains entrance
-                                    val ccwPoint = direction.rotateCCW().next(pipe.point)
-                                    if (pipeMap.containsKey(ccwPoint) && isTunnelAccessible(listOf(pipeMap[ccwPoint]!!, pipe), direction)) {
-                                        entrances.add(Entrance(setOf(nextPoint, ccwPoint), direction))
-                                    }
-                                    // Iterate discovered entrances
-                                    while (entrances.isNotEmpty()) {
-                                        val nextEntrances = mutableSetOf<Entrance>()
-                                        for (entrance in entrances) {
-                                            if (entrance.points in closedEntrances) {
-                                                // Entrance is closed
-                                                continue
-                                            }
-                                            // Move to a next "tunnel" point
-                                            val nextEntrancePoints = entrance.points.map { entrance.direction.next(it) }
-                                            // Check if we exit the tunnel into free point
-                                            if (nextEntrancePoints.any { !pipeMap.containsKey(it) }) {
-                                                // Collect all free points at the end of the tunnel
-                                                for (freePoint in nextEntrancePoints.filter { !pipeMap.containsKey(it) }) {
-                                                    nextPoints.add(freePoint)
-                                                }
-                                                // If there are any other entrances created by leaving the tunnel, they will be discovered later
-                                            } else {
-                                                // Move in the tunnel
-                                                val straightEntrancePipes = entrance.points.map { pipeMap[entrance.direction.next(it)]!! }
-                                                // Straight
-                                                if (isTunnelAccessible(straightEntrancePipes, entrance.direction)) {
-                                                    nextEntrances.add(Entrance(nextEntrancePoints.toSet(), entrance.direction))
-                                                }
-                                                // Move to sides
-                                                val (ep1, ep2) = entrance.points.map { pipeMap[it]!! }
-                                                // Move to side #1
-                                                val sideDir1 = ep1.pipeType.entranceDirections.find { it.axis != entrance.direction.axis }
-                                                if (sideDir1 != null) {
-                                                    val nep1 = pipeMap[entrance.direction.next(ep1.point)]!!
-                                                    if (isTunnelAccessible(setOf(ep1, nep1), sideDir1)) {
-                                                        nextEntrances.add(Entrance(setOf(ep1.point, nep1.point), sideDir1))
-                                                    }
-                                                }
-                                                // Move to side #2
-                                                val sideDir2 = ep2.pipeType.entranceDirections.find { it.axis != entrance.direction.axis }
-                                                if (sideDir2 != null) {
-                                                    val nep2 = pipeMap[entrance.direction.next(ep2.point)]!!
-                                                    if (isTunnelAccessible(setOf(ep2, nep2), sideDir2)) {
-                                                        nextEntrances.add(Entrance(setOf(ep2.point, nep2.point), sideDir2))
-                                                    }
-                                                }
-                                            }
-                                            // Close entrance
-                                            closedEntrances.add(entrance.points)
-                                        }
-                                        // Update entrances
-                                        entrances = nextEntrances
-                                    }
-                                }
+                                val entrances = findInitialEntrances(nextPoint, direction, pipeMap)
+                                // Process entrances and add collected points
+                                nextPoints.addAll(processEntrances(entrances, closedEntrances, pipeMap))
                             }
                         }
                     }
@@ -176,6 +116,85 @@ class Day10 {
                 }
             }
             println(sum)
+        }
+
+        private fun findInitialEntrances(
+            nextPoint: Point,
+            direction: PointDirection,
+            pipeMap: Map<Point, Pipe>
+        ): Set<Entrance> {
+            val pipe = pipeMap[nextPoint]!!
+            val entrances = mutableSetOf<Entrance>()
+            // Check if CW point in the given direction contains entrance
+            val cwPoint = direction.rotateCW().next(pipe.point)
+            if (pipeMap.containsKey(cwPoint) && isTunnelAccessible(listOf(pipe, pipeMap[cwPoint]!!), direction)) {
+                entrances.add(Entrance(setOf(nextPoint, cwPoint), direction))
+            }
+            // Check if CCW point in the given direction contains entrance
+            val ccwPoint = direction.rotateCCW().next(pipe.point)
+            if (pipeMap.containsKey(ccwPoint) && isTunnelAccessible(listOf(pipeMap[ccwPoint]!!, pipe), direction)) {
+                entrances.add(Entrance(setOf(nextPoint, ccwPoint), direction))
+            }
+            return entrances
+        }
+
+        private fun processEntrances(
+            initialEntrances: Set<Entrance>,
+            closedEntrances: MutableSet<Entrance>,
+            pipeMap: Map<Point, Pipe>
+        ): Set<Point> {
+            val output = mutableSetOf<Point>()
+            var entrances = initialEntrances
+            // Iterate discovered entrances
+            while (entrances.isNotEmpty()) {
+                val nextEntrances = mutableSetOf<Entrance>()
+                for (entrance in entrances) {
+                    if (entrance in closedEntrances) {
+                        // Entrance is closed
+                        continue
+                    }
+                    // Move to a next "tunnel" point
+                    val nextEntrancePoints = entrance.points.map { entrance.direction.next(it) }
+                    // Check if we exit the tunnel into free point
+                    if (nextEntrancePoints.any { !pipeMap.containsKey(it) }) {
+                        // Collect all free points at the end of the tunnel
+                        for (freePoint in nextEntrancePoints.filter { !pipeMap.containsKey(it) }) {
+                            output.add(freePoint)
+                        }
+                        // If there are any other entrances created by leaving the tunnel, they will be discovered later
+                    } else {
+                        // Move in the tunnel
+                        val straightEntrancePipes = entrance.points.map { pipeMap[entrance.direction.next(it)]!! }
+                        // Straight
+                        if (isTunnelAccessible(straightEntrancePipes, entrance.direction)) {
+                            nextEntrances.add(Entrance(nextEntrancePoints.toSet(), entrance.direction))
+                        }
+                        // Move to sides
+                        val (entrancePipe1, entrancePipe2) = entrance.points.map { pipeMap[it]!! }
+                        // Move to side #1
+                        val sideDir1 = entrancePipe1.pipeType.entranceDirections.find { it.axis != entrance.direction.axis }
+                        if (sideDir1 != null) {
+                            val nextEntrancePipe1 = pipeMap[entrance.direction.next(entrancePipe1.point)]!!
+                            if (isTunnelAccessible(setOf(entrancePipe1, nextEntrancePipe1), sideDir1)) {
+                                nextEntrances.add(Entrance(setOf(entrancePipe1.point, nextEntrancePipe1.point), sideDir1))
+                            }
+                        }
+                        // Move to side #2
+                        val sideDir2 = entrancePipe2.pipeType.entranceDirections.find { it.axis != entrance.direction.axis }
+                        if (sideDir2 != null) {
+                            val nextEntrancePipe2 = pipeMap[entrance.direction.next(entrancePipe2.point)]!!
+                            if (isTunnelAccessible(setOf(entrancePipe2, nextEntrancePipe2), sideDir2)) {
+                                nextEntrances.add(Entrance(setOf(entrancePipe2.point, nextEntrancePipe2.point), sideDir2))
+                            }
+                        }
+                    }
+                    // Close entrance
+                    closedEntrances.add(entrance)
+                }
+                // Update entrances
+                entrances = nextEntrances
+            }
+            return output
         }
 
         private fun isTunnelAccessible(pipes: Collection<Pipe>, direction: PointDirection): Boolean {
