@@ -1,9 +1,6 @@
 package net.nooii.adventofcode.aoc2016
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.add
-import net.nooii.adventofcode.helpers.captureFirstMatch
+import net.nooii.adventofcode.helpers.*
 import java.util.SortedSet
 
 class Day4 {
@@ -67,7 +64,7 @@ class Day4 {
             return if (char == '-') {
                 ' '
             } else {
-                ((char.code - 'a'.code + room.sectorId) % 26 + 'a'.code).toChar()
+                CryptoTool.lowercaseCaesar(char, room.sectorId)
             }
         }
 

@@ -1,9 +1,8 @@
 package net.nooii.adventofcode.aoc2015
 
 import net.nooii.adventofcode.helpers.AoCYear
+import net.nooii.adventofcode.helpers.CryptoTool
 import net.nooii.adventofcode.helpers.InputLoader
-import java.math.BigInteger
-import java.security.MessageDigest
 
 class Day4 {
 
@@ -28,14 +27,9 @@ class Day4 {
             var i = 0
             do {
                 i++
-                val hash = md5hash("$inputPrefix$i")
+                val hash = CryptoTool.md5hash("$inputPrefix$i")
             } while (!hash.startsWith(requiredHashPrefix))
             println(i)
-        }
-
-        private fun md5hash(string: String): String {
-            val md = MessageDigest.getInstance("MD5")
-            return BigInteger(1, md.digest(string.toByteArray())).toString(16).padStart(32, '0')
         }
     }
 }
