@@ -74,12 +74,12 @@ class Day8 {
         private fun processInput(input: List<String>): Network {
             val sequence = input.first()
             val regex = Regex("(\\S+) = \\((\\S+), (\\S+)\\)")
-            val nodes = mutableMapOf<String, Node>()
+            val nodes = mutableNNMapOf<String, Node>()
             for (line in input.drop(2)) {
                 val (value, left, right) = regex.captureFirstMatch(line)
                 nodes[value] = Node(left, right)
             }
-            return Network(sequence, nodes.toImmutable())
+            return Network(sequence, nodes)
         }
     }
 }

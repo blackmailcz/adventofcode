@@ -68,7 +68,7 @@ class Day5 {
             val instructions = input.drop(emptyLine + 1).map {
                 parseInstruction(it)
             }
-            return Crane(stacks.toImmutable(), instructions)
+            return Crane(stacks.nn(), instructions)
         }
 
         private fun parseBoxLineAndAddBoxes(line: String, stacks: MutableMap<Int, Stack<Char>>) {

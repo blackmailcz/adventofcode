@@ -50,7 +50,7 @@ class Day12 {
         }
 
         private fun parseInput(input: List<String>): Area {
-            val map = mutableMapOf<Point, Int>()
+            val map = mutableNNMapOf<Point, Int>()
             var start: Point? = null
             var end: Point? = null
             for ((y, line) in input.withIndex()) {
@@ -65,7 +65,7 @@ class Day12 {
                 }
             }
             return Area(
-                map.toImmutable(),
+                map,
                 start ?: error("No start"),
                 end ?: error("No end")
             )

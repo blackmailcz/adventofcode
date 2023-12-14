@@ -30,9 +30,7 @@ data class MutableNNMap<K : Any, V : Any>(
         get() = underlying.values
 }
 
-fun <K : Any, V : Any> MutableMap<K, V>.nn() = MutableNNMap(this)
-
-fun <K : Any, V : Any> MutableMap<K, V>.toImmutable() = toMap().nn()
+fun <K : Any, V : Any> MutableMap<K, V>.nn(): MutableNNMap<K, V> = MutableNNMap(this)
 
 fun <K: Any, V: Any> mutableNNMapOf(): MutableNNMap<K, V> = mutableMapOf<K, V>().nn()
 
@@ -52,8 +50,6 @@ open class NNMap<K : Any, V : Any>(
 }
 
 fun <K : Any, V : Any> Map<K, V>.nn() = NNMap(this)
-
-fun <K : Any, V : Any> Map<K, V>.toMutable() = toMutableMap().nn()
 
 fun <K: Any, V: Any> nnMapOf(): NNMap<K, V> = mapOf<K, V>().nn()
 

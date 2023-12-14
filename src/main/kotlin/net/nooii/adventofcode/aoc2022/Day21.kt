@@ -175,7 +175,7 @@ class Day21 {
                     }
                     else -> error("Unknown line")
                 }
-            }.toMutable()
+            }.toMutableMap().nn()
         }
     }
 }
