@@ -58,7 +58,7 @@ class Day14 {
                     val cycleSize = i - states[state]!!
                     i = max - (max - i) % cycleSize
                 } else {
-                    states.add(state, i)
+                    states[state] = i
                     i++
                 }
             }
@@ -81,7 +81,7 @@ class Day14 {
                         break
                     }
                     if (candidate in area.rocks) {
-                        nextRocks.add(Point(blocker.x + i * scanDirection.xDiff, blocker.y + i * scanDirection.yDiff))
+                        nextRocks.add(scanDirection.next(blocker, i))
                         i++
                     }
                     point = candidate
