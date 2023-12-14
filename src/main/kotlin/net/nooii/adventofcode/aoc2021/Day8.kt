@@ -42,10 +42,10 @@ class Day8 {
 
         private fun decodeSegments(pattern: Pattern): NNMap<Segment, Char> {
             val map = MutableNNMap<Segment, Char>()
-            val one = pattern.hints.find { it.length == 2 }!!
-            val seven = pattern.hints.find { it.length == 3 }!!
-            val four = pattern.hints.find { it.length == 4 }!!
-            val eight = pattern.hints.find { it.length == 7 }!!
+            val one = pattern.hints.first { it.length == 2 }
+            val seven = pattern.hints.first { it.length == 3 }
+            val four = pattern.hints.first { it.length == 4 }
+            val eight = pattern.hints.first { it.length == 7 }
             // Start by finding top segment
             map[TOP] = getMissingSegment(seven, *one.toCharArray())
             // Then find 6 in {0, 6, 9} because it contains only one part of 1. => finds bottom right
@@ -96,7 +96,7 @@ class Day8 {
         }
 
         private fun getMissingSegmentFromList(patterns: List<String>, vararg segments: Char): Char {
-            val number = patterns.find { it.toList().containsAll(segments.toList()) }!!
+            val number = patterns.first { it.toList().containsAll(segments.toList()) }
             return getMissingSegment(number, *segments)
         }
 
@@ -105,7 +105,7 @@ class Day8 {
         }
 
         private fun getBottomRight(patternsOfSizeSix: List<String>, one: String): Char {
-            val six = patternsOfSizeSix.find { !(it.contains(one[0]) && it.contains(one[1])) }!!
+            val six = patternsOfSizeSix.first { !(it.contains(one[0]) && it.contains(one[1])) }
             return if (six.contains(one[0])) one[0] else one[1]
         }
 

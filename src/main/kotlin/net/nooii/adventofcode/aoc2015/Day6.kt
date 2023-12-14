@@ -1,9 +1,6 @@
 package net.nooii.adventofcode.aoc2015
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.add
-import net.nooii.adventofcode.helpers.captureFirstMatch
+import net.nooii.adventofcode.helpers.*
 import java.awt.Point
 
 class Day6 {
@@ -59,14 +56,14 @@ class Day6 {
         }
 
         private fun part2(rectangles: List<Rectangle>) {
-            val brightness = mutableMapOf<Point, Long>()
+            val brightness = mutableNNMapOf<Point, Long>()
             for (rectangle in rectangles) {
                 for (point in rectangle.generatePoints()) {
                     when (rectangle.action) {
                         Action.ON -> brightness.add(point, 1L)
                         Action.OFF -> {
                             brightness.add(point, -1L)
-                            if (brightness[point]!! < 0) {
+                            if (brightness[point] < 0) {
                                 brightness[point] = 0
                             }
                         }

@@ -50,9 +50,9 @@ class Day1 {
             val literal = when (this) {
                 in literals.keys -> literals[this]!!
                 in literals.values -> this
-                else -> null
+                else -> error("Invalid literal: $this")
             }
-            return literal!!.first()
+            return literal.first()
         }
     }
 }

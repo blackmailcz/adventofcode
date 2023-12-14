@@ -137,8 +137,8 @@ class Day16 {
                     when (packet.header.type) {
                         0 -> values.sum()
                         1 -> values.reduce(Long::times)
-                        2 -> values.minOrNull()!!
-                        3 -> values.maxOrNull()!!
+                        2 -> values.min()
+                        3 -> values.max()
                         5 -> (values[0] > values[1]).toLong()
                         6 -> (values[0] < values[1]).toLong()
                         7 -> (values[0] == values[1]).toLong()

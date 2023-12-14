@@ -61,7 +61,7 @@ class Day21 {
 
             fun isOver() = p1.isWinner() || p2.isWinner()
 
-            fun getLoser() = setOf(p1, p2).minByOrNull { it.score }!!
+            fun getLoser() = setOf(p1, p2).minBy { it.score }
         }
 
         fun solution(p1position: Int, p2position: Int) {

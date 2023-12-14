@@ -1,8 +1,6 @@
 package net.nooii.adventofcode.aoc2015
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.captureFirstMatch
+import net.nooii.adventofcode.helpers.*
 
 class Day16 {
 
@@ -22,15 +20,15 @@ class Day16 {
             val input = InputLoader(AoCYear.AOC_2015).loadStrings("Day16Input")
             val sues = processInput(input)
             val message = InputLoader(AoCYear.AOC_2015).loadStrings("Day16Message")
-            val messageThings = message.associate { parseThing(it) }
+            val messageThings = message.associate { parseThing(it) }.nn()
             part1(sues, messageThings)
             part2(sues, messageThings)
         }
 
-        private fun part1(sues: List<Sue>, messageThings: Map<Thing, Int>) {
+        private fun part1(sues: List<Sue>, messageThings: NNMap<Thing, Int>) {
             val validSues = sues.filter { sue ->
                 for ((thing, count) in sue.things) {
-                    if (messageThings.containsKey(thing) && count != messageThings[thing]!!) {
+                    if (messageThings.containsKey(thing) && count != messageThings[thing]) {
                         return@filter false
                     }
                 }

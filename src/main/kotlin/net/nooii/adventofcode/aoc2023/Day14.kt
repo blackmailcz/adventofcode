@@ -45,7 +45,7 @@ class Day14 {
 
         private fun part2(area: Area, blockersMap: NNMap<PointDirection, Set<Point>>) {
             val spin = listOf(UP, LEFT, DOWN, RIGHT)
-            val states = mutableMapOf<State, Long>()
+            val states = mutableNNMapOf<State, Long>()
             var i = 0L
             val max = 1_000_000_000L * spin.size
             var repetitionFound = false
@@ -55,7 +55,7 @@ class Day14 {
                 val state = State(direction, area.rocks)
                 if (!repetitionFound && states.containsKey(state)) {
                     repetitionFound = true
-                    val cycleSize = i - states[state]!!
+                    val cycleSize = i - states[state]
                     i = max - (max - i) % cycleSize
                 } else {
                     states[state] = i

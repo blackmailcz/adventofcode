@@ -44,6 +44,10 @@ open class NNMap<K : Any, V : Any>(
 
     override fun get(key: K): V = underlying[key]!!
 
+    override fun getOrDefault(key: K, defaultValue: V): V {
+        return if (key in this) get(key) else defaultValue
+    }
+
     open operator fun contains(key: K): Boolean = underlying.containsKey(key)
 
     override fun containsKey(key: K) = contains(key)
