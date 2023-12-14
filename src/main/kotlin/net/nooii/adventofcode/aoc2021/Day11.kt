@@ -1,8 +1,6 @@
 package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
+import net.nooii.adventofcode.helpers.*
 import java.awt.Point
 
 /**
@@ -19,11 +17,11 @@ class Day11 {
             part2(processInput(input))
         }
 
-        private fun part1(map: NonNullMap<Point, Int>) {
+        private fun part1(map: MutableNNMap<Point, Int>) {
             println(IntRange(1, 100).sumOf { processStep(map) })
         }
 
-        private fun part2(map: NonNullMap<Point, Int>) {
+        private fun part2(map: MutableNNMap<Point, Int>) {
             var steps = 0
             do {
                 steps++
@@ -31,7 +29,7 @@ class Day11 {
             println(steps)
         }
 
-        private fun processStep(map: NonNullMap<Point, Int>): Int {
+        private fun processStep(map: MutableNNMap<Point, Int>): Int {
             val flashed = mutableSetOf<Point>()
             for (point in map.keys) {
                 inc(point, map, flashed)
@@ -39,7 +37,7 @@ class Day11 {
             return flashed.size
         }
 
-        private fun flash(point: Point, map: NonNullMap<Point, Int>, flashed: MutableSet<Point>) {
+        private fun flash(point: Point, map: MutableNNMap<Point, Int>, flashed: MutableSet<Point>) {
             map[point] = 0
             flashed.add(point)
             for (dy in -1..1) {
@@ -51,7 +49,7 @@ class Day11 {
             }
         }
 
-        private fun inc(point: Point, map: NonNullMap<Point, Int>, flashed: MutableSet<Point>) {
+        private fun inc(point: Point, map: MutableNNMap<Point, Int>, flashed: MutableSet<Point>) {
             if (!map.contains(point) || flashed.contains(point)) {
                 return
             }
@@ -61,8 +59,8 @@ class Day11 {
             }
         }
 
-        private fun processInput(input: List<String>): NonNullMap<Point, Int> {
-            val pointMap = NonNullMap<Point, Int>()
+        private fun processInput(input: List<String>): MutableNNMap<Point, Int> {
+            val pointMap = MutableNNMap<Point, Int>()
             for ((y, line) in input.withIndex()) {
                 for ((x, char) in line.withIndex()) {
                     pointMap[Point(x, y)] = char.digitToInt()
@@ -70,7 +68,5 @@ class Day11 {
             }
             return pointMap
         }
-
     }
-
 }

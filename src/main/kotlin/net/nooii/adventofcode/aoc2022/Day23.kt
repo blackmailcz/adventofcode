@@ -2,7 +2,7 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
+import net.nooii.adventofcode.helpers.MutableNNMap
 import net.nooii.adventofcode.helpers.PointDirectionDiagonal
 import net.nooii.adventofcode.helpers.PointDirectionDiagonal.*
 import java.awt.Point
@@ -58,7 +58,7 @@ class Day23 {
         }
 
         private fun round(game: Game) {
-            val proposed = NonNullMap<Point, Point>()
+            val proposed = MutableNNMap<Point, Point>()
             val forbidden = mutableSetOf<Point>()
             val notMoving = mutableSetOf<Point>()
             for (elf in game.elves) {

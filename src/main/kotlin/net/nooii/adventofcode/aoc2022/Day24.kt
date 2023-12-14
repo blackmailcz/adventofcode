@@ -16,11 +16,11 @@ class Day24 {
         val start: Point,
         val end: Point,
         val walls: Set<Point>,
-        var blizzard: NonNullMap<Point, MutableSet<Blizzard>>
+        var blizzard: NNMap<Point, MutableSet<Blizzard>>
     ) {
 
         fun blow() {
-            val nextBlizzard = NonNullMap<Point, MutableSet<Blizzard>>()
+            val nextBlizzard = MutableNNMap<Point, MutableSet<Blizzard>>()
             for ((point, blizzards) in blizzard) {
                 for (blizzard in blizzards) {
                     val next = nextBlizzardPoint(point, blizzard.direction)
@@ -118,7 +118,7 @@ class Day24 {
             val startX = input.first().indexOfFirst { it == '.' }
             val endX = input.last().indexOfFirst { it == '.' }
             val walls = mutableSetOf<Point>()
-            val blizzard = NonNullMap<Point, MutableSet<Blizzard>>()
+            val blizzard = MutableNNMap<Point, MutableSet<Blizzard>>()
             for ((y, line) in input.withIndex()) {
                 for ((x, char) in line.withIndex()) {
                     val point = Point(x, y)
@@ -141,7 +141,7 @@ class Day24 {
                 start = Point(startX, 0),
                 end = Point(endX, input.size - 1),
                 walls = walls,
-                blizzard = blizzard
+                blizzard = blizzard.nn()
             )
         }
 

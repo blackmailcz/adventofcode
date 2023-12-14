@@ -37,8 +37,8 @@ class Day14 {
             println(scores.values.max())
         }
 
-        private fun computeState(time: Int, reindeers: List<Reindeer>): NonNullMap<Reindeer, Int> {
-            val map = NonNullMap<Reindeer, Int>(mutableMapOf())
+        private fun computeState(time: Int, reindeers: List<Reindeer>): NNMap<Reindeer, Int> {
+            val map = mutableNNMapOf<Reindeer, Int>()
             for (reindeer in reindeers) {
                 val cycleTime = reindeer.flyTime + reindeer.restTime
                 val fullDistance = (time / cycleTime) * reindeer.flyTime * reindeer.speed

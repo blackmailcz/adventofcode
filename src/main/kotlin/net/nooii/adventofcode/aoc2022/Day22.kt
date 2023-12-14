@@ -20,8 +20,8 @@ class Day22 {
     private class CubeNet(
         val sideSize: Int,
         val startSide: Int,
-        val pattern: NonNullMap<Int, Point>,
-        val connectionMap: NonNullMap<Int, NonNullMap<PointDirection, CubeConnection>>
+        val pattern: NNMap<Int, Point>,
+        val connectionMap: NNMap<Int, NNMap<PointDirection, CubeConnection>>
     )
 
     private sealed class Instruction {
@@ -34,7 +34,7 @@ class Day22 {
         val id: Int,
         val sideSize: Int,
         val map: PointMap<Boolean>,
-        private val connections: NonNullMap<PointDirection, CubeConnection>
+        private val connections: NNMap<PointDirection, CubeConnection>
     ) {
 
         fun nextWrap(point: Point, direction: PointDirection): Wrap {
@@ -80,7 +80,7 @@ class Day22 {
 
     private class Maze(
         private val cubeNet: CubeNet,
-        private val sides: NonNullMap<Int, CubeSide>,
+        private val sides: NNMap<Int, CubeSide>,
         private val instructions: List<Instruction>,
         private var side: Int,
         private var position: Point,
@@ -156,15 +156,13 @@ class Day22 {
          *      14.
          *      2..
          */
-        private val CUBE_PATTERN = NonNullMap(
-            mutableMapOf(
-                3 to Point(1, 0),
-                6 to Point(2, 0),
-                5 to Point(1, 1),
-                1 to Point(0, 2),
-                4 to Point(1, 2),
-                2 to Point(0, 3)
-            )
+        private val CUBE_PATTERN = nnMapOf(
+            3 to Point(1, 0),
+            6 to Point(2, 0),
+            5 to Point(1, 1),
+            1 to Point(0, 2),
+            4 to Point(1, 2),
+            2 to Point(0, 3)
         )
 
         @JvmStatic
@@ -179,56 +177,42 @@ class Day22 {
                 sideSize = SIDE_SIZE,
                 startSide = START_SIDE,
                 pattern = CUBE_PATTERN,
-                connectionMap = NonNullMap(
-                    mutableMapOf(
-                        1 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(4, RIGHT),
-                                DOWN to CubeConnection(2, UP),
-                                RIGHT to CubeConnection(4, LEFT),
-                                UP to CubeConnection(2, DOWN)
-                            )
-                        ),
-                        2 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(2, RIGHT),
-                                DOWN to CubeConnection(1, UP),
-                                RIGHT to CubeConnection(2, LEFT),
-                                UP to CubeConnection(1, DOWN)
-                            )
-                        ),
-                        3 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(6, RIGHT),
-                                DOWN to CubeConnection(5, UP),
-                                RIGHT to CubeConnection(6, LEFT),
-                                UP to CubeConnection(4, DOWN)
-                            )
-                        ),
-                        4 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(1, RIGHT),
-                                DOWN to CubeConnection(3, UP),
-                                RIGHT to CubeConnection(1, LEFT),
-                                UP to CubeConnection(5, DOWN)
-                            )
-                        ),
-                        5 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(5, RIGHT),
-                                DOWN to CubeConnection(4, UP),
-                                RIGHT to CubeConnection(5, LEFT),
-                                UP to CubeConnection(3, DOWN)
-                            )
-                        ),
-                        6 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(3, RIGHT),
-                                DOWN to CubeConnection(6, UP),
-                                RIGHT to CubeConnection(3, LEFT),
-                                UP to CubeConnection(6, DOWN)
-                            )
-                        )
+                connectionMap = nnMapOf(
+                    1 to nnMapOf(
+                        LEFT to CubeConnection(4, RIGHT),
+                        DOWN to CubeConnection(2, UP),
+                        RIGHT to CubeConnection(4, LEFT),
+                        UP to CubeConnection(2, DOWN)
+                    ),
+                    2 to nnMapOf(
+                        LEFT to CubeConnection(2, RIGHT),
+                        DOWN to CubeConnection(1, UP),
+                        RIGHT to CubeConnection(2, LEFT),
+                        UP to CubeConnection(1, DOWN)
+                    ),
+                    3 to nnMapOf(
+                        LEFT to CubeConnection(6, RIGHT),
+                        DOWN to CubeConnection(5, UP),
+                        RIGHT to CubeConnection(6, LEFT),
+                        UP to CubeConnection(4, DOWN)
+                    ),
+                    4 to nnMapOf(
+                        LEFT to CubeConnection(1, RIGHT),
+                        DOWN to CubeConnection(3, UP),
+                        RIGHT to CubeConnection(1, LEFT),
+                        UP to CubeConnection(5, DOWN)
+                    ),
+                    5 to nnMapOf(
+                        LEFT to CubeConnection(5, RIGHT),
+                        DOWN to CubeConnection(4, UP),
+                        RIGHT to CubeConnection(5, LEFT),
+                        UP to CubeConnection(3, DOWN)
+                    ),
+                    6 to nnMapOf(
+                        LEFT to CubeConnection(3, RIGHT),
+                        DOWN to CubeConnection(6, UP),
+                        RIGHT to CubeConnection(3, LEFT),
+                        UP to CubeConnection(6, DOWN)
                     )
                 )
             )
@@ -240,56 +224,42 @@ class Day22 {
                 sideSize = SIDE_SIZE,
                 startSide = START_SIDE,
                 pattern = CUBE_PATTERN,
-                connectionMap = NonNullMap(
-                    mutableMapOf(
-                        1 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(3, LEFT),
-                                DOWN to CubeConnection(2, UP),
-                                RIGHT to CubeConnection(4, LEFT),
-                                UP to CubeConnection(5, LEFT)
-                            )
-                        ),
-                        2 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(3, UP),
-                                DOWN to CubeConnection(6, UP),
-                                RIGHT to CubeConnection(4, DOWN),
-                                UP to CubeConnection(1, DOWN)
-                            )
-                        ),
-                        3 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(1, LEFT),
-                                DOWN to CubeConnection(5, UP),
-                                RIGHT to CubeConnection(6, LEFT),
-                                UP to CubeConnection(2, LEFT)
-                            )
-                        ),
-                        4 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(1, RIGHT),
-                                DOWN to CubeConnection(2, RIGHT),
-                                RIGHT to CubeConnection(6, RIGHT),
-                                UP to CubeConnection(5, DOWN)
-                            )
-                        ),
-                        5 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(1, UP),
-                                DOWN to CubeConnection(4, UP),
-                                RIGHT to CubeConnection(6, DOWN),
-                                UP to CubeConnection(3, DOWN)
-                            )
-                        ),
-                        6 to NonNullMap(
-                            mutableMapOf(
-                                LEFT to CubeConnection(3, RIGHT),
-                                DOWN to CubeConnection(5, RIGHT),
-                                RIGHT to CubeConnection(4, RIGHT),
-                                UP to CubeConnection(2, DOWN)
-                            )
-                        )
+                connectionMap = nnMapOf(
+                    1 to nnMapOf(
+                        LEFT to CubeConnection(3, LEFT),
+                        DOWN to CubeConnection(2, UP),
+                        RIGHT to CubeConnection(4, LEFT),
+                        UP to CubeConnection(5, LEFT)
+                    ),
+                    2 to nnMapOf(
+                        LEFT to CubeConnection(3, UP),
+                        DOWN to CubeConnection(6, UP),
+                        RIGHT to CubeConnection(4, DOWN),
+                        UP to CubeConnection(1, DOWN)
+                    ),
+                    3 to nnMapOf(
+                        LEFT to CubeConnection(1, LEFT),
+                        DOWN to CubeConnection(5, UP),
+                        RIGHT to CubeConnection(6, LEFT),
+                        UP to CubeConnection(2, LEFT)
+                    ),
+                    4 to nnMapOf(
+                        LEFT to CubeConnection(1, RIGHT),
+                        DOWN to CubeConnection(2, RIGHT),
+                        RIGHT to CubeConnection(6, RIGHT),
+                        UP to CubeConnection(5, DOWN)
+                    ),
+                    5 to nnMapOf(
+                        LEFT to CubeConnection(1, UP),
+                        DOWN to CubeConnection(4, UP),
+                        RIGHT to CubeConnection(6, DOWN),
+                        UP to CubeConnection(3, DOWN)
+                    ),
+                    6 to nnMapOf(
+                        LEFT to CubeConnection(3, RIGHT),
+                        DOWN to CubeConnection(5, RIGHT),
+                        RIGHT to CubeConnection(4, RIGHT),
+                        UP to CubeConnection(2, DOWN)
                     )
                 )
             )
@@ -312,9 +282,7 @@ class Day22 {
         private fun parseMaze(cubeNet: CubeNet, lines: List<String>, instructions: List<Instruction>): Maze {
             return Maze(
                 cubeNet = cubeNet,
-                sides = NonNullMap.fromMap(
-                    IntRange(1, 6).associateWith { parseSide(cubeNet, lines, it) }
-                ),
+                sides = IntRange(1, 6).associateWith { parseSide(cubeNet, lines, it) }.nn(),
                 instructions = instructions,
                 position = Point(0, 0),
                 side = cubeNet.startSide,

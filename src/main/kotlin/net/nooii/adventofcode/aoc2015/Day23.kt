@@ -1,9 +1,6 @@
 package net.nooii.adventofcode.aoc2015
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
-import net.nooii.adventofcode.helpers.captureFirstMatch
+import net.nooii.adventofcode.helpers.*
 
 class Day23 {
 
@@ -22,29 +19,29 @@ class Day23 {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            val registers = NonNullMap(mutableMapOf(
+            val registers = nnMapOf(
                 'a' to Register(),
                 'b' to Register()
-            ))
+            )
             val input = InputLoader(AoCYear.AOC_2015).loadStrings("Day23Input")
             val instructions = processInput(registers, input)
             part1(registers, instructions)
             part2(registers, instructions)
         }
 
-        private fun part1(registers: NonNullMap<Char, Register>, instructions: List<Instruction>) {
+        private fun part1(registers: NNMap<Char, Register>, instructions: List<Instruction>) {
             registers['a'].value = 0
             registers['b'].value = 0
             solution(registers, instructions)
         }
 
-        private fun part2(registers: NonNullMap<Char, Register>, instructions: List<Instruction>) {
+        private fun part2(registers: NNMap<Char, Register>, instructions: List<Instruction>) {
             registers['a'].value = 1
             registers['b'].value = 0
             solution(registers, instructions)
         }
 
-        private fun solution(registers: NonNullMap<Char, Register>, instructions: List<Instruction>) {
+        private fun solution(registers: NNMap<Char, Register>, instructions: List<Instruction>) {
             var i = 0
             while (i < instructions.size) {
                 when (val instruction = instructions[i]) {
@@ -68,7 +65,7 @@ class Day23 {
             println(registers['b'].value)
         }
 
-        private fun processInput(registers: NonNullMap<Char, Register>, input: List<String>): List<Instruction> {
+        private fun processInput(registers: NNMap<Char, Register>, input: List<String>): List<Instruction> {
             return input.map { line ->
                 when (line.take(3)) {
                     "hlf" -> Instruction.Hlf(registers[line[4]])

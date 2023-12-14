@@ -12,7 +12,7 @@ class Day16 {
     ) {
 
         // Precomputed to speed up time
-        val timeToOpenValve = NonNullMap<Valve, Int>()
+        val timeToOpenValve = MutableNNMap<Valve, Int>()
     }
 
     private sealed class State(
@@ -155,7 +155,7 @@ class Day16 {
             part2(valves, yourFirstValve)
         }
 
-        private fun part1(valves: NonNullMap<String, Valve>): String {
+        private fun part1(valves: NNMap<String, Valve>): String {
             val startState = State1(
                 closedValves = valves.values.filter { it.flowRate > 0 }.toSet(),
                 currentValve = valves["AA"],
@@ -168,7 +168,7 @@ class Day16 {
             return (finalState as State1).path.first()
         }
 
-        private fun part2(valves: NonNullMap<String, Valve>, yourFirstValve: String) {
+        private fun part2(valves: NNMap<String, Valve>, yourFirstValve: String) {
             val startState = State2(
                 yourFirstValve = yourFirstValve,
                 closedValves = valves.values.filter { it.flowRate > 0 }.toSet(),
@@ -210,7 +210,7 @@ class Day16 {
             return timeMap
         }
 
-        private fun precompute(valves: NonNullMap<String, Valve>) {
+        private fun precompute(valves: NNMap<String, Valve>) {
             for (valve in valves.values) {
                 var time = 0
                 val visited = mutableSetOf<Valve>()
@@ -233,15 +233,15 @@ class Day16 {
             }
         }
 
-        private fun parseInput(input: List<String>): NonNullMap<String, Valve> {
-            return NonNullMap(input.associate { line ->
+        private fun parseInput(input: List<String>): NNMap<String, Valve> {
+            return input.associate { line ->
                 val data = Regex("Valve (\\w+) has flow rate=(\\d+); tunnels? leads? to valves? (.*)")
                     .captureFirstMatch(line) { it }
                 val valve = Valve(
                     data[0], data[1].toInt(), data[2].split(", ")
                 )
                 data[0] to valve
-            }.toMutableMap())
+            }.nn()
         }
     }
 }

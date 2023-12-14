@@ -1,9 +1,6 @@
 package net.nooii.adventofcode.aoc2016
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
-import net.nooii.adventofcode.helpers.PointDirection
+import net.nooii.adventofcode.helpers.*
 import java.awt.Point
 
 class Day2 {
@@ -26,7 +23,7 @@ class Day2 {
             solution(directionsList, createDiamondPad())
         }
 
-        private fun solution(directionsList: List<List<PointDirection>>, pad: NonNullMap<Point, Char>) {
+        private fun solution(directionsList: List<List<PointDirection>>, pad: NNMap<Point, Char>) {
             val digits = StringBuilder()
             var point = pad.entries.first { it.value == '5' }.key
             for (directions in directionsList) {
@@ -41,15 +38,13 @@ class Day2 {
             println(digits.toString())
         }
 
-        private fun createSquarePad(): NonNullMap<Point, Char> {
-            return NonNullMap(
-                IntRange(1, 9).associate {
-                    Point((it - 1) % 3, (it - 1) / 3) to it.digitToChar()
-                }.toMutableMap()
-            )
+        private fun createSquarePad(): NNMap<Point, Char> {
+            return IntRange(1, 9).associate {
+                Point((it - 1) % 3, (it - 1) / 3) to it.digitToChar()
+            }.nn()
         }
 
-        private fun createDiamondPad(): NonNullMap<Point, Char> {
+        private fun createDiamondPad(): NNMap<Point, Char> {
             val chars = "123456789ABCD"
             val pattern = listOf(1, 3, 5, 3, 1)
             val points = mutableListOf<Point>()
@@ -58,7 +53,7 @@ class Day2 {
                     points.add(Point((pattern.size - n) / 2 + i, y))
                 }
             }
-            return NonNullMap(chars.toList().zip(points).associate { (char, point) -> point to char }.toMutableMap())
+            return chars.toList().zip(points).associate { (char, point) -> point to char }.nn()
         }
 
         private fun processInput(input: List<String>): List<List<PointDirection>> {

@@ -30,7 +30,7 @@ class Day4 {
         }
 
         private fun part2(tickets: List<Ticket>) {
-            val ticketMap = NonNullMap(tickets.associate { it.id to 1L }.toMutableMap())
+            val ticketMap = tickets.associate { it.id to 1L }.toMutable()
             for (ticket in tickets) {
                 for (n in 1..ticket.matchingCount) {
                     if (ticketMap.containsKey(ticket.id + n)) {

@@ -38,12 +38,12 @@ class Day14 {
             part2(area.copy(), blockersMap)
         }
 
-        private fun part1(area: Area, blockersMap: NonNullMap<PointDirection, Set<Point>>) {
+        private fun part1(area: Area, blockersMap: NNMap<PointDirection, Set<Point>>) {
             moveRocks(area, UP, blockersMap[UP])
             println(computeLoad(area))
         }
 
-        private fun part2(area: Area, blockersMap: NonNullMap<PointDirection, Set<Point>>) {
+        private fun part2(area: Area, blockersMap: NNMap<PointDirection, Set<Point>>) {
             val spin = listOf(UP, LEFT, DOWN, RIGHT)
             val states = mutableMapOf<State, Long>()
             var i = 0L
@@ -100,8 +100,8 @@ class Day14 {
             return area.blockers + edgeBlockers
         }
 
-        private fun computeBlockersMap(area: Area): NonNullMap<PointDirection, Set<Point>> {
-            return NonNullMap(PointDirection.entries.associateWith { computeBlockers(area, it) }.toMutableMap())
+        private fun computeBlockersMap(area: Area): NNMap<PointDirection, Set<Point>> {
+            return PointDirection.entries.associateWith { computeBlockers(area, it) }.nn()
         }
 
         private fun processInput(input: List<String>): Area {

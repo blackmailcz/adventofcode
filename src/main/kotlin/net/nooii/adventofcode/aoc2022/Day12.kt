@@ -6,7 +6,7 @@ import java.awt.Point
 class Day12 {
 
     private class Area(
-        val map: NonNullMap<Point, Int>,
+        val map: NNMap<Point, Int>,
         val start: Point,
         val end: Point
     )
@@ -50,7 +50,7 @@ class Day12 {
         }
 
         private fun parseInput(input: List<String>): Area {
-            val map = NonNullMap<Point, Int>()
+            val map = mutableMapOf<Point, Int>()
             var start: Point? = null
             var end: Point? = null
             for ((y, line) in input.withIndex()) {
@@ -65,7 +65,7 @@ class Day12 {
                 }
             }
             return Area(
-                map,
+                map.toImmutable(),
                 start ?: error("No start"),
                 end ?: error("No end")
             )

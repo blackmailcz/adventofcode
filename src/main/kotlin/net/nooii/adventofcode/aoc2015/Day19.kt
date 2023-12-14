@@ -21,6 +21,7 @@ class Day19 {
             val input = InputLoader(AoCYear.AOC_2015).loadStrings("Day19Input")
             val calibration = processInput(input)
             part1(calibration)
+            // Runtime ~ 12 seconds (for 100000 iterations)
             part2(calibration)
         }
 
@@ -38,13 +39,12 @@ class Day19 {
             // As a proper solution would be probably impossible to solve by exploring all the states,
             // do a series of greedy backtracking in randomized order and find the minimum number of steps.
             // For the given input, the probability of not finding the shortest way is very close to zero
-            // Runtime ~ 12 seconds (for 100000 iterations)
-            val regexCache = NonNullMap(calibration.replacements.associate { it.target to Regex(it.target) }.toMutableMap())
+            val regexCache = calibration.replacements.associate { it.target to Regex(it.target) }.nn()
             val solution = IntRange(0, 100000).minOf { backtrack(calibration, regexCache) ?: Int.MAX_VALUE }
             println(solution)
         }
 
-        private fun backtrack(calibration: Calibration, regexCache: NonNullMap<String, Regex>): Int? {
+        private fun backtrack(calibration: Calibration, regexCache: NNMap<String, Regex>): Int? {
             var molecule = calibration.molecule
             var steps = 0
             do {

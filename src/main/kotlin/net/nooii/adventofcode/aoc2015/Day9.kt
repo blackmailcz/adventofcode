@@ -7,7 +7,7 @@ class Day9 {
     private data class City(
         val name: String
     ) {
-        val distances = NonNullMap(mutableMapOf<City, Int>())
+        val distances = mutableNNMapOf<City, Int>()
     }
 
     companion object {

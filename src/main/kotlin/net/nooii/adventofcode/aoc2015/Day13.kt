@@ -1,10 +1,7 @@
 package net.nooii.adventofcode.aoc2015
 
 import com.github.shiguruikai.combinatoricskt.permutations
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
-import net.nooii.adventofcode.helpers.captureFirstMatch
+import net.nooii.adventofcode.helpers.*
 import kotlin.math.max
 
 class Day13 {
@@ -12,7 +9,7 @@ class Day13 {
     private data class Person(
         val name: String,
     ) {
-        val happiness: NonNullMap<String, Int> = NonNullMap(mutableMapOf())
+        val happiness: MutableNNMap<String, Int> = mutableNNMapOf()
     }
 
     companion object {

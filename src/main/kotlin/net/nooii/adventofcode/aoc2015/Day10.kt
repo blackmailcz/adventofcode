@@ -1,8 +1,6 @@
 package net.nooii.adventofcode.aoc2015
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
+import net.nooii.adventofcode.helpers.*
 import java.lang.StringBuilder
 
 class Day10 {
@@ -28,7 +26,7 @@ class Day10 {
 
         private fun solution(input: String, repeats: Int) {
             // Works fast enough for given input and repeats
-            val baseMap: NonNullMap<Key, String> = createBaseMap()
+            val baseMap: NNMap<Key, String> = createBaseMap()
             var str = input
             repeat(repeats) {
                 var n = 0
@@ -56,8 +54,8 @@ class Day10 {
             println(str.length)
         }
 
-        private fun createBaseMap(): NonNullMap<Key, String> {
-            val baseMap = NonNullMap(mutableMapOf<Key, String>())
+        private fun createBaseMap(): NNMap<Key, String> {
+            val baseMap = mutableNNMapOf<Key, String>()
             for (char in setOf('1', '2', '3')) {
                 for (n in 1..3) {
                     baseMap[Key(char, n)] = "$n$char"

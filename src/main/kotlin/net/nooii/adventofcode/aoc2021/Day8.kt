@@ -1,9 +1,7 @@
 package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.aoc2021.Day8.Segment.*
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
+import net.nooii.adventofcode.helpers.*
 import java.lang.Exception
 
 /**
@@ -42,8 +40,8 @@ class Day8 {
             })
         }
 
-        private fun decodeSegments(pattern: Pattern): NonNullMap<Segment, Char> {
-            val map = NonNullMap<Segment, Char>()
+        private fun decodeSegments(pattern: Pattern): NNMap<Segment, Char> {
+            val map = MutableNNMap<Segment, Char>()
             val one = pattern.hints.find { it.length == 2 }!!
             val seven = pattern.hints.find { it.length == 3 }!!
             val four = pattern.hints.find { it.length == 4 }!!
@@ -74,7 +72,7 @@ class Day8 {
             return map
         }
 
-        private fun decodeDigit(digit: String, map: NonNullMap<Segment, Char>): String {
+        private fun decodeDigit(digit: String, map: NNMap<Segment, Char>): String {
             return when {
                 isMadeOf(digit, map, TOP_LEFT, TOP, TOP_RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT) -> "0"
                 digit.length == 2 -> "1"
@@ -90,7 +88,7 @@ class Day8 {
             }
         }
 
-        private fun isMadeOf(encodedDigit: String, map: NonNullMap<Segment, Char>, vararg segments: Segment): Boolean {
+        private fun isMadeOf(encodedDigit: String, map: NNMap<Segment, Char>, vararg segments: Segment): Boolean {
             if (encodedDigit.length != segments.size) {
                 return false
             }

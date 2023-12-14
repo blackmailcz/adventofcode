@@ -1,15 +1,12 @@
 package net.nooii.adventofcode.aoc2022
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
-import net.nooii.adventofcode.helpers.captureFirstMatch
+import net.nooii.adventofcode.helpers.*
 import java.util.*
 
 class Day5 {
 
     private data class Crane(
-        val stacks: NonNullMap<Int, Stack<Char>>, // The map is sorted
+        val stacks: NNMap<Int, Stack<Char>>, // The map is sorted
         val instructions: List<Instruction>
     ) {
 
@@ -71,7 +68,7 @@ class Day5 {
             val instructions = input.drop(emptyLine + 1).map {
                 parseInstruction(it)
             }
-            return Crane(NonNullMap(stacks), instructions)
+            return Crane(stacks.toImmutable(), instructions)
         }
 
         private fun parseBoxLineAndAddBoxes(line: String, stacks: MutableMap<Int, Stack<Char>>) {

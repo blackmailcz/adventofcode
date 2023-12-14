@@ -6,7 +6,7 @@ class Day8 {
 
     private class Network(
         val sequence: String,
-        val nodes: NonNullMap<String, Node>
+        val nodes: NNMap<String, Node>
     ) {
         fun getDirection(i: Long) = sequence[(i % sequence.length).toInt()]
     }
@@ -74,12 +74,12 @@ class Day8 {
         private fun processInput(input: List<String>): Network {
             val sequence = input.first()
             val regex = Regex("(\\S+) = \\((\\S+), (\\S+)\\)")
-            val nodes = NonNullMap(mutableMapOf<String, Node>())
+            val nodes = mutableMapOf<String, Node>()
             for (line in input.drop(2)) {
                 val (value, left, right) = regex.captureFirstMatch(line)
                 nodes[value] = Node(left, right)
             }
-            return Network(sequence, nodes)
+            return Network(sequence, nodes.toImmutable())
         }
     }
 }

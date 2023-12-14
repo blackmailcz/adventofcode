@@ -18,11 +18,11 @@ class Day21 {
 
     private sealed class Monkey(protected val id: String) {
 
-        abstract fun compute(monkeys: NonNullMap<String, Monkey>): Long
+        abstract fun compute(monkeys: NNMap<String, Monkey>): Long
 
         class Simple(id: String, private val value: Long) : Monkey(id) {
 
-            override fun compute(monkeys: NonNullMap<String, Monkey>) = value
+            override fun compute(monkeys: NNMap<String, Monkey>) = value
         }
 
         class Complex(
@@ -34,7 +34,7 @@ class Day21 {
 
             val children = listOf(left, right)
 
-            override fun compute(monkeys: NonNullMap<String, Monkey>): Long {
+            override fun compute(monkeys: NNMap<String, Monkey>): Long {
                 return when (operator) {
                     Operator.PLUS -> monkeys[left].compute(monkeys) + monkeys[right].compute(monkeys)
                     Operator.MINUS -> monkeys[left].compute(monkeys) - monkeys[right].compute(monkeys)
@@ -44,8 +44,8 @@ class Day21 {
             }
 
             fun tryEvaluate(
-                monkeys: NonNullMap<String, Monkey>,
-                evaluatedMonkeys: NonNullMap<String, Long>
+                monkeys: NNMap<String, Monkey>,
+                evaluatedMonkeys: MutableNNMap<String, Long>
             ) {
                 // Check if reversal process is even needed:
                 val known: String
@@ -88,7 +88,7 @@ class Day21 {
 
         class Unknown(id: String) : Monkey(id) {
 
-            override fun compute(monkeys: NonNullMap<String, Monkey>): Long {
+            override fun compute(monkeys: NNMap<String, Monkey>): Long {
                 // Exception is more convenient than null.
                 throw IllegalStateException("Cannot compute")
             }
@@ -104,18 +104,18 @@ class Day21 {
             part2(parseInput(input))
         }
 
-        private fun part1(monkeys: NonNullMap<String, Monkey>) {
+        private fun part1(monkeys: NNMap<String, Monkey>) {
             val result = monkeys["root"].compute(monkeys)
             println(result)
         }
 
-        private fun part2(monkeys: NonNullMap<String, Monkey>) {
+        private fun part2(monkeys: MutableNNMap<String, Monkey>) {
             val root = monkeys["root"] as Monkey.Complex
             monkeys["root"] = Monkey.Unknown("root")
             monkeys["humn"] = Monkey.Unknown("humn")
-            val evaluatedMonkeys = NonNullMap<String, Long>()
+            val evaluatedMonkeys = MutableNNMap<String, Long>()
             // Start in root and collect all monkeys that can be evaluated
-            var pendingMonkeys = mutableMapOf(
+            var pendingMonkeys = mapOf(
                 root.left to monkeys[root.left],
                 root.right to monkeys[root.right]
             )
@@ -155,10 +155,10 @@ class Day21 {
             println(evaluatedMonkeys["humn"])
         }
 
-        private fun parseInput(input: List<String>): NonNullMap<String, Monkey> {
+        private fun parseInput(input: List<String>): MutableNNMap<String, Monkey> {
             val simple = Regex("(\\w+): (\\d+)")
             val complex = Regex("(\\w+): (\\w+) (.) (\\w+)")
-            return NonNullMap(input.associate { line ->
+            return input.associate { line ->
                 when {
                     line.matches(simple) -> {
                         val (id, value) = simple.captureFirstMatch(line) { it }
@@ -175,7 +175,7 @@ class Day21 {
                     }
                     else -> error("Unknown line")
                 }
-            }.toMutableMap())
+            }.toMutable()
         }
     }
 }

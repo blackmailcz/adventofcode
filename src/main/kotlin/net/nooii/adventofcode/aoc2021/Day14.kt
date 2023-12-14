@@ -1,9 +1,6 @@
 package net.nooii.adventofcode.aoc2021
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.NonNullMap
-import net.nooii.adventofcode.helpers.add
+import net.nooii.adventofcode.helpers.*
 
 /**
  * Created by Nooii on 14.12.2021
@@ -12,7 +9,7 @@ class Day14 {
 
     private class PolymerInput(
         val template: String,
-        val rules: NonNullMap<String, Char>
+        val rules: NNMap<String, Char>
     )
 
     companion object {
@@ -68,8 +65,7 @@ class Day14 {
                 val parts = line.split(" -> ")
                 parts[0] to parts[1][0]
             }
-            return PolymerInput(template, NonNullMap(rules.toMutableMap()))
+            return PolymerInput(template, rules.nn())
         }
     }
-
 }
