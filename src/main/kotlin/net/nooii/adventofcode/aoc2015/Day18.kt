@@ -69,13 +69,7 @@ class Day18 {
         }
 
         private fun processInput(input: List<String>): PointMap<Boolean> {
-            val map = mutableMapOf<Point, Boolean>()
-            for (y in input.indices) {
-                for (x in input[y].indices) {
-                    map[Point(x, y)] = input[y][x] == '#'
-                }
-            }
-            return PointMap(input.first().length, input.size, map)
+            return PointMap.filled(input.first().length, input.size) { x, y -> input[y][x] == '#' }
         }
     }
 }

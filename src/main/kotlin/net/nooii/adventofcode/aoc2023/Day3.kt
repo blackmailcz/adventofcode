@@ -74,13 +74,7 @@ class Day3 {
         }
 
         private fun parsePoints(input: List<String>): PointMap<Char> {
-            val map = mutableMapOf<Point, Char>()
-            for (y in input.indices) {
-                for (x in input[y].indices) {
-                    map[Point(x, y)] = input[y][x]
-                }
-            }
-            return PointMap(input.first().length, input.size, map)
+            return PointMap.filled(input.first().length, input.size) { x, y -> input[y][x] }
         }
     }
 }

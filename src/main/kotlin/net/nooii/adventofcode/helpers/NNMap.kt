@@ -1,6 +1,6 @@
 package net.nooii.adventofcode.helpers
 
-data class MutableNNMap<K : Any, V : Any>(
+open class MutableNNMap<K : Any, V : Any>(
     override val underlying: MutableMap<K, V> = HashMap() // HashMap by default
 ) : NNMap<K, V>(underlying), MutableMap<K, V> by underlying {
 
@@ -58,6 +58,19 @@ open class NNMap<K : Any, V : Any>(
 
     override fun toString(): String {
         return underlying.toString()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is NNMap<*, *>) return false
+
+        if (underlying != other.underlying) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return underlying.hashCode()
     }
 }
 

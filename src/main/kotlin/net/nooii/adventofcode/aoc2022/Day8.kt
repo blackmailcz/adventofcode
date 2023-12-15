@@ -1,10 +1,7 @@
 package net.nooii.adventofcode.aoc2022
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.PointDirection
+import net.nooii.adventofcode.helpers.*
 import net.nooii.adventofcode.helpers.PointDirection.*
-import net.nooii.adventofcode.helpers.PointMap
 import java.awt.Point
 import kotlin.math.max
 
@@ -99,14 +96,7 @@ class Day8 {
         }
 
         private fun parseTrees(input: List<String>): PointMap<Tree> {
-            val map = mutableMapOf<Point, Tree>()
-            for ((y, line) in input.withIndex()) {
-                for ((x, value) in line.withIndex()) {
-                    val point = Point(x, y)
-                    map[point] = Tree(point, value.digitToInt())
-                }
-            }
-            return PointMap(input[0].length, input.size, map)
+            return PointMap.filled(input.first().length, input.size) { x, y -> Tree(Point(x, y), input[y][x].digitToInt()) }
         }
     }
 }
