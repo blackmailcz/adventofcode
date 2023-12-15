@@ -28,6 +28,10 @@ data class MutableNNMap<K : Any, V : Any>(
 
     override val values: MutableCollection<V>
         get() = underlying.values
+
+    override fun toString(): String {
+        return underlying.toString()
+    }
 }
 
 fun <K : Any, V : Any> MutableMap<K, V>.nn(): MutableNNMap<K, V> = MutableNNMap(this)
@@ -51,6 +55,10 @@ open class NNMap<K : Any, V : Any>(
     open operator fun contains(key: K): Boolean = underlying.containsKey(key)
 
     override fun containsKey(key: K) = contains(key)
+
+    override fun toString(): String {
+        return underlying.toString()
+    }
 }
 
 fun <K : Any, V : Any> Map<K, V>.nn() = NNMap(this)
