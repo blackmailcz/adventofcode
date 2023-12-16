@@ -30,9 +30,7 @@ class Day16 {
         fun main(args: Array<String>) {
             val input = InputLoader(AoCYear.AOC_2023).loadStrings("Day16Input")
             val area = processInput(input)
-            // Runtime ~ 100 ms
             part1(area)
-            // Runtime ~ 11500 ms
             part2(area)
         }
 
@@ -55,10 +53,9 @@ class Day16 {
             println(max)
         }
 
-        private fun beam(area: Area, initialState: State) = beam(area, mutableSetOf(), initialState)
-
-        private fun beam(area: Area, visited: MutableSet<State> = mutableSetOf(), initialState: State): Set<Point> {
+        private fun beam(area: Area, initialState: State): Set<Point> {
             var states = setOf(initialState)
+            val visited = mutableSetOf<State>()
             val output = mutableSetOf<Point>()
             while (states.isNotEmpty()) {
                 val nextStates = mutableSetOf<State>()
@@ -78,39 +75,39 @@ class Day16 {
                             '|' -> {
                                 when (state.direction.axis) {
                                     Axis.VERTICAL -> {
-                                        output += beam(area, visited, State(state.direction.next(point), state.direction))
+                                        nextStates += State(state.direction.next(point), state.direction)
                                     }
                                     Axis.HORIZONTAL -> {
-                                        output += beam(area, visited, State(UP.next(point), UP))
-                                        output += beam(area, visited, State(DOWN.next(point), DOWN))
+                                        nextStates += State(UP.next(point), UP)
+                                        nextStates += State(DOWN.next(point), DOWN)
                                     }
                                 }
                             }
                             '-' -> {
                                 when (state.direction.axis) {
                                     Axis.VERTICAL -> {
-                                        output += beam(area, visited, State(LEFT.next(point), LEFT))
-                                        output += beam(area, visited, State(RIGHT.next(point), RIGHT))
+                                        nextStates += State(LEFT.next(point), LEFT)
+                                        nextStates += State(RIGHT.next(point), RIGHT)
                                     }
                                     Axis.HORIZONTAL -> {
-                                        output += beam(area, visited, State(state.direction.next(point), state.direction))
+                                        nextStates += State(state.direction.next(point), state.direction)
                                     }
                                 }
                             }
                             '/' -> {
-                                output += when (state.direction) {
-                                    LEFT -> beam(area, visited, State(DOWN.next(point), DOWN))
-                                    RIGHT -> beam(area, visited, State(UP.next(point), UP))
-                                    UP -> beam(area, visited, State(RIGHT.next(point), RIGHT))
-                                    DOWN -> beam(area, visited, State(LEFT.next(point), LEFT))
+                                nextStates += when (state.direction) {
+                                    LEFT -> State(DOWN.next(point), DOWN)
+                                    RIGHT -> State(UP.next(point), UP)
+                                    UP -> State(RIGHT.next(point), RIGHT)
+                                    DOWN -> State(LEFT.next(point), LEFT)
                                 }
                             }
                             '\\' -> {
-                                output += when (state.direction) {
-                                    LEFT -> beam(area, visited, State(UP.next(point), UP))
-                                    RIGHT -> beam(area, visited, State(DOWN.next(point), DOWN))
-                                    UP -> beam(area, visited, State(LEFT.next(point), LEFT))
-                                    DOWN -> beam(area, visited, State(RIGHT.next(point), RIGHT))
+                                nextStates += when (state.direction) {
+                                    LEFT -> State(UP.next(point), UP)
+                                    RIGHT -> State(DOWN.next(point), DOWN)
+                                    UP -> State(LEFT.next(point), LEFT)
+                                    DOWN -> State(RIGHT.next(point), RIGHT)
                                 }
                             }
                             else -> error("Invalid mirror")
