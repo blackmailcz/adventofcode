@@ -25,7 +25,7 @@ class Day9 {
             println(countDecompress(input))
         }
 
-        private fun countDecompress(input: String): Long {
+        private fun countDecompress(input: CharSequence): Long {
             val original = StringBuilder(input)
             val regex = Regex("^(.*?)(\\((\\d+)x(\\d+)\\))")
             var count = 0L
@@ -35,18 +35,14 @@ class Day9 {
                     count += prefix.length
                 }
                 original.delete(0, prefix.length + compression.length)
-                val suffix = original.take(howMany.toInt()).toString()
-                count += multiplier.toLong() * max(
-                    countDecompress(suffix),
-                    suffix.length.toLong()
-                )
+                count += multiplier.toLong() * countDecompress(original.take(howMany.toInt()))
                 original.delete(0, howMany.toInt())
             }
             count += original.length
             return count
         }
 
-        private fun decompress(input: String): String {
+        private fun decompress(input: CharSequence): String {
             val original = StringBuilder(input)
             val decoded = StringBuilder()
             val regex = Regex("^(.*?)(\\((\\d+)x(\\d+)\\))")
