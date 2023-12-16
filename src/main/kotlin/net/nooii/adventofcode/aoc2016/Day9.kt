@@ -22,10 +22,10 @@ class Day9 {
         private fun part2(input: String) {
             // Assuming the decompression will always yield other decompression(s) + literal
             // Will not work for arbitrary input!
-            println(countDecompress(input, 1))
+            println(countDecompress(input))
         }
 
-        private fun countDecompress(input: String, outsideMultiplier: Long): Long {
+        private fun countDecompress(input: String): Long {
             val original = StringBuilder(input)
             val regex = Regex("^(.*?)(\\((\\d+)x(\\d+)\\))")
             var count = 0L
@@ -36,10 +36,9 @@ class Day9 {
                 }
                 original.delete(0, prefix.length + compression.length)
                 val suffix = original.take(howMany.toInt()).toString()
-                val totalMultiplier = outsideMultiplier * multiplier.toLong()
-                count += max(
-                    countDecompress(suffix, totalMultiplier),
-                    suffix.length.toLong() * totalMultiplier
+                count += multiplier.toLong() * max(
+                    countDecompress(suffix),
+                    suffix.length.toLong()
                 )
                 original.delete(0, howMany.toInt())
             }
