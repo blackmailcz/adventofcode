@@ -2,7 +2,6 @@ package net.nooii.adventofcode.aoc2016
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import kotlin.math.max
 
 class Day9 {
 
