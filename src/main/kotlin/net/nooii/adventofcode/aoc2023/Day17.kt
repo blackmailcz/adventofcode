@@ -11,11 +11,12 @@ class Day17 {
 
     private class RouteNode(
         val path: List<Point>,
-        val directions: List<PointDirection>,
-        val score: Int
+        val direction: PointDirection? = null,
+        val consecutiveDirections: List<Int> = listOf(0),
+        val score: Int = 0
     ) : Comparable<RouteNode> {
 
-        constructor(start: Point, score: Int = 0) : this(listOf(start), emptyList(), score)
+        constructor(start: Point, score: Int = 0) : this(listOf(start), score = score)
 
         val current: Point
             get() = path.last()
@@ -37,14 +38,14 @@ class Day17 {
             val pointMap = processInput(input)
             // Runtime ~ 2 seconds
             part1(pointMap)
-            // Runtime ~ 57 seconds
+            // Runtime ~ 44 seconds
             part2(pointMap)
         }
 
         private fun part1(pointMap: PointMap<Int>) {
             val startPoint = Point(0, 0)
             val endPoint = Point(pointMap.width - 1, pointMap.height - 1)
-            val cache = mutableSetOf<Set<Point>>() // We need to store visited points forming the last 3 edges
+            val cache = mutableSetOf<Set<Point>>()
             val states = PriorityQueue<RouteNode>()
             states.add(RouteNode(startPoint))
             while (states.isNotEmpty()) {
@@ -60,7 +61,7 @@ class Day17 {
                         continue
                     }
                     // Cannot go backwards
-                    if (node.directions.lastOrNull() == direction.mirror()) {
+                    if (node.direction == direction.mirror()) {
                         continue
                     }
                     // Cannot visit the same point twice
@@ -68,24 +69,35 @@ class Day17 {
                         continue
                     }
 
-                    val nextPath = node.path + connection
-                    val nextDirections = node.directions + direction
+                    val nextConsecutive = if (node.direction == null || node.direction == direction) {
+                        node.consecutiveDirections.toMutableList().apply {
+                            this[size - 1] = last() + 1
+                        }
+                    } else {
+                        node.consecutiveDirections + listOf(1)
+                    }
+
+                    val next = RouteNode(
+                        path = node.path + connection,
+                        direction = direction,
+                        consecutiveDirections = nextConsecutive,
+                        score = node.score + pointMap[connection]
+                    )
 
                     // Check last 4 directions. If the direction has not changed, this move is invalid
-                    if (nextDirections.size > 3 && nextDirections.takeLast(4).toSet().size == 1) {
+                    if (nextConsecutive.last() == 4) {
                         continue
                     }
 
                     // Cache last 4 or 5 points (works with 4, not 100% sure tho)
-                    val cachedPoints = nextPath.takeLast(4).toSet()
+                    val cachedPoints = next.path.takeLast(4).toSet()
                     // If the cached key already exists, this move is invalid
                     if (cachedPoints in cache) {
                         continue
                     }
                     cache.add(cachedPoints)
 
-                    val newScore = node.score + pointMap[connection]
-                    states.add(RouteNode(nextPath, nextDirections, newScore))
+                    states.add(next)
                 }
             }
             error("No route found")
@@ -110,7 +122,7 @@ class Day17 {
                         continue
                     }
                     // Cannot go backwards
-                    if (node.directions.lastOrNull() == direction.mirror()) {
+                    if (node.direction == direction.mirror()) {
                         continue
                     }
                     // Cannot visit the same point twice
@@ -118,37 +130,38 @@ class Day17 {
                         continue
                     }
 
-                    val nextPath = node.path + connection
-                    val nextDirections = node.directions + direction
-
-                    // Go backwards and analyze directions
-                    val lastDirection1 = nextDirections.lastOrNull()
-                    if (lastDirection1 != null) {
-                        val lastDirections1 = nextDirections.takeLastWhile { it == lastDirection1 }
-                        // Up to 10 moves straight
-                        if (lastDirections1.size > 10) {
-                            continue
+                    val nextConsecutive = if (node.direction == null || node.direction == direction) {
+                        node.consecutiveDirections.toMutableList().apply {
+                            this[size - 1] = last() + 1
                         }
-                        val cutDirections = nextDirections.dropLast(lastDirections1.size)
-                        val lastDirection2 = cutDirections.lastOrNull()
-                        if (lastDirection2 != null) {
-                            val lastDirections2 = cutDirections.takeLastWhile { it == lastDirection2 }
-                            // Less than 4 moves straight
-                            if (lastDirections2.size < 4) {
-                                continue
-                            }
-                            // Not sure how many points to cache. Works like this, might need +1
-                            val cachedPoints = nextPath.takeLast(lastDirections1.size + lastDirections2.size).toSet()
-                            // If the cached key already exists, this move is invalid
-                            if (cachedPoints in cache) {
-                                continue
-                            }
-                            cache.add(cachedPoints)
-                        }
+                    } else {
+                        node.consecutiveDirections + listOf(1)
                     }
 
-                    val newScore = node.score + pointMap[connection]
-                    states.add(RouteNode(nextPath, nextDirections, newScore))
+                    val next = RouteNode(
+                        path = node.path + connection,
+                        direction = direction,
+                        consecutiveDirections = nextConsecutive,
+                        score = node.score + pointMap[connection]
+                    )
+
+                    if (nextConsecutive.last() > 10) {
+                        continue
+                    }
+                    if (nextConsecutive.size >= 2) {
+                        val secondLastDirectionCount = nextConsecutive[nextConsecutive.size - 2]
+                        if (secondLastDirectionCount < 4) {
+                            continue
+                        }
+                        // Not sure how many points to cache. Works like this, might need +1
+                        val cachedPoints = next.path.takeLast(nextConsecutive.last() + secondLastDirectionCount).toSet()
+                        // If the cached key already exists, this move is invalid
+                        if (cachedPoints in cache) {
+                            continue
+                        }
+                        cache.add(cachedPoints)
+                    }
+                    states.add(next)
                 }
             }
             error("No route found")
