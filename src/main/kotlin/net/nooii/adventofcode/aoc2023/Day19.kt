@@ -100,7 +100,7 @@ class Day19 {
                     sum += item.components().sum()
                 }
             }
-            println("$sum")
+            println(sum)
         }
 
         private fun part2(workflows: NNMap<String, Workflow>) {
@@ -125,12 +125,12 @@ class Day19 {
                         is Workflow.Jump -> {
                             val instruction = workflow.instructions.getOrNull(state.instructionIndex) ?: continue
                             // Condition valid branch
-                            val validBranchState = constraintValidBranch(state, instruction)
+                            val validBranchState = constrainValidBranch(state, instruction)
                             if (validBranchState != null) {
                                 nextStates.add(validBranchState)
                             }
                             // Condition invalid branch
-                            val invalidBranchState = constraintInvalidBranch(state, instruction)
+                            val invalidBranchState = constrainInvalidBranch(state, instruction)
                             if (invalidBranchState != null) {
                                 nextStates.add(invalidBranchState)
                             }
@@ -145,7 +145,7 @@ class Day19 {
             println(sum)
         }
 
-        private fun constraintValidBranch(state: State, instruction: Instruction): State? {
+        private fun constrainValidBranch(state: State, instruction: Instruction): State? {
             return State(
                 x = instruction.constraint.constrainValidBranch("x", state.x) ?: return null,
                 m = instruction.constraint.constrainValidBranch("m", state.m) ?: return null,
@@ -156,7 +156,7 @@ class Day19 {
             )
         }
 
-        private fun constraintInvalidBranch(state: State, instruction: Instruction): State? {
+        private fun constrainInvalidBranch(state: State, instruction: Instruction): State? {
             return State(
                 x = instruction.constraint.constrainInvalidBranch("x", state.x) ?: return null,
                 m = instruction.constraint.constrainInvalidBranch("m", state.m) ?: return null,
