@@ -109,6 +109,17 @@ fun IntRange.overlaps(range: IntRange): Boolean {
 }
 
 /**
+ * Computes intersection of two ranges. Ranges must overlap [overlaps]. More effective than [IntRange.intersect].
+ */
+fun IntRange.fastIntersect(range: IntRange): IntRange {
+    if (!this.overlaps(range)) {
+        throw IllegalArgumentException("Ranges do not overlap")
+    }
+    return IntRange(max(first, range.first), min(last, range.last))
+}
+
+
+/**
  * Computes size of LongRange. More effective than [LongRange.count].
  */
 fun LongRange.size(): Long = last - first + 1
