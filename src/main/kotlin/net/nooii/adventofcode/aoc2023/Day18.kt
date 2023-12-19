@@ -10,40 +10,6 @@ class Day18 {
         val hexColors: List<String>
     )
 
-    private class Edge(
-        val from: Point,
-        val to: Point
-    ) {
-        fun length() = from.manhattanDistance(to)
-    }
-
-    private class Polygon(
-        val points: List<Point>,
-        val edges: List<Edge>
-    ) {
-
-        fun getPerimeter() = edges.sumOf { it.length().toLong() }
-
-        fun getArea(): Long {
-            // Shoelace Formula
-            return (points + points.first()).windowed(2, 1).sumOf { (p1, p2) ->
-                p1.x.toLong() * p2.y.toLong() - p1.y.toLong() * p2.x.toLong()
-            } / 2
-        }
-
-        fun getNumberOfPoints(): Long {
-            // Pick's Theorem
-
-            // Area = InnerVertices + OuterVertices / 2 - 1
-            // InnerVertices = Area - OuterVertices / 2 + 1
-            val area = getArea()
-            val perimeter = getPerimeter()
-
-            val innerPointCount = area - perimeter / 2 + 1
-            return innerPointCount + perimeter
-        }
-    }
-
     private data class Instruction(
         val direction: PointDirection,
         val steps: Int,
@@ -70,8 +36,7 @@ class Day18 {
 
         private fun solution(instructions: List<Instruction>) {
             val polygon = createPolygon(instructions)
-            val points = polygon.getNumberOfPoints()
-            println(points)
+            println(polygon.numberOfPoints)
         }
 
         private fun parseHexToInstruction(hex: String): Instruction {
@@ -89,14 +54,12 @@ class Day18 {
         private fun createPolygon(instructions: List<Instruction>): Polygon {
             var current = Point(0, 0)
             val points = mutableListOf<Point>()
-            val edges = mutableListOf<Edge>()
             for (instruction in instructions) {
                 val next = instruction.direction.next(current, instruction.steps)
-                edges.add(Edge(Point(current.x, current.y), Point(next.x, next.y)))
                 points.add(next)
                 current = next
             }
-            return Polygon(points, edges)
+            return Polygon(points)
         }
 
         private fun processInput(input: List<String>): InputData {
