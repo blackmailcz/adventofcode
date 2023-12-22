@@ -16,4 +16,12 @@ data class Point3D(
     )
 
     override fun toString() = "[$x,$y,$z]"
+
+    companion object {
+
+        fun fromXYZString(string: String): Point3D {
+            val (x, y, z) = Regex("(-?\\d+),(-?\\d+),(-?\\d+)").captureFirstMatch(string) { it.toInt() }
+            return Point3D(x, y, z)
+        }
+    }
 }
