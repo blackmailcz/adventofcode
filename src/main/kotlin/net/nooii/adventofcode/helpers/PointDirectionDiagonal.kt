@@ -16,4 +16,29 @@ enum class PointDirectionDiagonal(val xDiff: Int, val yDiff: Int) {
     fun next(point: Point, step: Int = 1): Point {
         return Point(point.x + xDiff * step, point.y + yDiff * step)
     }
+
+    fun mirror(): PointDirectionDiagonal {
+        return when (this) {
+            NORTH_WEST -> SOUTH_EAST
+            NORTH_EAST -> SOUTH_WEST
+            SOUTH_EAST -> NORTH_WEST
+            SOUTH_WEST -> NORTH_EAST
+            EAST -> WEST
+            WEST -> EAST
+            SOUTH -> NORTH
+            NORTH -> SOUTH
+        }
+    }
+
+    companion object {
+
+        fun diagonals(): Set<PointDirectionDiagonal> {
+            return setOf(
+                NORTH_WEST,
+                NORTH_EAST,
+                SOUTH_WEST,
+                SOUTH_EAST
+            )
+        }
+    }
 }
