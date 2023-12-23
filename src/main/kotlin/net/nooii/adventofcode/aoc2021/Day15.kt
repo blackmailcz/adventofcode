@@ -25,9 +25,11 @@ class Day15 {
         }
 
         private fun solution(input: Input): Int {
+            val endPoint = Point(input.sizeX - 1, input.sizeY - 1)
             val result = traverse(
                 start = Point(0, 0),
-                isEnd = { isEndPoint(it, input) },
+                traverseMode = TraverseMode.ToEnd { it == endPoint },
+                heuristic = { it.manhattanDistance(endPoint).toLong() },
                 nextItems = { current ->
                     PointDirection.entries
                         .map { it.next(current) }
@@ -35,15 +37,11 @@ class Day15 {
                         .map { ItemWithCost(it, input.map[it.y][it.x].toLong()) }
                 }
             )
-            return result!!.cost().toInt()
+            return result!!.cost.toInt()
         }
 
         private fun isValidPoint(point: Point, input: Input): Boolean {
             return point.x in 0 until input.sizeX && point.y in 0 until input.sizeY
-        }
-
-        private fun isEndPoint(point: Point, input: Input): Boolean {
-            return point.x == input.sizeX - 1 && point.y == input.sizeY - 1
         }
 
         private fun processInput1(input: List<String>): Input {

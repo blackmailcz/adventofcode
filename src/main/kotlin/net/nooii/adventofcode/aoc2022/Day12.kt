@@ -34,7 +34,7 @@ class Day12 {
         private fun shortestPath(start: Point, area: Area): Int? {
             val result = traverse(
                 start = start,
-                isEnd = { item -> item == area.end },
+                traverseMode = TraverseMode.ToEnd { item -> item == area.end },
                 nextItems = { current ->
                     PointDirection.entries
                         .map { it.next(current) }
@@ -42,7 +42,7 @@ class Day12 {
                         .map { ItemWithCost(it) }
                 }
             )
-            return result?.cost()?.toInt()
+            return result?.cost?.toInt()
         }
 
         private fun isValidMove(area: Area, from: Point, to: Point): Boolean {
