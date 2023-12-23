@@ -32,17 +32,17 @@ class Day12 {
         }
 
         private fun shortestPath(start: Point, area: Area): Int? {
-            val dijkstra = Dijkstra(
+            val result = traverse(
                 start = start,
-                isEnd = { _, item -> item == area.end },
-                itemDistance = { 1 },
+                isEnd = { item -> item == area.end },
                 nextItems = { current ->
-                    PointDirection.entries.mapNotNull { direction ->
-                        direction.next(current).takeIf { isValidMove(area, current, it) }
-                    }
+                    PointDirection.entries
+                        .map { it.next(current) }
+                        .filter { isValidMove(area, current, it) }
+                        .map { ItemWithCost(it) }
                 }
             )
-            return dijkstra.distance()
+            return result?.cost()?.toInt()
         }
 
         private fun isValidMove(area: Area, from: Point, to: Point): Boolean {
