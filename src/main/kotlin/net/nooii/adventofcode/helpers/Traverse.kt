@@ -18,12 +18,35 @@ sealed interface TraverseMode<T> {
     class LimitedSteps<T : Any>(val limit: Int) : TraverseMode<T>
 }
 
+// TODO add to Traverse. Also add iterative version using stack.
+fun <T: Any> greatestCost(
+    start: T,
+    end: T,
+    visited: MutableSet<T> = mutableSetOf(),
+    nextItems: (current: T) -> Collection<ItemWithCost<T>>,
+): Long {
+    if (start == end) {
+        return 0
+    }
+    var maxDistance = Long.MIN_VALUE
+    visited.add(start)
+    for ((item, cost) in nextItems.invoke(start)) {
+        if (item in visited) {
+            continue
+        }
+        maxDistance = maxOf(maxDistance, greatestCost(item, end, visited, nextItems) + cost)
+    }
+    visited.remove(start)
+    return maxDistance
+}
+
 fun <T : Any> traverse(
     start: T,
     initialCost: Long = 0,
     costLimit: Long = Long.MAX_VALUE,
     heuristic: (T) -> Long = { 0 },
     onNodeVisited: (T) -> Unit = {},
+    onEndFound: (cost: Long) -> Unit = {},
     traverseMode: TraverseMode<T>,
     nextItems: (current: T) -> Collection<ItemWithCost<T>?>
 ): TraverseResult<T>? {
@@ -52,6 +75,7 @@ fun <T : Any> traverse(
         }
 
         if (traverseMode is TraverseMode.ToEnd && traverseMode.isEnd.invoke(current)) {
+            onEndFound.invoke(gScore[current]!!)
             val path = reconstructPath(cameFrom, current)
             return TraverseResult(path, gScore[current]!!, closedSet.size)
         }

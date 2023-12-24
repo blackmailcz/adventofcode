@@ -60,5 +60,14 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
                 else -> throw IllegalArgumentException("Invalid direction ($arrow)")
             }
         }
+
+        fun determine(from: Point, to: Point): PointDirection {
+            return when {
+                from == to -> error("Points cannot be the same")
+                from.x == to.x -> if (to.x > from.x) RIGHT else LEFT
+                from.y == to.y -> if (to.y > from.y) DOWN else UP
+                else -> error("Cannot determine direction from $from to $to")
+            }
+        }
     }
 }
