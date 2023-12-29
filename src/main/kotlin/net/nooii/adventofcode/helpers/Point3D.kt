@@ -20,7 +20,7 @@ data class Point3D(
     companion object {
 
         fun fromXYZString(string: String): Point3D {
-            val (x, y, z) = Regex("(-?\\d+),(-?\\d+),(-?\\d+)").captureFirstMatch(string) { it.toInt() }
+            val (x, y, z) = Regex("(-?\\d+),\\s*(-?\\d+),\\s*(-?\\d+)").captureFirstMatch(string) { it.toInt() }
             return Point3D(x, y, z)
         }
     }

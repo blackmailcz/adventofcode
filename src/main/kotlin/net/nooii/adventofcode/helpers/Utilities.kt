@@ -1,6 +1,8 @@
 package net.nooii.adventofcode.helpers
 
 import java.awt.Point
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -189,7 +191,7 @@ fun lcm(numbers: Collection<Long>): Long {
 }
 
 fun Long.factors(): List<Long> {
-    return ((1..this/2).asSequence().filter { this % it == 0L } + this).toList()
+    return ((1..this / 2).asSequence().filter { this % it == 0L } + this).toList()
 }
 
 fun Long.primeFactors(primeCache: List<Long>): Map<Long, Int> {
@@ -198,7 +200,7 @@ fun Long.primeFactors(primeCache: List<Long>): Map<Long, Int> {
     while (number > 1) {
         for (prime in primeCache) {
             if (number % prime == 0L) {
-                primeFactors[prime] = (primeFactors[prime]?: 0) + 1
+                primeFactors[prime] = (primeFactors[prime] ?: 0) + 1
                 number /= prime
                 break
             }
@@ -216,3 +218,8 @@ infix fun Int.pow(exponent: Int) = this.toDouble().pow(exponent).toInt()
  * Raises this value to the integer power [exponent].
  */
 infix fun Long.pow(exponent: Int) = this.toDouble().pow(exponent).toLong()
+
+/**
+ * Round [BigDecimal] to nearest whole number.
+ */
+fun BigDecimal.round(): BigDecimal = setScale(0, RoundingMode.HALF_UP)
