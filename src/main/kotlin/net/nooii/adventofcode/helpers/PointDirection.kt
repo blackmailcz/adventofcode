@@ -8,6 +8,15 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
     LEFT(-1, 0, Axis.HORIZONTAL),
     RIGHT(1, 0, Axis.HORIZONTAL);
 
+    fun letter(): Char {
+        return when (this) {
+            UP -> 'U'
+            DOWN -> 'D'
+            LEFT -> 'L'
+            RIGHT -> 'R'
+        }
+    }
+
     fun next(point: Point, step: Int = 1): Point {
         return Point(point.x + xDiff * step, point.y + yDiff * step)
     }
