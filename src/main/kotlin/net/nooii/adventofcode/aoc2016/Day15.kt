@@ -34,13 +34,13 @@ class Day15 {
             var i = -1
             do {
                 i++
-                val positions = discs.map { (it.id + it.initialPosition + i) % it.positions }
-            } while (!positions.all { it == 0 })
+                val positionSum = discs.sumOf { (it.id + it.initialPosition + i) % it.positions }
+            } while (positionSum != 0)
             println(i)
         }
 
         private fun processInput(input: List<String>): List<Disc> {
-            val regex = Regex("Disc #(\\d+) has (\\d+).*(\\d+).")
+            val regex = Regex("#(\\d+) has (\\d+).*(\\d+)")
             return input.map { line ->
                 val (id, positions, initialPosition) = regex.captureFirstMatch(line) { it.toInt() }
                 Disc(id, positions, initialPosition)
