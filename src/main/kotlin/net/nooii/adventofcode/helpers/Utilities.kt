@@ -144,6 +144,19 @@ fun LongRange.fastIntersect(range: LongRange): LongRange {
 }
 
 /**
+ * Computes a hole in the range delimited by the other range. More effective than [LongRange.subtract].
+ */
+fun LongRange.fastCut(range: LongRange): List<LongRange> {
+    return when {
+        !this.overlaps(range) -> listOf(this)
+        this.fastIntersect(range) == this -> emptyList()
+        range.first <= first -> listOf(LongRange(range.last + 1, this.last))
+        range.last >= last -> listOf(LongRange(this.first, range.first - 1))
+        else -> listOf(LongRange(this.first, range.first - 1), LongRange(range.last + 1, this.last))
+    }
+}
+
+/**
  * Splits the list into smaller lists, using the elements matching [predicate] as delimiter, removing it in process.
  */
 fun <I> List<I>.splitBy(predicate: (I) -> Boolean): List<List<I>> {
