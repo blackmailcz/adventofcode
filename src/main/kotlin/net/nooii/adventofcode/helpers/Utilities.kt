@@ -236,3 +236,15 @@ infix fun Long.pow(exponent: Int) = this.toDouble().pow(exponent).toLong()
  * Round [BigDecimal] to nearest whole number.
  */
 fun BigDecimal.round(): BigDecimal = setScale(0, RoundingMode.HALF_UP)
+
+/**
+ * Rotates a string by a given number of positions.
+ */
+fun String.rotate(by: Int): String {
+    val charArray = toCharArray()
+    val rotated = arrayOfNulls<Char>(length)
+    for ((index, char) in charArray.withIndex()) {
+        rotated[(index + by).mod(length)] = char
+    }
+    return rotated.joinToString("")
+}
