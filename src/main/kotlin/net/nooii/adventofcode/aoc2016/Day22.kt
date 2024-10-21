@@ -161,16 +161,16 @@ class Day22 {
                 if (!line.contains(regex)) {
                     continue
                 }
-                val (x, y, size, used, available) = regex.captureFirstMatch(line)
-                val point = Point(x.toInt(), y.toInt())
+                val (x, y, size, used, available) = regex.captureFirstMatch(line) { it.toInt() }
+                val point = Point(x, y)
                 underlying[point] = Node(
                     point = point,
-                    size = size.toInt(),
-                    used = used.toInt(),
-                    available = available.toInt()
+                    size = size,
+                    used = used,
+                    available = available
                 )
-                maxX = max(maxX, x.toInt())
-                maxY = max(maxY, y.toInt())
+                maxX = max(maxX, x)
+                maxY = max(maxY, y)
             }
             return PointMap(maxX + 1, maxY + 1, underlying)
         }
