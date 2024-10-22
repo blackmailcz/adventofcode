@@ -1,9 +1,9 @@
 package net.nooii.adventofcode.aoc2016
 
-import net.nooii.adventofcode.aoc2016.Day12.Instruction.*
+import net.nooii.adventofcode.aoc2016.Day23.Instruction.*
 import net.nooii.adventofcode.helpers.*
 
-class Day12 {
+class Day23 {
 
     private sealed interface Value {
         data class Integer(val value: Int) : Value
@@ -11,38 +11,54 @@ class Day12 {
     }
 
     private sealed interface Instruction {
-        data class Cpy(val from: Value, val to: Value) : Instruction
-        data class Inc(val target: Value) : Instruction
-        data class Dec(val target: Value) : Instruction
+        data class Cpy(val from: Value, val to: Value) : Instruction {
+            override fun isValid(): Boolean = to is Value.Register
+        }
+
+        data class Inc(val target: Value) : Instruction {
+            override fun isValid(): Boolean = target is Value.Register
+        }
+
+        data class Dec(val target: Value) : Instruction {
+            override fun isValid(): Boolean = target is Value.Register
+        }
+
         data class Jnz(val condition: Value, val offset: Value) : Instruction
+        data class Tgl(val target: Value) : Instruction
+
+        fun isValid(): Boolean {
+            return true
+        }
     }
 
     companion object {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2016).loadStrings("Day12Input")
+            val input = InputLoader(AoCYear.AOC_2016).loadStrings("Day23Input")
             val instructions = processInput(input)
             part1(instructions)
             part2(instructions)
         }
 
         private fun part1(instructions: List<Instruction>) {
-            solution(instructions, 0)
+            solution(instructions, 7)
         }
 
         private fun part2(instructions: List<Instruction>) {
-            solution(instructions, 1)
+            // Runtime ~ 55 sec
+            solution(instructions, 12)
         }
 
-        private fun solution(instructions: List<Instruction>, initialC: Int) {
+        private fun solution(initialInstructions: List<Instruction>, initialA: Int) {
             var i = 0
             val registers = mutableNNMapOf(
-                "a" to 0,
+                "a" to initialA,
                 "b" to 0,
-                "c" to initialC,
+                "c" to 0,
                 "d" to 0
             )
+            val instructions = initialInstructions.toMutableList()
             while (i < instructions.size) {
                 val instruction = instructions[i]
                 when (instruction) {
@@ -66,6 +82,30 @@ class Day12 {
                             i += resolve(instruction.offset, registers)
                         } else {
                             i++
+                        }
+                    }
+                    is Tgl -> {
+                        var targetInstructionIndex = i + resolve(instruction.target, registers)
+                        var first = true
+                        var newInstruction: Instruction?
+                        do {
+                            if (!first) {
+                                targetInstructionIndex++
+                            }
+                            first = false
+                            newInstruction =
+                                when (val targetInstruction = instructions.getOrNull(targetInstructionIndex)) {
+                                    null -> null
+                                    is Inc -> Dec(targetInstruction.target)
+                                    is Dec -> Inc(targetInstruction.target)
+                                    is Tgl -> Inc(targetInstruction.target)
+                                    is Cpy -> Jnz(targetInstruction.from, targetInstruction.to)
+                                    is Jnz -> Cpy(targetInstruction.condition, targetInstruction.offset)
+                                }
+                        } while (newInstruction != null && !newInstruction.isValid())
+
+                        if (newInstruction != null && newInstruction.isValid()) {
+                            instructions[targetInstructionIndex] = newInstruction
                         }
                     }
                 }
@@ -96,6 +136,7 @@ class Day12 {
                     "inc" -> Inc(o1!!)
                     "dec" -> Dec(o1!!)
                     "jnz" -> Jnz(o1!!, o2!!)
+                    "tgl" -> Tgl(o1!!)
                     else -> error("Invalid instruction")
                 }
             }
