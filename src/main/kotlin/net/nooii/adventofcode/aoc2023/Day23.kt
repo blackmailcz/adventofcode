@@ -8,7 +8,7 @@ import kotlin.math.max
 
 class Day23 {
 
-    sealed interface TileType {
+    private sealed interface TileType {
         data object Empty : TileType
         data object Wall : TileType
         data class Slide(val direction: PointDirection) : TileType
