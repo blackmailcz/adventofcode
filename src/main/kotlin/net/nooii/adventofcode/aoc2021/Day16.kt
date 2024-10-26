@@ -31,7 +31,7 @@ class Day16 {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            val input = longHexToBin(InputLoader(AoCYear.AOC_2021).loadStrings("Day16Input").first())
+            val input = hexToBin(InputLoader(AoCYear.AOC_2021).loadStrings("Day16Input").first())
             val (_, packet) = parsePacket(0, input)
             packet!!
             println(countVersionSum(packet))
@@ -146,12 +146,6 @@ class Day16 {
                     }
                 }
             }
-        }
-
-        private fun longHexToBin(hex: String): String {
-            return hex
-                .map { it.toString().toInt(16).toString(2).padStart(4, '0') }
-                .joinToString("")
         }
 
         private fun bitToBool(bit: Char) = bit == '1'

@@ -57,6 +57,15 @@ fun binToDecInt(bin: String) = bin.toInt(2)
 fun binToDecLong(bin: String) = bin.toLong(2)
 
 /**
+ * Converts hexadecimal number in [String] form to a binary number in [String].
+ */
+fun hexToBin(hex: String): String {
+    return hex
+        .map { it.toString().toInt(16).toString(2).padStart(4, '0') }
+        .joinToString("")
+}
+
+/**
  * Returns all captures from target [String] based on this [Regex] and [transform]s them to a single type.
  */
 fun <T> Regex.captureFirstMatch(input: String, transform: (String) -> T): List<T> {
