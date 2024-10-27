@@ -14,7 +14,7 @@ class Day16 {
 
     private data class State(
         val index: Int,
-        val dancers: MutableList<Char>
+        val dancers: List<Char>
     )
 
     companion object {
