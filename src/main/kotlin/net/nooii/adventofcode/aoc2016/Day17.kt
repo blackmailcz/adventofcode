@@ -8,7 +8,7 @@ import java.awt.Point
 
 class Day17 {
 
-    data class State(
+    private data class State(
         val point: Point,
         val path: String
     )
