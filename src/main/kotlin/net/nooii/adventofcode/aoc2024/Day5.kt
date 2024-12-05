@@ -51,19 +51,9 @@ class Day5 {
         }
 
         private fun correctUpdate(update: List<Int>, ordering: Map<Int, Set<Int>>): List<Int> {
-            // Convert to map for fast access
-            val pageToIndex = update.mapIndexed { index, value -> value to index }.toMap().nn()
-            // Sort
             return update.sortedWith { left, right ->
                 val shouldLeftComeBeforeRight = ordering[left]?.contains(right) ?: false
-                val isLeftBeforeRight = pageToIndex[left] < pageToIndex[right]
-                // If left should come before right, and it does, return -1, otherwise fix it and return 1
-                when {
-                    isLeftBeforeRight && shouldLeftComeBeforeRight -> -1
-                    isLeftBeforeRight && !shouldLeftComeBeforeRight -> 1
-                    shouldLeftComeBeforeRight -> -1
-                    else -> 1
-                }
+                if (shouldLeftComeBeforeRight) -1 else 1
             }
         }
 
