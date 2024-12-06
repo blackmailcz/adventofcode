@@ -257,3 +257,27 @@ fun String.rotate(by: Int): String {
     }
     return rotated.joinToString("")
 }
+
+/**
+ * Runs a [callback] over each point. Faster than [forEachPoint] for large ranges.
+ */
+fun forEachPoint(xRange: IntRange, yRange: IntRange, callback: (point: Point) -> Unit) {
+    for (y in yRange) {
+        for (x in xRange) {
+            callback(Point(x, y))
+        }
+    }
+}
+
+/**
+ * Return a list of points within the given range.
+ */
+fun pointRange(xRange: IntRange, yRange: IntRange): Set<Point> {
+    val points = mutableSetOf<Point>()
+    for (y in yRange) {
+        for (x in xRange) {
+            points.add(Point(x, y))
+        }
+    }
+    return points
+}
