@@ -281,3 +281,14 @@ fun pointRange(xRange: IntRange, yRange: IntRange): Set<Point> {
     }
     return points
 }
+
+/**
+ * Repeats this list [times] times and returns the result as a new list.
+ */
+fun <T> List<T>.repeat(times: Int): List<T> {
+    val output = mutableListOf<T>()
+    repeat(times) {
+        output.addAll(this)
+    }
+    return output
+}
