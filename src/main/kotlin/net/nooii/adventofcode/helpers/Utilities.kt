@@ -292,3 +292,21 @@ fun <T> List<T>.repeat(times: Int): List<T> {
     }
     return output
 }
+
+/**
+ * Splits the string into two halves.
+ * @see [halve]
+ */
+fun String.halve() = halve { it }
+
+/**
+ * Splits the string into two halves, rounded down. [transform] the value in process of splitting.
+ * For size <= 1 it produces the original string.
+ */
+fun <T> String.halve(transform: (String) -> T): List<T> {
+    return if (length <= 1) {
+        listOf(transform(this))
+    } else {
+        listOf(transform(take(length / 2)), transform(drop(length / 2)))
+    }
+}
