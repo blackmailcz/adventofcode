@@ -270,6 +270,15 @@ fun forEachPoint(xRange: IntRange, yRange: IntRange, callback: (point: Point) ->
 }
 
 /**
+ * Runs [forEachPoint] over a [PointMap].
+ */
+fun <T : Any> forEachPoint(pointMap: PointMap<T>, callback: (point: Point, value: T) -> Unit) {
+    forEachPoint(0 until pointMap.width, 0 until pointMap.height) { point ->
+        callback.invoke(point, pointMap[point])
+    }
+}
+
+/**
  * Return a list of points within the given range.
  */
 fun pointRange(xRange: IntRange, yRange: IntRange): Set<Point> {
