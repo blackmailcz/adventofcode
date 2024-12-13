@@ -41,10 +41,9 @@ class Day13 {
 
         private fun computeCost(configuration: Configuration): Long? {
             with(configuration) {
-                val (a, b) = solveTwoLinearEquations(
-                    longArrayOf(x1, x2, prizeX),
-                    longArrayOf(y1, y2, prizeY)
-                ) ?: return null
+                val (a, b) = solveTwoLinearEquations(longArrayOf(x1, x2, prizeX), longArrayOf(y1, y2, prizeY))
+                    ?.takeIf { (a, b) -> a >= 0 && b >= 0 }
+                    ?: return null
                 return (3 * a + b)
             }
         }
