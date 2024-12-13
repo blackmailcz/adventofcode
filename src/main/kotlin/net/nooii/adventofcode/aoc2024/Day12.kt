@@ -58,7 +58,6 @@ class Day12 {
             return polygons
         }
 
-
         /**
          * Creates a polygon (a set of connected points) starting from an initial point.
          *
