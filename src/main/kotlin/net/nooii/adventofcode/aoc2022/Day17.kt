@@ -2,7 +2,7 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import java.awt.Point
+import net.nooii.adventofcode.helpers.Point
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -73,7 +73,7 @@ class Day17 {
             while (true) {
                 moveRockInJetStream(rock)
                 if (canRockFall(rock)) {
-                    rock.offset.y++
+                    rock.offset = rock.offset.copy(y = rock.offset.y + 1)
                 } else {
                     imprintRock(rock)
                     break
@@ -123,7 +123,7 @@ class Day17 {
                     return
                 }
             }
-            rock.offset.x += jetStreamOffset.by
+            rock.offset = rock.offset.copy(x = rock.offset.x + jetStreamOffset.by)
         }
 
         private fun generateRock(): Rock {
@@ -139,7 +139,6 @@ class Day17 {
         fun main(args: Array<String>) {
             val rocksInput = InputLoader(AoCYear.AOC_2022).loadStrings("Day17Rocks")
             val rocks = parseRocks(rocksInput)
-            println(rocks)
             val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day17Input")
             val jetStream = parseInput(input)
             part1(Room(rocks, jetStream))

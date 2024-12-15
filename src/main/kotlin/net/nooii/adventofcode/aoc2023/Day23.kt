@@ -2,7 +2,6 @@ package net.nooii.adventofcode.aoc2023
 
 import net.nooii.adventofcode.aoc2023.Day23.TileType.*
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 import java.util.*
 import kotlin.math.max
 

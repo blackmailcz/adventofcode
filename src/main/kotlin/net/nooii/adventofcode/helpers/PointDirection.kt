@@ -1,7 +1,5 @@
 package net.nooii.adventofcode.helpers
 
-import java.awt.Point
-
 enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
     UP(0, -1, Axis.VERTICAL),
     DOWN(0, 1, Axis.VERTICAL),

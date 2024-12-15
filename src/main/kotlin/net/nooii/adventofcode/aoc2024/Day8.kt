@@ -3,8 +3,8 @@ package net.nooii.adventofcode.aoc2024
 import com.github.shiguruikai.combinatoricskt.combinations
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.Point
 import net.nooii.adventofcode.helpers.forEachPoint
-import java.awt.Point
 
 class Day8 {
 

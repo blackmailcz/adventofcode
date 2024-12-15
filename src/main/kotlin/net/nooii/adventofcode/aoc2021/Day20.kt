@@ -2,8 +2,8 @@ package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.Point
 import net.nooii.adventofcode.helpers.binToDecInt
-import java.awt.Point
 
 /**
  * Created by Nooii on 20.12.2021

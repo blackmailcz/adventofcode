@@ -1,7 +1,6 @@
 package net.nooii.adventofcode.aoc2023
 
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 import kotlin.math.max
 
 class Day21 {

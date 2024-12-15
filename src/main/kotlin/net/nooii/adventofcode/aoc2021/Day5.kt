@@ -2,7 +2,7 @@ package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
-import java.awt.Point
+import net.nooii.adventofcode.helpers.Point
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sign

@@ -2,7 +2,6 @@ package net.nooii.adventofcode.aoc2016
 
 import com.github.shiguruikai.combinatoricskt.permutations
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 import kotlin.math.max
 import kotlin.math.min
 

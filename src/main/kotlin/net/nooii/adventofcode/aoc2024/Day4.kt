@@ -1,11 +1,7 @@
 package net.nooii.adventofcode.aoc2024
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.PointDirectionDiagonal
+import net.nooii.adventofcode.helpers.*
 import net.nooii.adventofcode.helpers.PointDirectionDiagonal.*
-import net.nooii.adventofcode.helpers.PointMap
-import java.awt.Point
 
 class Day4 {
 

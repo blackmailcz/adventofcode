@@ -1,7 +1,6 @@
 package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 
 class Day12 {
 

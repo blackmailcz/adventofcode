@@ -1,7 +1,5 @@
 package net.nooii.adventofcode.helpers
 
-import java.awt.Point
-
 enum class PointDirectionDiagonal(val xDiff: Int, val yDiff: Int) {
 
     NORTH_WEST(-1, -1),

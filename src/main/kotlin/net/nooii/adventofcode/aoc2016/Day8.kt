@@ -2,8 +2,8 @@ package net.nooii.adventofcode.aoc2016
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.Point
 import net.nooii.adventofcode.helpers.captureFirstMatch
-import java.awt.Point
 import kotlin.math.min
 
 class Day8 {

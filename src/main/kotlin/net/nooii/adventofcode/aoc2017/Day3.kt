@@ -1,10 +1,6 @@
 package net.nooii.adventofcode.aoc2017
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.PointDirection
-import net.nooii.adventofcode.helpers.PointDirectionDiagonal
-import java.awt.Point
+import net.nooii.adventofcode.helpers.*
 import kotlin.math.abs
 import kotlin.math.min
 

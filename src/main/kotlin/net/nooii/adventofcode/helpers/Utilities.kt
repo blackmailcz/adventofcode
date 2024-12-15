@@ -1,9 +1,7 @@
 package net.nooii.adventofcode.helpers
 
-import java.awt.Point
 import java.math.BigDecimal
 import java.math.RoundingMode
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -84,13 +82,6 @@ fun Regex.captureFirstMatch(input: String): List<String> {
 }
 
 /**
- * Computes difference between two points represented by a point.
- */
-fun Point.diff(other: Point): Point {
-    return Point(other.x - x, other.y - y)
-}
-
-/**
  * Produces product of all items in the list.
  */
 fun Collection<Int>.product() = reduce { acc, i -> acc * i }
@@ -99,13 +90,6 @@ fun Collection<Int>.product() = reduce { acc, i -> acc * i }
  * Produces product of all items in the list.
  */
 fun Collection<Long>.product() = reduce { acc, i -> acc * i }
-
-/**
- * Computes Manhattan distance to other [Point].
- */
-fun Point.manhattanDistance(other: Point): Int {
-    return abs(x - other.x) + abs(y - other.y)
-}
 
 /**
  * Compute size of IntRange. More effective than [IntRange.count].
@@ -206,16 +190,32 @@ fun gcd(numbers: Collection<Long>): Long {
 }
 
 /**
+ * Finds the Greatest Common Divisor of collection of [numbers].
+ */
+fun gcd(vararg numbers: Long): Long = gcd(numbers.toSet())
+
+/**
  * Finds the Least Common Multiple of collection of [numbers].
  */
 fun lcm(numbers: Collection<Long>): Long {
     return numbers.toSet().fold(1) { x, y -> x * (y / gcd(x, y)) }
 }
 
+/**
+ * Finds the Least Common Multiple of collection of [numbers].
+ */
+fun lcm(vararg numbers: Long): Long = lcm(numbers.toSet())
+
+/**
+ * Breakdown [Long] into its factors (all factors, not just primes).
+ */
 fun Long.factors(): List<Long> {
     return ((1..this / 2).asSequence().filter { this % it == 0L } + this).toList()
 }
 
+/**
+ * Breakdown [Long] into its prime factors.
+ */
 fun Long.primeFactors(primeCache: List<Long>): Map<Long, Int> {
     val primeFactors = mutableMapOf<Long, Int>()
     var number = this

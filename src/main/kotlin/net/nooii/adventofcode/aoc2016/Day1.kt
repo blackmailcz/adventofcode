@@ -2,9 +2,8 @@ package net.nooii.adventofcode.aoc2016
 
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
+import net.nooii.adventofcode.helpers.Point
 import net.nooii.adventofcode.helpers.PointDirection
-import net.nooii.adventofcode.helpers.manhattanDistance
-import java.awt.Point
 
 class Day1 {
 

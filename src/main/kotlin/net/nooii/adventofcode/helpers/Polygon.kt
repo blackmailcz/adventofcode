@@ -1,7 +1,5 @@
 package net.nooii.adventofcode.helpers
 
-import java.awt.Point
-
 /**
  * Represents an arbitrary closed polygon formed by [points].
  */

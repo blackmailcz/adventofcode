@@ -1,7 +1,6 @@
 package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min

@@ -1,10 +1,6 @@
 package net.nooii.adventofcode.aoc2016
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.CryptoTool
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.PointDirection
-import java.awt.Point
+import net.nooii.adventofcode.helpers.*
 
 class Day17 {
 

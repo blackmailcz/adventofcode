@@ -2,7 +2,6 @@ package net.nooii.adventofcode.aoc2023
 
 import com.github.shiguruikai.combinatoricskt.combinations
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 
 class Day11 {
 

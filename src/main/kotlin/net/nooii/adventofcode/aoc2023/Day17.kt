@@ -1,10 +1,6 @@
 package net.nooii.adventofcode.aoc2023
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.PointDirection
-import net.nooii.adventofcode.helpers.PointMap
-import java.awt.Point
+import net.nooii.adventofcode.helpers.*
 import java.util.*
 
 class Day17 {

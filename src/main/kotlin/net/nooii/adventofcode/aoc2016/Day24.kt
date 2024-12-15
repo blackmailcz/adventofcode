@@ -3,7 +3,6 @@ package net.nooii.adventofcode.aoc2016
 import com.github.shiguruikai.combinatoricskt.combinations
 import com.github.shiguruikai.combinatoricskt.permutations
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 
 class Day24 {
 

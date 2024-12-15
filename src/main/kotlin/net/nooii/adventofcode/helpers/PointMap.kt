@@ -1,7 +1,5 @@
 package net.nooii.adventofcode.helpers
 
-import java.awt.Point
-
 class PointMap<T : Any>(
     val width: Int,
     val height: Int,

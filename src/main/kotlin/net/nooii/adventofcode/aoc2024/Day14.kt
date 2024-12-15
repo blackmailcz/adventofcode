@@ -1,10 +1,6 @@
 package net.nooii.adventofcode.aoc2024
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.captureFirstMatch
-import net.nooii.adventofcode.helpers.product
-import java.awt.Point
+import net.nooii.adventofcode.helpers.*
 
 class Day14 {
 

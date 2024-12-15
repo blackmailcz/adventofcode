@@ -1,7 +1,6 @@
 package net.nooii.adventofcode.aoc2021
 
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 
 /**
  * Created by Nooii on 11.12.2021

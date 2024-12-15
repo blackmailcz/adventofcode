@@ -1,11 +1,7 @@
 package net.nooii.adventofcode.aoc2022
 
-import net.nooii.adventofcode.helpers.AoCYear
-import net.nooii.adventofcode.helpers.InputLoader
-import net.nooii.adventofcode.helpers.MutableNNMap
-import net.nooii.adventofcode.helpers.PointDirectionDiagonal
+import net.nooii.adventofcode.helpers.*
 import net.nooii.adventofcode.helpers.PointDirectionDiagonal.*
-import java.awt.Point
 import kotlin.math.abs
 
 class Day23 {

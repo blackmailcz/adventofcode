@@ -2,7 +2,6 @@ package net.nooii.adventofcode.aoc2017
 
 import net.nooii.adventofcode.aoc2017.cross.AoC2017_Day10_KnotHash
 import net.nooii.adventofcode.helpers.*
-import java.awt.Point
 
 class Day14 {
 
