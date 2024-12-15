@@ -50,6 +50,8 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
 
     companion object {
 
+        fun fromLetter(letter: Char) = fromLetter(letter.toString())
+
         fun fromLetter(letter: String): PointDirection {
             return when (letter) {
                 "U" -> UP
@@ -60,8 +62,10 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
             }
         }
 
+        fun fromArrow(arrow: Char) = fromArrow(arrow.toString())
+
         fun fromArrow(arrow: String): PointDirection {
-            return when(arrow) {
+            return when (arrow) {
                 ">" -> RIGHT
                 "<" -> LEFT
                 "v" -> DOWN
