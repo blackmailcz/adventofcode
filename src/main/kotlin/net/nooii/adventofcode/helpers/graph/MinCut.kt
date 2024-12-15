@@ -1,5 +1,13 @@
 package net.nooii.adventofcode.helpers.graph
 
+/**
+ * Represents the result of a minimum cut operation on a graph.
+ *
+ * @property graph1 The first subgraph resulting from the cut.
+ * @property graph2 The second subgraph resulting from the cut.
+ * @property cutters The set of edges that were removed to create the cut.
+ * @property weight The total weight of the cut (sum of weights of the cut edges).
+ */
 class MinCutResult(
     val graph1: Graph,
     val graph2: Graph,
@@ -7,12 +15,28 @@ class MinCutResult(
     val weight: Int
 )
 
-private data class InternalCut(
+/**
+ * Represents a cut in a graph during the minimum cut algorithm.
+ *
+ * @property v1 The first vertex of the cut.
+ * @property v2 The second vertex of the cut.
+ * @property weight The weight of the cut, representing the sum of weights of edges between v1 and v2.
+ */
+private data class Cut(
     val v1: Vertex,
     val v2: Vertex,
     val weight: Int
 )
 
+/**
+ * Finds the minimum cut of the graph using the Stoer-Wagner algorithm.
+ *
+ * This function creates a copy of the original graph and performs the minimum cut algorithm on the copy.
+ * It iteratively finds cuts and merges vertices until only one vertex remains, keeping track of the best cut found.
+ *
+ * @receiver The graph on which to perform the minimum cut algorithm.
+ * @return A [MinCutResult] object containing information about the minimum cut, or null if no cut was found.
+ */
 fun Graph.findMinCut(): MinCutResult? {
     // Copy graph, because cutting will destroy it
     val copy = Graph()
@@ -22,7 +46,7 @@ fun Graph.findMinCut(): MinCutResult? {
 
     with(copy) {
         val cuts = mutableListOf<Int>()
-        var bestCut: InternalCut? = null
+        var bestCut: Cut? = null
         while (numberOfVertices() > 1) {
             val internalCut = findCut()
             if (bestCut == null || internalCut.weight < bestCut.weight) {
@@ -36,7 +60,19 @@ fun Graph.findMinCut(): MinCutResult? {
     }
 }
 
-private fun Graph.findCut(): InternalCut {
+/**
+ * Finds a cut in the graph using the Stoer-Wagner algorithm.
+ *
+ * This function implements a phase of the Stoer-Wagner algorithm to find a cut in the graph.
+ * It starts with a random vertex and gradually builds a "potato" (a growing set of vertices)
+ * until only one vertex remains outside the potato. The last edge added to the potato
+ * represents the cut.
+ *
+ * @receiver The graph on which to perform the cut-finding operation.
+ * @return A [Cut] object representing the found cut, containing the two vertices that define
+ *         the cut and the weight of the cut.
+ */
+private fun Graph.findCut(): Cut {
     // Stoer-Wagner algorithm to find all cuts in the graph
 
     // Choose random vertex
@@ -68,12 +104,23 @@ private fun Graph.findCut(): InternalCut {
         if (remaining == 1) {
             val cutWeight = edges[EdgeKey(potato, nextVertex)]!!.weight
             removeVertex(potato)
-            return InternalCut(potatoVertices.last(), potatoVertices[potatoVertices.size - 2], cutWeight)
+            return Cut(potatoVertices.last(), potatoVertices[potatoVertices.size - 2], cutWeight)
         }
         removeEdge(EdgeKey(potato, nextVertex))
     }
 }
 
+/**
+ * Merges two vertices in the graph into a single new vertex.
+ *
+ * This function creates a new vertex that combines the properties of two existing vertices.
+ * It handles the edges connected to the both vertices, adjusting weights where necessary,
+ * and removes the original vertices from the graph.
+ *
+ * @param v1 The first vertex to be merged.
+ * @param v2 The second vertex to be merged.
+ * @return A new [Vertex] that represents the merged result of v1 and v2.
+ */
 private fun Graph.mergeVertices(v1: Vertex, v2: Vertex): Vertex {
     val out = Vertex("${v1.name}-${v2.name}")
     addVertex(out)
@@ -107,6 +154,18 @@ private fun Graph.mergeVertices(v1: Vertex, v2: Vertex): Vertex {
     return out
 }
 
+/**
+ * Relaxes the edges between a given vertex and a "potato" vertex in the graph.
+ *
+ * This function is part of the Stoer-Wagner algorithm implementation. It updates the edges
+ * connecting the given vertex to the potato vertex, which represents a growing set of vertices.
+ * If an edge already exists between the potato and another vertex, its weight is increased.
+ * If no such edge exists, a new edge is created.
+ *
+ * @param vertex The vertex whose edges are being relaxed.
+ * @param potato The "potato" vertex representing the growing set of vertices.
+ * @param potatoVertices A set of vertices already included in the potato.
+ */
 private fun Graph.relaxate(vertex: Vertex, potato: Vertex, potatoVertices: Set<Vertex>) {
     for (edge in vertexToEdgesMap[vertex]!!) {
         val otherVertex = edge.getOtherVertex(vertex)
@@ -130,11 +189,23 @@ private fun Graph.relaxate(vertex: Vertex, potato: Vertex, potatoVertices: Set<V
     }
 }
 
-private fun buildMinCutResult(originalGraph: Graph, internalCut: InternalCut): MinCutResult {
+/**
+ * Builds a [MinCutResult] object based on the original graph and the found cut.
+ *
+ * This function takes the original graph and the cut information, and constructs two subgraphs
+ * representing the partitions created by the minimum cut. It also identifies the edges that
+ * form the cut itself.
+ *
+ * @param originalGraph The original graph on which the minimum cut was performed.
+ * @param cut The [Cut] object representing the minimum cut found in the graph.
+ * @return A [MinCutResult] object containing the two partitioned subgraphs, the set of edges
+ *         that form the cut, and the weight of the cut.
+ */
+private fun buildMinCutResult(originalGraph: Graph, cut: Cut): MinCutResult {
     val graph1 = Graph()
     val graph2 = Graph()
     val cutters = mutableSetOf<Edge>()
-    val subVerticesNames = internalCut.v1.name.split("-")
+    val subVerticesNames = cut.v1.name.split("-")
     for (vertex in originalGraph.vertices.values) {
         if (vertex.name in subVerticesNames) {
             graph1.addVertex(vertex)
@@ -155,5 +226,5 @@ private fun buildMinCutResult(originalGraph: Graph, internalCut: InternalCut): M
             }
         }
     }
-    return MinCutResult(graph1, graph2, cutters, internalCut.weight)
+    return MinCutResult(graph1, graph2, cutters, cut.weight)
 }

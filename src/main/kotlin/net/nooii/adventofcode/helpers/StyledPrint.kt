@@ -1,5 +1,14 @@
 package net.nooii.adventofcode.helpers
 
+/**
+ * Represents various text styling options for console output.
+ *
+ * This enum provides a set of ANSI escape codes for different text colors,
+ * styles (bold, underlined), and background colors. These can be used to
+ * format text output in the console.
+ *
+ * @property code The ANSI escape code string for the specific style.
+ */
 enum class PrintStyle(val code: String) {
 
     BLACK("\u001B[0;30m"),
@@ -68,6 +77,18 @@ enum class PrintStyle(val code: String) {
 
 private const val RESET = "\u001B[0m"
 
+/**
+ * Prints the given text to the console with optional color styling.
+ *
+ * This function allows printing text with a specified color style. If no color
+ * is provided, it prints the text as-is. When a color is specified, it wraps
+ * the text with the appropriate ANSI color codes.
+ *
+ * @param text The text to be printed. Can be any object, which will be converted
+ *             to a string representation.
+ * @param color The [PrintStyle] to be applied to the text. If null, no styling
+ *              is applied.
+ */
 fun styledPrint(text: Any?, color: PrintStyle?) {
     if (color == null) {
         print(text)
@@ -76,6 +97,9 @@ fun styledPrint(text: Any?, color: PrintStyle?) {
     }
 }
 
+/**
+ * [styledPrint] variant, followed by a line break.
+ */
 fun styledPrintln(text: Any?, color: PrintStyle?) {
     if (color == null) {
         println(text)

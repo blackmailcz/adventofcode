@@ -3,6 +3,9 @@ package net.nooii.adventofcode.helpers
 import kotlin.math.max
 import kotlin.math.sqrt
 
+/**
+ * Utility to generate first N prime numbers.
+ */
 object SieveOfAtkin {
 
     fun sieve(limit : Int) : MutableList<Int> {

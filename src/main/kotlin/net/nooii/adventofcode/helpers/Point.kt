@@ -23,4 +23,6 @@ data class Point(
     fun diff(other: Point): Point {
         return Point(other.x - x, other.y - y)
     }
+
+    override fun toString() = "[$x,$y]"
 }

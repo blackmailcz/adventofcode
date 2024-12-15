@@ -1,11 +1,29 @@
 package net.nooii.adventofcode.helpers
 
+/**
+ * Represents a point in 3D space using double precision coordinates.
+ *
+ * @property x The x-coordinate of the point.
+ * @property y The y-coordinate of the point.
+ * @property z The z-coordinate of the point. Defaults to positive infinity if not specified.
+ */
 data class DoublePoint(
     val x: Double,
     val y: Double,
     val z: Double = Double.POSITIVE_INFINITY
 )
 
+/**
+ * Computes the equation of a plane given two points on the plane and a vector.
+ *
+ * This function calculates the coefficients of the plane equation Ax + By + Cz + D = 0,
+ * where (A, B, C) is the normal vector to the plane and D is the constant term.
+ *
+ * @param p1 A point on the plane, represented as a DoublePoint.
+ * @param v1 A vector on the plane, represented as a DoublePoint.
+ * @param p2 Another point on the plane, different from p1, represented as a DoublePoint.
+ * @return A List of four Double values representing the coefficients [A, B, C, D] of the plane equation.
+ */
 private fun computePlaneEquation(p1: DoublePoint, v1: DoublePoint, p2: DoublePoint): List<Double> {
 
 //    val p1 = DoublePoint(5.0, 8.0, -1.0)
@@ -28,6 +46,21 @@ private fun computePlaneEquation(p1: DoublePoint, v1: DoublePoint, p2: DoublePoi
     return listOf(n.x, n.y, n.z, d)
 }
 
+
+/**
+ * Calculates the intersection point of a line with a plane in 3D space.
+ *
+ * This function determines where a given line intersects with a plane defined by its equation.
+ * It uses the parametric form of the line equation and substitutes it into the plane equation
+ * to solve for the intersection point.
+ *
+ * @param planeEquation A list of four Double values representing the coefficients [A, B, C, D]
+ *                      of the plane equation Ax + By + Cz + D = 0.
+ * @param p A DoublePoint representing a point on the line.
+ * @param v A DoublePoint representing the direction vector of the line.
+ * @return A DoublePoint representing the intersection point of the line and the plane.
+ *         If the line is parallel to the plane (no intersection), the behavior is undefined.
+ */
 private fun intersectPlaneWithLine(planeEquation: List<Double>, p: DoublePoint, v: DoublePoint): DoublePoint {
     val (X, Y, Z, D) = planeEquation
 
@@ -42,6 +75,20 @@ private fun intersectPlaneWithLine(planeEquation: List<Double>, p: DoublePoint, 
     return DoublePoint(x, y, z)
 }
 
+
+/**
+ * Calculates the intersection point of two 3D lines, if it exists.
+ *
+ * This function determines whether two lines in 3D space intersect and, if so, computes their intersection point.
+ * It uses parametric equations of the lines to solve for the intersection.
+ *
+ * @param p1 A DoublePoint representing a point on the first line.
+ * @param v1 A DoublePoint representing the direction vector of the first line.
+ * @param p2 A DoublePoint representing a point on the second line.
+ * @param v2 A DoublePoint representing the direction vector of the second line.
+ * @return A DoublePoint representing the intersection point if the lines intersect, or null if they do not intersect
+ *         or are parallel.
+ */
 private fun xyzIntersection(
     p1: DoublePoint,
     v1: DoublePoint,

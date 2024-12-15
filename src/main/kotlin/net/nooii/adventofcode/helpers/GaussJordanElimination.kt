@@ -2,6 +2,16 @@ package net.nooii.adventofcode.helpers
 
 import kotlin.math.abs
 
+/**
+ * Retrieves the solution to the linear system of equations.
+ *
+ * This function determines whether the system is feasible and returns the appropriate solution.
+ * If the system is feasible, it returns the primal solution. Otherwise, it returns the dual solution.
+ *
+ * @return A [DoubleArray] representing the solution to the linear system.
+ *         Returns the primal solution if the system is feasible, or the dual solution if it's not.
+ *         May return null if no solution exists.
+ */
 // https://algs4.cs.princeton.edu/99scientific/GaussJordanElimination.java.html
 class GaussJordanElimination(A: Array<DoubleArray>, b: DoubleArray) {
 

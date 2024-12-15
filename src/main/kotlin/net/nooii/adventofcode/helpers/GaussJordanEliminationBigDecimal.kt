@@ -3,6 +3,9 @@ package net.nooii.adventofcode.helpers
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+/**
+ * A [GaussJordanElimination] variant with [BigDecimal] precision.
+ */
 class GaussJordanEliminationBigDecimal(A: Array<Array<BigDecimal>>, b: Array<BigDecimal>) {
 
     private val n = b.size // n-by-n system
