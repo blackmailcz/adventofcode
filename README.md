@@ -23,8 +23,8 @@ time.
 [![13.png](readme_images/regular/13.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day13.kt)
 [![14.png](readme_images/regular/14.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day14.kt)
 [![15.png](readme_images/regular/15.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day15.kt)<br/>
-<img src="readme_images/grayscale/16.png" />
-<img src="readme_images/grayscale/17.png" />
+<picture><img src="readme_images/grayscale/16.png" /></picture>
+<picture><img src="readme_images/grayscale/17.png" /></picture>
 ![18.png](readme_images/grayscale/18.png)
 ![19.png](readme_images/grayscale/19.png)
 ![20.png](readme_images/grayscale/20.png)<br/>
