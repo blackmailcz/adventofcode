@@ -23,16 +23,16 @@ time.
 [![13.png](readme_images/regular/13.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day13.kt)
 [![14.png](readme_images/regular/14.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day14.kt)
 [![15.png](readme_images/regular/15.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day15.kt)<br/>
-<picture><img src="readme_images/grayscale/16.png" /></picture>
-<picture><img src="readme_images/grayscale/17.png" /></picture>
-<picture><img src="readme_images/grayscale/18.png" /></picture>
-<picture><img src="readme_images/grayscale/19.png" /></picture>
-<picture><img src="readme_images/grayscale/20.png" /></picture><br/>
-<picture><img src="readme_images/grayscale/21.png" /></picture>
-<picture><img src="readme_images/grayscale/22.png" /></picture>
-<picture><img src="readme_images/grayscale/23.png" /></picture>
-<picture><img src="readme_images/grayscale/24.png" /></picture>
-<picture><img src="readme_images/grayscale/25.png" /></picture>
+[![16.png](readme_images/grayscale/16.png)]()
+<a><img src="readme_images/grayscale/17.png" /></a>
+<a><img src="readme_images/grayscale/18.png" /></a>
+<a><img src="readme_images/grayscale/19.png" /></a>
+<a><img src="readme_images/grayscale/20.png" /></a><br/>
+<a><img src="readme_images/grayscale/21.png" /></a>
+<a><img src="readme_images/grayscale/22.png" /></a>
+<a><img src="readme_images/grayscale/23.png" /></a>
+<a><img src="readme_images/grayscale/24.png" /></a>
+<a><img src="readme_images/grayscale/25.png" /></a>
 
 </details>
 
@@ -155,13 +155,13 @@ time.
 [![16.png](readme_images/regular/16.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day16.kt)
 [![17.png](readme_images/regular/17.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day17.kt)
 [![18.png](readme_images/regular/18.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day18.kt)
-<picture><img src="readme_images/grayscale/19.png" /></picture>
-<picture><img src="readme_images/grayscale/20.png" /></picture><br/>
-<picture><img src="readme_images/grayscale/21.png" /></picture>
-<picture><img src="readme_images/grayscale/22.png" /></picture>
-<picture><img src="readme_images/grayscale/23.png" /></picture>
-<picture><img src="readme_images/grayscale/24.png" /></picture>
-<picture><img src="readme_images/grayscale/25.png" /></picture>
+<a><img src="readme_images/grayscale/19.png" /></a>
+<a><img src="readme_images/grayscale/20.png" /></a><br/>
+<a><img src="readme_images/grayscale/21.png" /></a>
+<a><img src="readme_images/grayscale/22.png" /></a>
+<a><img src="readme_images/grayscale/23.png" /></a>
+<a><img src="readme_images/grayscale/24.png" /></a>
+<a><img src="readme_images/grayscale/25.png" /></a>
 </details>
 
 ## 2016 - 50 ⭐
