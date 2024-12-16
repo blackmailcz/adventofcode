@@ -25,14 +25,15 @@ time.
 [![15.png](readme_images/regular/15.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day15.kt)<br/>
 <picture><img src="readme_images/grayscale/16.png" /></picture>
 <picture><img src="readme_images/grayscale/17.png" /></picture>
-![18.png](readme_images/grayscale/18.png)
-![19.png](readme_images/grayscale/19.png)
-![20.png](readme_images/grayscale/20.png)<br/>
-![21.png](readme_images/grayscale/21.png)
-![22.png](readme_images/grayscale/22.png)
-![23.png](readme_images/grayscale/23.png)
-![24.png](readme_images/grayscale/24.png)
-![25.png](readme_images/grayscale/25.png)
+<picture><img src="readme_images/grayscale/18.png" /></picture>
+<picture><img src="readme_images/grayscale/19.png" /></picture>
+<picture><img src="readme_images/grayscale/20.png" /></picture><br/>
+<picture><img src="readme_images/grayscale/21.png" /></picture>
+<picture><img src="readme_images/grayscale/22.png" /></picture>
+<picture><img src="readme_images/grayscale/23.png" /></picture>
+<picture><img src="readme_images/grayscale/24.png" /></picture>
+<picture><img src="readme_images/grayscale/25.png" /></picture>
+
 </details>
 
 ## 2023 - 50 ⭐
@@ -154,13 +155,13 @@ time.
 [![16.png](readme_images/regular/16.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day16.kt)
 [![17.png](readme_images/regular/17.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day17.kt)
 [![18.png](readme_images/regular/18.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day18.kt)
-![19.png](readme_images/grayscale/19.png)
-![20.png](readme_images/grayscale/20.png)<br/>
-![21.png](readme_images/grayscale/21.png)
-![22.png](readme_images/grayscale/22.png)
-![23.png](readme_images/grayscale/23.png)
-![24.png](readme_images/grayscale/24.png)
-![25.png](readme_images/grayscale/25.png)
+<picture><img src="readme_images/grayscale/19.png" /></picture>
+<picture><img src="readme_images/grayscale/20.png" /></picture><br/>
+<picture><img src="readme_images/grayscale/21.png" /></picture>
+<picture><img src="readme_images/grayscale/22.png" /></picture>
+<picture><img src="readme_images/grayscale/23.png" /></picture>
+<picture><img src="readme_images/grayscale/24.png" /></picture>
+<picture><img src="readme_images/grayscale/25.png" /></picture>
 </details>
 
 ## 2016 - 50 ⭐
