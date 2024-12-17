@@ -42,7 +42,7 @@ class Day17 {
             // - Any unique 4th digit is a candidate for a checking of a next digit
             // - Walk recursively over all candidates until a solution is found. This solution would be the smallest.
             val prefixes = (0b000..0b111).toList()
-            val mask = listOf(1).repeat(16)
+            val mask = listOf(1).repeat(instructions.size)
 
             // Recursively find the next states until a solution is found
             fun find(state: List<Int>): List<Int>? {
