@@ -41,8 +41,9 @@ class Day17 {
             // - We need to iterate over all combination of 4 digits at once, and check the 4th digit.
             // - Any unique 4th digit is a candidate for a checking of a next digit
             // - Walk recursively over all candidates until a solution is found. This solution would be the smallest.
+            val expectedNumberOfDigits = instructions.size
             val prefixes = (0b000..0b111).toList()
-            val mask = listOf(1).repeat(instructions.size)
+            val mask = listOf(1).repeat(expectedNumberOfDigits)
 
             // Recursively find the next states until a solution is found
             fun find(state: List<Int>): List<Int>? {
@@ -59,7 +60,7 @@ class Day17 {
                     // We create a part that will be checked for correctness equal to the size of state
                     val checkedPart = instructions.take(state.size)
                     // Check if we get a result when we have a perfect match with a state of size 12, that means full 16-digit number.
-                    if (state.size == 12 && execution == instructions) {
+                    if (state.size == expectedNumberOfDigits - 4 && execution == instructions) {
                         return prefix + state // Prepend the tested digits and return the correct result
                     }
                     // Otherwise take the last digit of checked prefix as a candidate to be checked in next round
