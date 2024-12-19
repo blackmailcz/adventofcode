@@ -11,7 +11,6 @@ class Day18 {
             val input = InputLoader(AoCYear.AOC_2024).loadStrings("Day18Input")
             val points = processInput(input)
             part1(points)
-            // Runtime ~ 23 seconds
             part2(points)
         }
 
@@ -20,15 +19,17 @@ class Day18 {
         }
 
         private fun part2(points: List<Point>) {
-            var i = -1
-            while (i < points.size - 1) {
-                if (findShortestPath(points.take(i + 1)) == null) {
-                    break
-                }
-                i++
-            }
-            val result = points[i]
+            val result = points[binarySearch(points)]
             println("${result.x},${result.y}")
+        }
+
+        private fun binarySearch(points: List<Point>, left: Int = 0, right: Int = points.size - 1): Int {
+            val middle = (left + right) / 2
+            return when {
+                left > right -> right
+                findShortestPath(points.take(middle)) != null -> binarySearch(points, middle + 1, right)
+                else -> binarySearch(points, left, middle - 1)
+            }
         }
 
         private fun findShortestPath(points: List<Point>): TraverseResult<Point>? {
