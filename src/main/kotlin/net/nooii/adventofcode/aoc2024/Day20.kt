@@ -34,9 +34,9 @@ class Day20 {
 
         private fun solution(area: Area, maxCheatSteps: Int) {
             // Precompute the best distance from the every point to the end
-            val costMap = computeBestDistanceMap(area)
+            val costMap = computeBestCostMap(area)
             // Track the cost occurrences
-            val costs = mutableMapOf<Long, Long>()
+            val costs = mutableMapOf<Int, Long>()
             // Iterate over every reachable point
             for ((current, currentCost) in costMap) {
                 // Analyze area around current point within a radius of maxCheatSteps
@@ -47,11 +47,11 @@ class Day20 {
                         val cheatSteps = current.manhattanDistance(cheated)
                         // Only consider cheats with up to maxCheatSteps that land inside the area and not on a wall
                         if (cheatSteps <= maxCheatSteps && area.isInRange(cheated) && cheated !in area.walls) {
-                            val costFromCheatPoint = costMap[cheated]
+                            val costFromCheated = costMap[cheated]
                             // End must be reachable from the cheated point
-                            if (costFromCheatPoint != null) {
+                            if (costFromCheated != null) {
                                 // Compute the discount cost and track the occurrence
-                                costs.add(costFromCheatPoint - currentCost - cheatSteps, 1L)
+                                costs.add(costFromCheated - currentCost - cheatSteps, 1L)
                             }
                         }
                     }
@@ -61,19 +61,19 @@ class Day20 {
         }
 
         /**
-         * Calculates the best (shortest) distance from every point in the area to the end point.
+         * Calculates the best cost (shortest distance) from every point in the area to the end point.
          *
          * This function uses a breadth-first search algorithm to compute the minimum distance
          * from each accessible point in the area to the end point, considering walls as obstacles.
          *
          * @param area The Area object containing the dimensions, start point, end point, and walls.
-         * @return A Map where each key is a Point in the area, and the value is the shortest
-         *         distance (as a Long) from that point to the end point. Points that are
+         * @return A Map where each key is a Point in the area, and the value is the best
+         *         cost (as a Long) from that point to the end point. Points that are
          *         unreachable (e.g., walled off) will not be included in the map.
          */
-        private fun computeBestDistanceMap(area: Area): Map<Point, Long> {
-            var distance = 0L
-            val costMap = mutableMapOf<Point, Long>()
+        private fun computeBestCostMap(area: Area): Map<Point, Int> {
+            var distance = 0
+            val costMap = mutableMapOf<Point, Int>()
             var points = setOf(area.end)
             while (points.isNotEmpty()) {
                 val nextPoints = mutableSetOf<Point>()
