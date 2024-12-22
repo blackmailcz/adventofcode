@@ -141,7 +141,7 @@ class Day12 {
          * @return A Set of Touch objects that should be excluded when counting sides.
          */
         private fun computeExclusions(touch: Touch, touches: Set<Touch>): Set<Touch> {
-            val axis = PointDirection.determine(touch.polygonPoint, touch.touchPoint).axis
+            val axis = PointDirection.determine(touch.polygonPoint, touch.touchPoint).axis.rotate()
             return adjacentTouches(touch, axis, touches, 1) + adjacentTouches(touch, axis, touches, -1)
         }
 

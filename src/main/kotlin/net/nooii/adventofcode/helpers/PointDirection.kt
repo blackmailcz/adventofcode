@@ -7,11 +7,11 @@ package net.nooii.adventofcode.helpers
  * @property yDiff The change in y-coordinate for this direction.
  * @property axis The axis (vertical or horizontal) this direction is aligned with.
  */
-enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
-    UP(0, -1, Axis.VERTICAL),
-    DOWN(0, 1, Axis.VERTICAL),
-    LEFT(-1, 0, Axis.HORIZONTAL),
-    RIGHT(1, 0, Axis.HORIZONTAL);
+enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis, val arrow: Char) {
+    UP(0, -1, Axis.VERTICAL, '^'),
+    DOWN(0, 1, Axis.VERTICAL, 'v'),
+    LEFT(-1, 0, Axis.HORIZONTAL, '<'),
+    RIGHT(1, 0, Axis.HORIZONTAL, '>');
 
     /**
      * Returns the letter representation of the direction.
@@ -141,8 +141,8 @@ enum class PointDirection(val xDiff: Int, val yDiff: Int, val axis: Axis) {
         fun determine(from: Point, to: Point): PointDirection {
             return when {
                 from == to -> error("Points cannot be the same")
-                from.x == to.x -> if (to.x > from.x) RIGHT else LEFT
-                from.y == to.y -> if (to.y > from.y) DOWN else UP
+                from.y == to.y -> if (to.x > from.x) RIGHT else LEFT
+                from.x == to.x -> if (to.y > from.y) DOWN else UP
                 else -> error("Cannot determine direction from $from to $to")
             }
         }
