@@ -21,7 +21,7 @@ class Day21 {
 
         companion object {
 
-            fun fromSymbol(char: Char) = entries.find { it.symbol == char }!!
+            fun fromSymbol(char: Char) = entries.find { it.symbol == char } ?: error("Unknown symbol $char")
         }
     }
 
@@ -49,9 +49,9 @@ class Day21 {
 
     private object ArrowKeypad {
 
-        const val WIDTH = 3
-        const val HEIGHT = 2
-        val INVALID_POINT = Point(0, 0)
+        private const val WIDTH = 3
+        private const val HEIGHT = 2
+        private val INVALID_POINT = Point(0, 0)
 
         fun isValid(point: Point) = point != INVALID_POINT && point.x in 0 until WIDTH && point.y in 0 until HEIGHT
     }
@@ -66,8 +66,8 @@ class Day21 {
     }
 
     private data class CostCacheKey(
-        val chunk: String,
-        val depth: Int
+        private val chunk: String,
+        private val depth: Int
     )
 
     companion object {
@@ -90,7 +90,7 @@ class Day21 {
 
         private fun solution(input: List<String>, depth: Int) {
             val complexity = input.sumOf { code ->
-                findMinimumCost(code, depth) * code.dropLast(1).toLong()
+                findMinimumCost(code, depth) * code.filter { it.isDigit() }.toLong()
             }
             println(complexity)
         }
@@ -124,9 +124,9 @@ class Day21 {
             return rec(code, depth, true)
         }
 
-        private fun List<ArrowKey>.toCacheKey() = joinToString("") { it.arrow.toString() }
+        private fun List<ArrowKey>.toCacheKey() = String(this.map { it.arrow }.toCharArray())
 
-        private fun getShortestPaths(start: Point, end: Point, validation: ((Point) -> Boolean)): List<List<ArrowKey>> {
+        private fun getShortestPaths(start: Point, end: Point, validation: (Point) -> Boolean): List<List<ArrowKey>> {
             val diff = start.diff(end)
             val parts = mutableListOf<ArrowKey>()
             when {
