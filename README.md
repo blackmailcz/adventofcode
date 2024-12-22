@@ -29,7 +29,7 @@ time.
 [![19.png](readme_images/regular/19.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day19.kt)
 [![20.png](readme_images/regular/20.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day20.kt)<br/>
 [![21.png](readme_images/regular/21.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day21.kt)
-<picture><img src="readme_images/grayscale/22.png" /></picture>
+[![22.png](readme_images/regular/22.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day22.kt)
 <picture><img src="readme_images/grayscale/23.png" /></picture>
 <picture><img src="readme_images/grayscale/24.png" /></picture>
 <picture><img src="readme_images/grayscale/25.png" /></picture>
