@@ -3,7 +3,7 @@
 My solution of Advent Of Code puzzles in Kotlin. The aim is to have clear and readable code that executes in reasonable
 time.
 
-## 2024 - 44 ⭐
+## 2024 - 46 ⭐
 
 <details open>
 <summary><i>See details</i></summary>
@@ -30,7 +30,7 @@ time.
 [![20.png](readme_images/regular/20.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day20.kt)<br/>
 [![21.png](readme_images/regular/21.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day21.kt)
 [![22.png](readme_images/regular/22.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day22.kt)
-<picture><img src="readme_images/grayscale/23.png" /></picture>
+[![23.png](readme_images/regular/23.png)](src/main/kotlin/net/nooii/adventofcode/aoc2024/Day23.kt)
 <picture><img src="readme_images/grayscale/24.png" /></picture>
 <picture><img src="readme_images/grayscale/25.png" /></picture>
 

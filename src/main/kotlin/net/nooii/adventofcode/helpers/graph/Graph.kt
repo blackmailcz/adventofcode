@@ -1,5 +1,8 @@
 package net.nooii.adventofcode.helpers.graph
 
+import net.nooii.adventofcode.helpers.NNMap
+import net.nooii.adventofcode.helpers.nn
+
 /**
  * Represents a vertex in a graph.
  *
@@ -240,5 +243,17 @@ class Graph {
         for (edge in edgesToRemove) {
             removeEdge(edge)
         }
+    }
+
+    /**
+     * Creates a map that associates each vertex with a set of its adjacent vertices.
+     *
+     * @return A [Map] where each key is a [Vertex] and the value is a [Set] of [Vertex]
+     *         objects representing all vertices adjacent to the key vertex.
+     */
+    fun createVertexToSetOfVerticesMap(): NNMap<Vertex, Set<Vertex>> {
+        return vertexToEdgesMap
+            .mapValues { (k, v) -> v.map { it.getOtherVertex(k) }.toSet() }
+            .nn()
     }
 }
