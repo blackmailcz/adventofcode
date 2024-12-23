@@ -29,6 +29,7 @@ class Day23 {
             val input = InputLoader(AoCYear.AOC_2024).loadStrings("Day23Input")
             val connections = processInput(input).nn()
             part1(connections)
+            // Runtime ~ 1.3 second
             part2(connections)
         }
 
