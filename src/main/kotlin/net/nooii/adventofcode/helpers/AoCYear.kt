@@ -11,5 +11,6 @@ enum class AoCYear(val resourcePath: String) {
     AOC_2021("aoc2021"),
     AOC_2022("aoc2022"),
     AOC_2023("aoc2023"),
-    AOC_2024("aoc2024")
+    AOC_2024("aoc2024"),
+    AOC_2025("aoc2025");
 }
