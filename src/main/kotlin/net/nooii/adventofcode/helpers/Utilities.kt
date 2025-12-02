@@ -207,6 +207,13 @@ fun lcm(numbers: Collection<Long>): Long {
 fun lcm(vararg numbers: Long): Long = lcm(numbers.toSet())
 
 /**
+ * Breakdown [Int] into its factors (all factors, not just primes).
+ */
+fun Int.factors(): List<Int> {
+    return ((1..this / 2).asSequence().filter { this % it == 0 } + this).toList()
+}
+
+/**
  * Breakdown [Long] into its factors (all factors, not just primes).
  */
 fun Long.factors(): List<Long> {
