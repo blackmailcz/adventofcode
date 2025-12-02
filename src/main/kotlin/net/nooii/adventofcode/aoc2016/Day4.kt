@@ -3,7 +3,7 @@ package net.nooii.adventofcode.aoc2016
 import net.nooii.adventofcode.helpers.*
 import java.util.SortedSet
 
-class Day4 {
+object Day4 {
 
     private class Symbol(
         val char: Char,
@@ -34,53 +34,50 @@ class Day4 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2016).loadStrings("Day4Input")
+        val rooms = processInput(input)
+        part1(rooms)
+        part2(rooms)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2016).loadStrings("Day4Input")
-            val rooms = processInput(input)
-            part1(rooms)
-            part2(rooms)
+    private fun part1(rooms: List<Room>) {
+        val sum = rooms.filter { it.isReal() }.sumOf { it.sectorId }
+        println(sum)
+    }
+
+    private fun part2(rooms: List<Room>) {
+        for (room in rooms) {
+            val message = room.symbols.map { decipher(room, it) }.joinToString("")
+            if (message == "northpole object storage") {
+                println(room.sectorId)
+                return
+            }
         }
+        error("No solution found")
+    }
 
-        private fun part1(rooms: List<Room>) {
-            val sum = rooms.filter { it.isReal() }.sumOf { it.sectorId }
-            println(sum)
+    private fun decipher(room: Room, char: Char): Char {
+        return if (char == '-') {
+            ' '
+        } else {
+            CryptoTool.lowercaseCaesar(char, room.sectorId)
         }
+    }
 
-        private fun part2(rooms: List<Room>) {
-            for (room in rooms) {
-                val message = room.symbols.map { decipher(room, it) }.joinToString("")
-                if (message == "northpole object storage") {
-                    println(room.sectorId)
-                    return
+    private fun processInput(input: List<String>): List<Room> {
+        val regex = Regex("(.*?)-(\\d+)\\[(\\w+)]")
+        return input.map { line ->
+            val charMap = mutableMapOf<Char, Int>()
+            val (symbols, sectorId, checksum) = regex.captureFirstMatch(line)
+            for (symbol in symbols) {
+                if (symbol != '-') {
+                    charMap.add(symbol, 1)
                 }
             }
-            error("No solution found")
-        }
-
-        private fun decipher(room: Room, char: Char): Char {
-            return if (char == '-') {
-                ' '
-            } else {
-                CryptoTool.lowercaseCaesar(char, room.sectorId)
-            }
-        }
-
-        private fun processInput(input: List<String>): List<Room> {
-            val regex = Regex("(.*?)-(\\d+)\\[(\\w+)]")
-            return input.map { line ->
-                val charMap = mutableMapOf<Char, Int>()
-                val (symbols, sectorId, checksum) = regex.captureFirstMatch(line)
-                for (symbol in symbols) {
-                    if (symbol != '-') {
-                        charMap.add(symbol, 1)
-                    }
-                }
-                val symbolSet = charMap.map { (char, count) -> Symbol(char, count) }.toSortedSet()
-                Room(symbols, symbolSet, sectorId.toInt(), checksum)
-            }
+            val symbolSet = charMap.map { (char, count) -> Symbol(char, count) }.toSortedSet()
+            Room(symbols, symbolSet, sectorId.toInt(), checksum)
         }
     }
 }

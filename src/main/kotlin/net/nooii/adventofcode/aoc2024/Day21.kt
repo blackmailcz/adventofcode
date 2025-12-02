@@ -4,7 +4,7 @@ import com.github.shiguruikai.combinatoricskt.permutations
 import net.nooii.adventofcode.helpers.*
 import kotlin.math.abs
 
-class Day21 {
+object Day21 {
 
     private enum class NumericKey(val symbol: Char, val point: Point) {
         ONE('1', Point(0, 2)),
@@ -70,92 +70,90 @@ class Day21 {
         private val depth: Int
     )
 
-    companion object {
-        private val pathCache = mutableMapOf<PathCacheKey, List<List<ArrowKey>>>()
+    private val pathCache = mutableMapOf<PathCacheKey, List<List<ArrowKey>>>()
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2024).loadStrings("Day21Input")
-            part1(input)
-            part2(input)
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2024).loadStrings("Day21Input")
+        part1(input)
+        part2(input)
+    }
+
+    private fun part1(input: List<String>) {
+        solution(input, 2)
+    }
+
+    private fun part2(input: List<String>) {
+        solution(input, 25)
+    }
+
+    private fun solution(input: List<String>, depth: Int) {
+        val complexity = input.sumOf { code ->
+            findMinimumCost(code, depth) * code.filter { it.isDigit() }.toLong()
         }
+        println(complexity)
+    }
 
-        private fun part1(input: List<String>) {
-            solution(input, 2)
-        }
+    private fun findMinimumCost(code: String, depth: Int): Long {
+        val cache: MutableMap<CostCacheKey, Long> = mutableMapOf()
 
-        private fun part2(input: List<String>) {
-            solution(input, 25)
-        }
-
-        private fun solution(input: List<String>, depth: Int) {
-            val complexity = input.sumOf { code ->
-                findMinimumCost(code, depth) * code.filter { it.isDigit() }.toLong()
-            }
-            println(complexity)
-        }
-
-        private fun findMinimumCost(code: String, depth: Int): Long {
-            val cache: MutableMap<CostCacheKey, Long> = mutableMapOf()
-
-            fun rec(chunk: String, depth: Int, isNumeric: Boolean): Long {
-                // Cannot use "computeIfAbsent" because it is throwing ConcurrentModificationException
-                return cache.getOrPut(CostCacheKey(chunk, depth)) {
-                    "A$chunk".windowed(2, 1).sumOf { (c1, c2) ->
-                        val paths = if (isNumeric) {
-                            val key = PathCacheKey(NumericKey.fromSymbol(c1), NumericKey.fromSymbol(c2))
-                            pathCache.getOrPut(key) {
-                                getShortestPaths(key.from, key.to) { NumericKeypad.isValid(it) }
-                            }
-                        } else {
-                            val key = PathCacheKey(ArrowKey.fromSymbol(c1), ArrowKey.fromSymbol(c2))
-                            pathCache.getOrPut(key) {
-                                getShortestPaths(key.from, key.to) { ArrowKeypad.isValid(it) }
-                            }
+        fun rec(chunk: String, depth: Int, isNumeric: Boolean): Long {
+            // Cannot use "computeIfAbsent" because it is throwing ConcurrentModificationException
+            return cache.getOrPut(CostCacheKey(chunk, depth)) {
+                "A$chunk".windowed(2, 1).sumOf { (c1, c2) ->
+                    val paths = if (isNumeric) {
+                        val key = PathCacheKey(NumericKey.fromSymbol(c1), NumericKey.fromSymbol(c2))
+                        pathCache.getOrPut(key) {
+                            getShortestPaths(key.from, key.to) { NumericKeypad.isValid(it) }
                         }
-                        if (depth == 0) {
-                            paths.minOf { it.size.toLong() }
-                        } else {
-                            paths.minOf { path -> rec(path.toCacheKey(), depth - 1, false) }
+                    } else {
+                        val key = PathCacheKey(ArrowKey.fromSymbol(c1), ArrowKey.fromSymbol(c2))
+                        pathCache.getOrPut(key) {
+                            getShortestPaths(key.from, key.to) { ArrowKeypad.isValid(it) }
                         }
+                    }
+                    if (depth == 0) {
+                        paths.minOf { it.size.toLong() }
+                    } else {
+                        paths.minOf { path -> rec(path.toCacheKey(), depth - 1, false) }
                     }
                 }
             }
-            return rec(code, depth, true)
         }
+        return rec(code, depth, true)
+    }
 
-        private fun List<ArrowKey>.toCacheKey() = String(this.map { it.arrow }.toCharArray())
+    private fun List<ArrowKey>.toCacheKey() = String(this.map { it.arrow }.toCharArray())
 
-        private fun getShortestPaths(start: Point, end: Point, validation: (Point) -> Boolean): List<List<ArrowKey>> {
-            val diff = start.diff(end)
-            val parts = mutableListOf<ArrowKey>()
-            when {
-                diff.x > 0 -> ArrowKey.RIGHT
-                diff.x < 0 -> ArrowKey.LEFT
-                else -> null
-            }?.let { parts.addAll(listOf(it).repeat(abs(diff.x))) }
-            when {
-                diff.y > 0 -> ArrowKey.DOWN
-                diff.y < 0 -> ArrowKey.UP
-                else -> null
-            }?.let { parts.addAll(listOf(it).repeat(abs(diff.y))) }
-            return parts
-                .permutations()
-                .toSet()
-                .filter { path ->
-                    var point = start
-                    var isValid = true
-                    for (arrowKey in path) {
-                        val next = PointDirection.fromArrow(arrowKey.arrow).next(point)
-                        if (!validation.invoke(next)) {
-                            isValid = false
-                            break
-                        }
-                        point = next
+    private fun getShortestPaths(start: Point, end: Point, validation: (Point) -> Boolean): List<List<ArrowKey>> {
+        val diff = start.diff(end)
+        val parts = mutableListOf<ArrowKey>()
+        when {
+            diff.x > 0 -> ArrowKey.RIGHT
+            diff.x < 0 -> ArrowKey.LEFT
+            else -> null
+        }?.let { parts.addAll(listOf(it).repeat(abs(diff.x))) }
+        when {
+            diff.y > 0 -> ArrowKey.DOWN
+            diff.y < 0 -> ArrowKey.UP
+            else -> null
+        }?.let { parts.addAll(listOf(it).repeat(abs(diff.y))) }
+        return parts
+            .permutations()
+            .toSet()
+            .filter { path ->
+                var point = start
+                var isValid = true
+                for (arrowKey in path) {
+                    val next = PointDirection.fromArrow(arrowKey.arrow).next(point)
+                    if (!validation.invoke(next)) {
+                        isValid = false
+                        break
                     }
-                    isValid
+                    point = next
                 }
-                .map { it + ArrowKey.A }
-        }
+                isValid
+            }
+            .map { it + ArrowKey.A }
     }
 }

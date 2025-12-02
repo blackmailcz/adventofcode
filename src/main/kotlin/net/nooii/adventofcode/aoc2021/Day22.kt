@@ -6,7 +6,7 @@ import net.nooii.adventofcode.helpers.InputLoader
 /**
  * Created by Nooii on 22.12.2021
  */
-class Day22 {
+object Day22 {
 
     private class Step(
         val on: Boolean,
@@ -73,51 +73,48 @@ class Day22 {
 
     }
 
-    companion object {
-
-        private val part1filter: (step: Step) -> Boolean = { step ->
-            with(step.cuboid) {
-                mutableListOf(x1, y1, z1, x2, y2, z2).all { it in -50..50 }
-            }
+    private val part1filter: (step: Step) -> Boolean = { step ->
+        with(step.cuboid) {
+            mutableListOf(x1, y1, z1, x2, y2, z2).all { it in -50..50 }
         }
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day22Input")
-            val steps = processInput(input)
-            solution(steps.filter(part1filter))
-            solution(steps)
-        }
-
-        private fun solution(steps: List<Step>) {
-            var onCuboids = mutableSetOf<Cuboid>()
-            for (step in steps) {
-                val nextOnCuboids = mutableSetOf<Cuboid>()
-                // Cut a hole in all on cuboids for the new cuboid
-                for (onCuboid in onCuboids) {
-                    nextOnCuboids.addAll(onCuboid.cut(step.cuboid))
-                }
-                // And add it only if it should be turned on
-                if (step.on) {
-                    nextOnCuboids.add(step.cuboid)
-                }
-                onCuboids = nextOnCuboids
-            }
-            println(onCuboids.sumOf { it.volume() })
-        }
-
-        private fun processInput(input: List<String>): List<Step> {
-            return input.map { line ->
-                val matches = Regex("(on|off) x=(-?\\d+)..(-?\\d+),y=(-?\\d+)..(-?\\d+),z=(-?\\d+)..(-?\\d+)")
-                    .findAll(line, 0)
-                    .first()
-                    .groupValues
-                    .drop(1)
-                val willTurnOn = matches[0] == "on"
-                val c = matches.drop(1).map { it.toInt() }
-                Step(willTurnOn, Cuboid(c[0], c[1], c[2], c[3], c[4], c[5]))
-            }
-        }
-
     }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day22Input")
+        val steps = processInput(input)
+        solution(steps.filter(part1filter))
+        solution(steps)
+    }
+
+    private fun solution(steps: List<Step>) {
+        var onCuboids = mutableSetOf<Cuboid>()
+        for (step in steps) {
+            val nextOnCuboids = mutableSetOf<Cuboid>()
+            // Cut a hole in all on cuboids for the new cuboid
+            for (onCuboid in onCuboids) {
+                nextOnCuboids.addAll(onCuboid.cut(step.cuboid))
+            }
+            // And add it only if it should be turned on
+            if (step.on) {
+                nextOnCuboids.add(step.cuboid)
+            }
+            onCuboids = nextOnCuboids
+        }
+        println(onCuboids.sumOf { it.volume() })
+    }
+
+    private fun processInput(input: List<String>): List<Step> {
+        return input.map { line ->
+            val matches = Regex("(on|off) x=(-?\\d+)..(-?\\d+),y=(-?\\d+)..(-?\\d+),z=(-?\\d+)..(-?\\d+)")
+                .findAll(line, 0)
+                .first()
+                .groupValues
+                .drop(1)
+            val willTurnOn = matches[0] == "on"
+            val c = matches.drop(1).map { it.toInt() }
+            Step(willTurnOn, Cuboid(c[0], c[1], c[2], c[3], c[4], c[5]))
+        }
+    }
+
 }

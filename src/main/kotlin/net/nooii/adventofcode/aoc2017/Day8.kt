@@ -6,7 +6,7 @@ import net.nooii.adventofcode.helpers.captureFirstMatch
 import net.nooii.adventofcode.helpers.component6
 import kotlin.math.max
 
-class Day8 {
+object Day8 {
 
     private enum class Operator(val symbol: String) {
         GREATER(">"),
@@ -49,48 +49,45 @@ class Day8 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2017).loadStrings("Day8Input")
+        val instructions = processInput(input)
+        solution(instructions)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2017).loadStrings("Day8Input")
-            val instructions = processInput(input)
-            solution(instructions)
-        }
-
-        private fun solution(instructions: List<Instruction>) {
-            val registers = mutableMapOf<String, Int>()
-            var absoluteMax = Int.MIN_VALUE
-            for (instruction in instructions) {
-                if (instruction.checkCondition(registers)) {
-                    instruction.execute(registers)
-                    absoluteMax = max(absoluteMax, registers.maxOf { it.value })
-                }
+    private fun solution(instructions: List<Instruction>) {
+        val registers = mutableMapOf<String, Int>()
+        var absoluteMax = Int.MIN_VALUE
+        for (instruction in instructions) {
+            if (instruction.checkCondition(registers)) {
+                instruction.execute(registers)
+                absoluteMax = max(absoluteMax, registers.maxOf { it.value })
             }
-            println(registers.maxOf { it.value })
-            println(absoluteMax)
         }
+        println(registers.maxOf { it.value })
+        println(absoluteMax)
+    }
 
-        private fun processInput(input: List<String>): List<Instruction> {
-            val regex = Regex("(\\w+) (inc|dec) (-?\\d+) if (\\w+) (\\S+) (-?\\d+)")
-            return input.map { line ->
-                val (
-                    targetRegister,
-                    instruction,
-                    targetValue,
-                    conditionRegister,
-                    conditionOperator,
-                    conditionValue
-                ) = regex.captureFirstMatch(line)
-                Instruction(
-                    instruction,
-                    targetRegister,
-                    targetValue.toInt(),
-                    conditionRegister,
-                    Operator.from(conditionOperator),
-                    conditionValue.toInt()
-                )
-            }
+    private fun processInput(input: List<String>): List<Instruction> {
+        val regex = Regex("(\\w+) (inc|dec) (-?\\d+) if (\\w+) (\\S+) (-?\\d+)")
+        return input.map { line ->
+            val (
+                targetRegister,
+                instruction,
+                targetValue,
+                conditionRegister,
+                conditionOperator,
+                conditionValue
+            ) = regex.captureFirstMatch(line)
+            Instruction(
+                instruction,
+                targetRegister,
+                targetValue.toInt(),
+                conditionRegister,
+                Operator.from(conditionOperator),
+                conditionValue.toInt()
+            )
         }
     }
 }

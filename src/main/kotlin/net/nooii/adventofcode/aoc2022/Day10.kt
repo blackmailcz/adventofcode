@@ -3,7 +3,7 @@ package net.nooii.adventofcode.aoc2022
 import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
 
-class Day10 {
+object Day10 {
 
     private class Instruction(val ticks: Int, val increment: Int)
 
@@ -45,33 +45,30 @@ class Day10 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day10Input")
+        val instructions = parseInput(input)
+        val cpu = CPU()
+        cpu.execute(instructions)
+        part1(cpu)
+        part2(cpu)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day10Input")
-            val instructions = parseInput(input)
-            val cpu = CPU()
-            cpu.execute(instructions)
-            part1(cpu)
-            part2(cpu)
-        }
+    private fun part1(cpu: CPU) {
+        println(cpu.strength)
+    }
 
-        private fun part1(cpu: CPU) {
-            println(cpu.strength)
-        }
+    private fun part2(cpu: CPU) {
+        cpu.draw()
+    }
 
-        private fun part2(cpu: CPU) {
-            cpu.draw()
-        }
-
-        private fun parseInput(input: List<String>): List<Instruction> {
-            return input.map { line ->
-                when {
-                    line == "noop" -> Instruction(1, 0)
-                    line.startsWith("addx") -> Instruction(2, line.drop(5).toInt()) // drop "addx "
-                    else -> throw IllegalStateException("Unknown instruction")
-                }
+    private fun parseInput(input: List<String>): List<Instruction> {
+        return input.map { line ->
+            when {
+                line == "noop" -> Instruction(1, 0)
+                line.startsWith("addx") -> Instruction(2, line.drop(5).toInt()) // drop "addx "
+                else -> throw IllegalStateException("Unknown instruction")
             }
         }
     }

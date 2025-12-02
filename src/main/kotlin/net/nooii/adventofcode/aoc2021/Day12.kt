@@ -6,7 +6,7 @@ import net.nooii.adventofcode.helpers.InputLoader
 /**
  * Created by Nooii on 12.12.2021
  */
-class Day12 {
+object Day12 {
 
     private class Cave(val id: String) {
 
@@ -29,56 +29,52 @@ class Day12 {
         override fun toString() = id
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day12Input")
+        val startCave = processInput(input)
+        part1(startCave)
+        part2(startCave)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day12Input")
-            val startCave = processInput(input)
-            part1(startCave)
-            part2(startCave)
-        }
+    private fun part1(startCave: Cave) {
+        println(next(startCave, canVisitSmallAgain = false))
+    }
 
-        private fun part1(startCave: Cave) {
-            println(next(startCave, canVisitSmallAgain = false))
-        }
+    private fun part2(startCave: Cave) {
+        println(next(startCave, canVisitSmallAgain = true))
+    }
 
-        private fun part2(startCave: Cave) {
-            println(next(startCave, canVisitSmallAgain = true))
-        }
-
-        private fun next(cave: Cave, path: MutableList<Cave> = mutableListOf(), canVisitSmallAgain: Boolean): Int {
-            path.add(cave)
-            return if (cave.id == "end") {
-                1 // Successful path
-            } else {
-                cave.paths.sumOf { nextCave ->
-                    val visitingSmallAgain = canVisitSmallAgain && !nextCave.isBig && nextCave.id != "start" && path.contains(nextCave)
-                    if (nextCave.isBig || !path.contains(nextCave) || visitingSmallAgain) {
-                        next(nextCave, path.toMutableList(), canVisitSmallAgain && !visitingSmallAgain)
-                    } else {
-                        0 // Dead end
-                    }
+    private fun next(cave: Cave, path: MutableList<Cave> = mutableListOf(), canVisitSmallAgain: Boolean): Int {
+        path.add(cave)
+        return if (cave.id == "end") {
+            1 // Successful path
+        } else {
+            cave.paths.sumOf { nextCave ->
+                val visitingSmallAgain = canVisitSmallAgain && !nextCave.isBig && nextCave.id != "start" && path.contains(nextCave)
+                if (nextCave.isBig || !path.contains(nextCave) || visitingSmallAgain) {
+                    next(nextCave, path.toMutableList(), canVisitSmallAgain && !visitingSmallAgain)
+                } else {
+                    0 // Dead end
                 }
             }
         }
+    }
 
-        private fun processInput(input: List<String>): Cave {
-            val caves = mutableMapOf<String, Cave>()
-            for (path in input) {
-                val pathData = path.split("-")
-                val fromCave = getOrCreateCave(pathData[0], caves)
-                val toCave = getOrCreateCave(pathData[1], caves)
-                fromCave.paths.add(toCave)
-                toCave.paths.add(fromCave) // You can also travel backwards
-            }
-            return caves["start"]!!
+    private fun processInput(input: List<String>): Cave {
+        val caves = mutableMapOf<String, Cave>()
+        for (path in input) {
+            val pathData = path.split("-")
+            val fromCave = getOrCreateCave(pathData[0], caves)
+            val toCave = getOrCreateCave(pathData[1], caves)
+            fromCave.paths.add(toCave)
+            toCave.paths.add(fromCave) // You can also travel backwards
         }
+        return caves["start"]!!
+    }
 
-        private fun getOrCreateCave(id: String, caves: MutableMap<String, Cave>): Cave {
-            return caves[id] ?: Cave(id).also { caves[id] = it }
-        }
-
+    private fun getOrCreateCave(id: String, caves: MutableMap<String, Cave>): Cave {
+        return caves[id] ?: Cave(id).also { caves[id] = it }
     }
 
 }

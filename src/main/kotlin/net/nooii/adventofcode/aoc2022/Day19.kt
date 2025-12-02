@@ -5,7 +5,7 @@ import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
 import net.nooii.adventofcode.helpers.product
 
-class Day19 {
+object Day19 {
 
     private enum class Material {
         ORE, CLAY, OBSIDIAN, GEODE
@@ -66,107 +66,104 @@ class Day19 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day19Input")
+        val blueprints = parseInput(input)
+        part1(blueprints)
+        part2(blueprints)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day19Input")
-            val blueprints = parseInput(input)
-            part1(blueprints)
-            part2(blueprints)
-        }
+    private fun part1(blueprints: List<Blueprint>) {
+        // Runtime ~ 14 sec
+        val sum = blueprints.sumOf { it.id * getMaxGeodes(it, 24) }
+        println(sum)
+    }
 
-        private fun part1(blueprints: List<Blueprint>) {
-            // Runtime ~ 14 sec
-            val sum = blueprints.sumOf { it.id * getMaxGeodes(it, 24) }
-            println(sum)
-        }
+    private fun part2(blueprints: List<Blueprint>) {
+        // Runtime ~ 3.5 sec
+        val product = blueprints.take(3).map { getMaxGeodes(it, 32) }.product()
+        println(product)
+    }
 
-        private fun part2(blueprints: List<Blueprint>) {
-            // Runtime ~ 3.5 sec
-            val product = blueprints.take(3).map { getMaxGeodes(it, 32) }.product()
-            println(product)
-        }
-
-        private fun getMaxGeodes(blueprint: Blueprint, totalTime: Int): Int {
-            var states = mutableSetOf(
-                State(
-                    ore = 0,
-                    clay = 0,
-                    obsidian = 0,
-                    geode = 0,
-                    oreCollectors = 1,
-                    clayCollectors = 0,
-                    obsidianCollectors = 0,
-                    geodeCollectors = 0
-                )
+    private fun getMaxGeodes(blueprint: Blueprint, totalTime: Int): Int {
+        var states = mutableSetOf(
+            State(
+                ore = 0,
+                clay = 0,
+                obsidian = 0,
+                geode = 0,
+                oreCollectors = 1,
+                clayCollectors = 0,
+                obsidianCollectors = 0,
+                geodeCollectors = 0
             )
-            var time = 0
-            while (time < totalTime) {
-                val nextStates = mutableSetOf<State>()
-                for (state in states) {
-                    // If possible to buy geode bot
-                    if (state.canBuy(blueprint.geodeCollector)) {
-                        nextStates.add(state.nextState(blueprint, blueprint.geodeCollector))
-                        continue // Other options are always worse
-                    }
-                    // If possible to buy obsidian bot
-                    if (state.canBuy(blueprint.obsidianCollector)) {
-                        nextStates.add(state.nextState(blueprint, blueprint.obsidianCollector))
-                        continue // Other options are always worse
-                    }
-                    // If possible to buy clay bot
-                    if (state.canBuy(blueprint.clayCollector)) {
-                        nextStates.add(state.nextState(blueprint, blueprint.clayCollector))
-                    }
-                    // If possible to buy ore bot
-                    if (state.canBuy(blueprint.oreCollector)) {
-                        nextStates.add(state.nextState(blueprint, blueprint.oreCollector))
-                    }
-                    // Or don't buy anything
-                    nextStates.add(state.nextState(blueprint, null))
+        )
+        var time = 0
+        while (time < totalTime) {
+            val nextStates = mutableSetOf<State>()
+            for (state in states) {
+                // If possible to buy geode bot
+                if (state.canBuy(blueprint.geodeCollector)) {
+                    nextStates.add(state.nextState(blueprint, blueprint.geodeCollector))
+                    continue // Other options are always worse
                 }
-                states = if (nextStates.any { it.geode >= 1 }) {
-                    // Filter out states with fewer geodes than the maximum
-                    val max = nextStates.maxOf { it.geode }
-                    nextStates.filter { it.geode == max }.toMutableSet()
-                } else {
-                    nextStates
+                // If possible to buy obsidian bot
+                if (state.canBuy(blueprint.obsidianCollector)) {
+                    nextStates.add(state.nextState(blueprint, blueprint.obsidianCollector))
+                    continue // Other options are always worse
                 }
-                time++
+                // If possible to buy clay bot
+                if (state.canBuy(blueprint.clayCollector)) {
+                    nextStates.add(state.nextState(blueprint, blueprint.clayCollector))
+                }
+                // If possible to buy ore bot
+                if (state.canBuy(blueprint.oreCollector)) {
+                    nextStates.add(state.nextState(blueprint, blueprint.oreCollector))
+                }
+                // Or don't buy anything
+                nextStates.add(state.nextState(blueprint, null))
             }
-            return states.maxOfOrNull { it.geode } ?: 0
+            states = if (nextStates.any { it.geode >= 1 }) {
+                // Filter out states with fewer geodes than the maximum
+                val max = nextStates.maxOf { it.geode }
+                nextStates.filter { it.geode == max }.toMutableSet()
+            } else {
+                nextStates
+            }
+            time++
         }
+        return states.maxOfOrNull { it.geode } ?: 0
+    }
 
-        private fun parseInput(input: List<String>): List<Blueprint> {
-            return input.map { line ->
-                val data = Regex("(\\d+)").findAll(line).map { it.groupValues[1].toInt() }.toList()
-                Blueprint(
-                    id = data[0],
-                    oreCollector = Robot(
-                        mutableMapOf(
-                            ORE to data[1]
-                        )
-                    ),
-                    clayCollector = Robot(
-                        mutableMapOf(
-                            ORE to data[2]
-                        )
-                    ),
-                    obsidianCollector = Robot(
-                        mutableMapOf(
-                            ORE to data[3],
-                            CLAY to data[4]
-                        )
-                    ),
-                    geodeCollector = Robot(
-                        mutableMapOf(
-                            ORE to data[5],
-                            OBSIDIAN to data[6]
-                        )
+    private fun parseInput(input: List<String>): List<Blueprint> {
+        return input.map { line ->
+            val data = Regex("(\\d+)").findAll(line).map { it.groupValues[1].toInt() }.toList()
+            Blueprint(
+                id = data[0],
+                oreCollector = Robot(
+                    mutableMapOf(
+                        ORE to data[1]
+                    )
+                ),
+                clayCollector = Robot(
+                    mutableMapOf(
+                        ORE to data[2]
+                    )
+                ),
+                obsidianCollector = Robot(
+                    mutableMapOf(
+                        ORE to data[3],
+                        CLAY to data[4]
+                    )
+                ),
+                geodeCollector = Robot(
+                    mutableMapOf(
+                        ORE to data[5],
+                        OBSIDIAN to data[6]
                     )
                 )
-            }
+            )
         }
     }
 }

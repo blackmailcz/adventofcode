@@ -6,7 +6,7 @@ import net.nooii.adventofcode.helpers.InputLoader
 /**
  * Created by Nooii on 02.12.2021
  */
-class Day2 {
+object Day2 {
 
     private data class Submarine(
         var depth: Int = 0,
@@ -18,45 +18,42 @@ class Day2 {
         }
     }
 
-    companion object {
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day2Input")
-            part1(input)
-            part2(input)
-        }
-
-        private fun part1(inputs: List<String>) {
-            val submarine = Submarine()
-            inputs.forEach { input ->
-                val parts = input.split(" ")
-                val diff = parts[1].toInt()
-                when (parts[0]) {
-                    "forward" -> submarine.distance += diff
-                    "down" -> submarine.depth += diff
-                    "up" -> submarine.depth -= diff
-                }
-            }
-            println(submarine)
-        }
-
-        private fun part2(inputs: List<String>) {
-            val submarine = Submarine()
-            inputs.forEach { input ->
-                val parts = input.split(" ")
-                val diff = parts[1].toInt()
-                when (parts[0]) {
-                    "forward" -> {
-                        submarine.distance += diff
-                        submarine.depth += submarine.aim * diff
-                    }
-                    "down" -> submarine.aim += diff
-                    "up" -> submarine.aim -= diff
-                }
-            }
-            println(submarine)
-        }
-
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day2Input")
+        part1(input)
+        part2(input)
     }
+
+    private fun part1(inputs: List<String>) {
+        val submarine = Submarine()
+        inputs.forEach { input ->
+            val parts = input.split(" ")
+            val diff = parts[1].toInt()
+            when (parts[0]) {
+                "forward" -> submarine.distance += diff
+                "down" -> submarine.depth += diff
+                "up" -> submarine.depth -= diff
+            }
+        }
+        println(submarine)
+    }
+
+    private fun part2(inputs: List<String>) {
+        val submarine = Submarine()
+        inputs.forEach { input ->
+            val parts = input.split(" ")
+            val diff = parts[1].toInt()
+            when (parts[0]) {
+                "forward" -> {
+                    submarine.distance += diff
+                    submarine.depth += submarine.aim * diff
+                }
+                "down" -> submarine.aim += diff
+                "up" -> submarine.aim -= diff
+            }
+        }
+        println(submarine)
+    }
+
 }

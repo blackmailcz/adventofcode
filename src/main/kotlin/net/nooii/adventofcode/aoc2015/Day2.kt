@@ -4,7 +4,7 @@ import net.nooii.adventofcode.helpers.AoCYear
 import net.nooii.adventofcode.helpers.InputLoader
 import kotlin.time.times
 
-class Day2 {
+object Day2 {
 
     private data class Box(
         val length: Int,
@@ -30,37 +30,34 @@ class Day2 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2015).loadStrings("Day2Input")
+        val boxes = processInput(input)
+        part1(boxes)
+        part2(boxes)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2015).loadStrings("Day2Input")
-            val boxes = processInput(input)
-            part1(boxes)
-            part2(boxes)
+    private fun part1(boxes: List<Box>) {
+        val totalPaper = boxes.sumOf {
+            it.computeBoxPaper() + it.computeExtraPaper()
         }
+        println(totalPaper)
+    }
 
-        private fun part1(boxes: List<Box>) {
-            val totalPaper = boxes.sumOf {
-                it.computeBoxPaper() + it.computeExtraPaper()
-            }
-            println(totalPaper)
+    private fun part2(boxes: List<Box>) {
+        val totalRibbon = boxes.sumOf {
+            it.computeBoxRibbon() + it.computeRibbonBow()
         }
+        println(totalRibbon)
+    }
 
-        private fun part2(boxes: List<Box>) {
-            val totalRibbon = boxes.sumOf {
-                it.computeBoxRibbon() + it.computeRibbonBow()
-            }
-            println(totalRibbon)
-        }
+    private fun processInput(input: List<String>): List<Box> {
+        return input.map { parseBox(it) }
+    }
 
-        private fun processInput(input: List<String>): List<Box> {
-            return input.map { parseBox(it) }
-        }
-
-        private fun parseBox(line: String): Box {
-            val (length, width, height) = line.split("x").map { it.toInt() }
-            return Box(length, width, height)
-        }
+    private fun parseBox(line: String): Box {
+        val (length, width, height) = line.split("x").map { it.toInt() }
+        return Box(length, width, height)
     }
 }

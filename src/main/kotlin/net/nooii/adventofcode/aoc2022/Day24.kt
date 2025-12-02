@@ -3,7 +3,7 @@ package net.nooii.adventofcode.aoc2022
 import net.nooii.adventofcode.helpers.*
 import net.nooii.adventofcode.helpers.PointDirection.*
 
-class Day24 {
+object Day24 {
 
     private class Blizzard(
         val direction: PointDirection
@@ -61,97 +61,94 @@ class Day24 {
         val phaseY: Int
     )
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day24Input")
+        part1(parseInput(input))
+        part2(parseInput(input))
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day24Input")
-            part1(parseInput(input))
-            part2(parseInput(input))
-        }
+    private fun part1(area: Area) {
+        val time = solution(area, area.start, area.end, 0)
+        println(time)
+    }
 
-        private fun part1(area: Area) {
-            val time = solution(area, area.start, area.end, 0)
-            println(time)
-        }
+    private fun part2(area: Area) {
+        // We have to stop for 1 time unit in the destination state before going back again.
+        val t1 = solution(area, area.start, area.end, 0)
+        val t2 = solution(area, area.end, area.start, t1 + 1)
+        val t3 = solution(area, area.start, area.end, t2 + 1)
+        println(t3)
+    }
 
-        private fun part2(area: Area) {
-            // We have to stop for 1 time unit in the destination state before going back again.
-            val t1 = solution(area, area.start, area.end, 0)
-            val t2 = solution(area, area.end, area.start, t1 + 1)
-            val t3 = solution(area, area.start, area.end, t2 + 1)
-            println(t3)
-        }
-
-        private fun solution(area: Area, from: Point, to: Point, t: Int): Int {
-            var time = t
-            var states = setOf(
-                State(from, area.getPhaseX(t), area.getPhaseX(t))
-            )
-            while (states.isNotEmpty()) {
-                val phaseX = area.getPhaseX(time)
-                val phaseY = area.getPhaseY(time)
-                area.blow()
-                val nextStates = mutableSetOf<State>()
-                for (state in states) {
-                    if (state.point == to) {
-                        return time
-                    }
-                    for (dir in PointDirection.entries) {
-                        val next = dir.next(state.point)
-                        if (next !in area.blizzard && next !in area.walls && next.x in 0 until area.width && next.y in 0 until area.height) {
-                            nextStates.add(State(next, phaseX, phaseY))
-                        }
-                    }
-                    if (state.point !in area.blizzard) {
-                        nextStates.add(State(state.point, phaseX, phaseY))
+    private fun solution(area: Area, from: Point, to: Point, t: Int): Int {
+        var time = t
+        var states = setOf(
+            State(from, area.getPhaseX(t), area.getPhaseX(t))
+        )
+        while (states.isNotEmpty()) {
+            val phaseX = area.getPhaseX(time)
+            val phaseY = area.getPhaseY(time)
+            area.blow()
+            val nextStates = mutableSetOf<State>()
+            for (state in states) {
+                if (state.point == to) {
+                    return time
+                }
+                for (dir in PointDirection.entries) {
+                    val next = dir.next(state.point)
+                    if (next !in area.blizzard && next !in area.walls && next.x in 0 until area.width && next.y in 0 until area.height) {
+                        nextStates.add(State(next, phaseX, phaseY))
                     }
                 }
-                states = nextStates
-                time++
+                if (state.point !in area.blizzard) {
+                    nextStates.add(State(state.point, phaseX, phaseY))
+                }
             }
-            error("Can't reach destination")
+            states = nextStates
+            time++
         }
+        error("Can't reach destination")
+    }
 
-        private fun parseInput(input: List<String>): Area {
-            val startX = input.first().indexOfFirst { it == '.' }
-            val endX = input.last().indexOfFirst { it == '.' }
-            val walls = mutableSetOf<Point>()
-            val blizzard = MutableNNMap<Point, MutableSet<Blizzard>>()
-            for ((y, line) in input.withIndex()) {
-                for ((x, char) in line.withIndex()) {
-                    val point = Point(x, y)
-                    when (char) {
-                        '#' -> walls.add(point)
-                        '.' -> continue
-                        else -> {
-                            if (point !in blizzard) {
-                                blizzard[point] = mutableSetOf()
-                            }
-                            blizzard[point].add(Blizzard(fromSymbol(char)))
+    private fun parseInput(input: List<String>): Area {
+        val startX = input.first().indexOfFirst { it == '.' }
+        val endX = input.last().indexOfFirst { it == '.' }
+        val walls = mutableSetOf<Point>()
+        val blizzard = MutableNNMap<Point, MutableSet<Blizzard>>()
+        for ((y, line) in input.withIndex()) {
+            for ((x, char) in line.withIndex()) {
+                val point = Point(x, y)
+                when (char) {
+                    '#' -> walls.add(point)
+                    '.' -> continue
+                    else -> {
+                        if (point !in blizzard) {
+                            blizzard[point] = mutableSetOf()
                         }
+                        blizzard[point].add(Blizzard(fromSymbol(char)))
                     }
                 }
             }
-
-            return Area(
-                width = input.first().length,
-                height = input.size,
-                start = Point(startX, 0),
-                end = Point(endX, input.size - 1),
-                walls = walls,
-                blizzard = blizzard.nn()
-            )
         }
 
-        private fun fromSymbol(char: Char): PointDirection {
-            return when (char) {
-                '>' -> RIGHT
-                '<' -> LEFT
-                'v' -> DOWN
-                '^' -> UP
-                else -> error("Invalid symbol")
-            }
+        return Area(
+            width = input.first().length,
+            height = input.size,
+            start = Point(startX, 0),
+            end = Point(endX, input.size - 1),
+            walls = walls,
+            blizzard = blizzard.nn()
+        )
+    }
+
+    private fun fromSymbol(char: Char): PointDirection {
+        return when (char) {
+            '>' -> RIGHT
+            '<' -> LEFT
+            'v' -> DOWN
+            '^' -> UP
+            else -> error("Invalid symbol")
         }
     }
 }

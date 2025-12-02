@@ -7,7 +7,7 @@ import net.nooii.adventofcode.helpers.Point
 /**
  * Created by Nooii on 25.12.2021
  */
-class Day25 {
+object Day25 {
 
     private class Cucumbers(
         val w: Int,
@@ -42,39 +42,35 @@ class Day25 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day25Input")
+        val cucumbers = processInput(input)
+        part1(cucumbers)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day25Input")
-            val cucumbers = processInput(input)
-            part1(cucumbers)
-        }
+    private fun part1(cucumber: Cucumbers) {
+        var steps = 0
+        do {
+            steps++
+        } while (cucumber.move())
+        println(steps)
+    }
 
-        private fun part1(cucumber: Cucumbers) {
-            var steps = 0
-            do {
-                steps++
-            } while (cucumber.move())
-            println(steps)
-        }
-
-        private fun processInput(input: List<String>): Cucumbers {
-            val east = mutableSetOf<Point>()
-            val south = mutableSetOf<Point>()
-            val w = input.first().length
-            val h = input.size
-            for ((y, line) in input.withIndex()) {
-                for ((x, char) in line.withIndex()) {
-                    when (char) {
-                        '>' -> east.add(Point(x, y))
-                        'v' -> south.add(Point(x, y))
-                    }
+    private fun processInput(input: List<String>): Cucumbers {
+        val east = mutableSetOf<Point>()
+        val south = mutableSetOf<Point>()
+        val w = input.first().length
+        val h = input.size
+        for ((y, line) in input.withIndex()) {
+            for ((x, char) in line.withIndex()) {
+                when (char) {
+                    '>' -> east.add(Point(x, y))
+                    'v' -> south.add(Point(x, y))
                 }
             }
-            return Cucumbers(w, h, east, south)
         }
-
+        return Cucumbers(w, h, east, south)
     }
 
 }

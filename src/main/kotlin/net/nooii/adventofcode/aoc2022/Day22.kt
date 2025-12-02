@@ -3,7 +3,7 @@ package net.nooii.adventofcode.aoc2022
 import net.nooii.adventofcode.helpers.*
 import net.nooii.adventofcode.helpers.PointDirection.*
 
-class Day22 {
+object Day22 {
 
     private class CubeConnection(
         val side: Int,
@@ -145,176 +145,173 @@ class Day22 {
 
     }
 
-    companion object {
+    private const val SIDE_SIZE = 50
+    private const val START_SIDE = 3
+    /**
+     *      .36
+     *      .5.
+     *      14.
+     *      2..
+     */
+    private val CUBE_PATTERN = nnMapOf(
+        3 to Point(1, 0),
+        6 to Point(2, 0),
+        5 to Point(1, 1),
+        1 to Point(0, 2),
+        4 to Point(1, 2),
+        2 to Point(0, 3)
+    )
 
-        private const val SIDE_SIZE = 50
-        private const val START_SIDE = 3
-        /**
-         *      .36
-         *      .5.
-         *      14.
-         *      2..
-         */
-        private val CUBE_PATTERN = nnMapOf(
-            3 to Point(1, 0),
-            6 to Point(2, 0),
-            5 to Point(1, 1),
-            1 to Point(0, 2),
-            4 to Point(1, 2),
-            2 to Point(0, 3)
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day22Input")
+        part1(input)
+        part2(input)
+    }
+
+    private fun part1(input: List<String>) {
+        val cube = CubeNet(
+            sideSize = SIDE_SIZE,
+            startSide = START_SIDE,
+            pattern = CUBE_PATTERN,
+            connectionMap = nnMapOf(
+                1 to nnMapOf(
+                    LEFT to CubeConnection(4, RIGHT),
+                    DOWN to CubeConnection(2, UP),
+                    RIGHT to CubeConnection(4, LEFT),
+                    UP to CubeConnection(2, DOWN)
+                ),
+                2 to nnMapOf(
+                    LEFT to CubeConnection(2, RIGHT),
+                    DOWN to CubeConnection(1, UP),
+                    RIGHT to CubeConnection(2, LEFT),
+                    UP to CubeConnection(1, DOWN)
+                ),
+                3 to nnMapOf(
+                    LEFT to CubeConnection(6, RIGHT),
+                    DOWN to CubeConnection(5, UP),
+                    RIGHT to CubeConnection(6, LEFT),
+                    UP to CubeConnection(4, DOWN)
+                ),
+                4 to nnMapOf(
+                    LEFT to CubeConnection(1, RIGHT),
+                    DOWN to CubeConnection(3, UP),
+                    RIGHT to CubeConnection(1, LEFT),
+                    UP to CubeConnection(5, DOWN)
+                ),
+                5 to nnMapOf(
+                    LEFT to CubeConnection(5, RIGHT),
+                    DOWN to CubeConnection(4, UP),
+                    RIGHT to CubeConnection(5, LEFT),
+                    UP to CubeConnection(3, DOWN)
+                ),
+                6 to nnMapOf(
+                    LEFT to CubeConnection(3, RIGHT),
+                    DOWN to CubeConnection(6, UP),
+                    RIGHT to CubeConnection(3, LEFT),
+                    UP to CubeConnection(6, DOWN)
+                )
+            )
         )
+        solution(cube, input)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day22Input")
-            part1(input)
-            part2(input)
-        }
-
-        private fun part1(input: List<String>) {
-            val cube = CubeNet(
-                sideSize = SIDE_SIZE,
-                startSide = START_SIDE,
-                pattern = CUBE_PATTERN,
-                connectionMap = nnMapOf(
-                    1 to nnMapOf(
-                        LEFT to CubeConnection(4, RIGHT),
-                        DOWN to CubeConnection(2, UP),
-                        RIGHT to CubeConnection(4, LEFT),
-                        UP to CubeConnection(2, DOWN)
-                    ),
-                    2 to nnMapOf(
-                        LEFT to CubeConnection(2, RIGHT),
-                        DOWN to CubeConnection(1, UP),
-                        RIGHT to CubeConnection(2, LEFT),
-                        UP to CubeConnection(1, DOWN)
-                    ),
-                    3 to nnMapOf(
-                        LEFT to CubeConnection(6, RIGHT),
-                        DOWN to CubeConnection(5, UP),
-                        RIGHT to CubeConnection(6, LEFT),
-                        UP to CubeConnection(4, DOWN)
-                    ),
-                    4 to nnMapOf(
-                        LEFT to CubeConnection(1, RIGHT),
-                        DOWN to CubeConnection(3, UP),
-                        RIGHT to CubeConnection(1, LEFT),
-                        UP to CubeConnection(5, DOWN)
-                    ),
-                    5 to nnMapOf(
-                        LEFT to CubeConnection(5, RIGHT),
-                        DOWN to CubeConnection(4, UP),
-                        RIGHT to CubeConnection(5, LEFT),
-                        UP to CubeConnection(3, DOWN)
-                    ),
-                    6 to nnMapOf(
-                        LEFT to CubeConnection(3, RIGHT),
-                        DOWN to CubeConnection(6, UP),
-                        RIGHT to CubeConnection(3, LEFT),
-                        UP to CubeConnection(6, DOWN)
-                    )
+    private fun part2(input: List<String>) {
+        val cube = CubeNet(
+            sideSize = SIDE_SIZE,
+            startSide = START_SIDE,
+            pattern = CUBE_PATTERN,
+            connectionMap = nnMapOf(
+                1 to nnMapOf(
+                    LEFT to CubeConnection(3, LEFT),
+                    DOWN to CubeConnection(2, UP),
+                    RIGHT to CubeConnection(4, LEFT),
+                    UP to CubeConnection(5, LEFT)
+                ),
+                2 to nnMapOf(
+                    LEFT to CubeConnection(3, UP),
+                    DOWN to CubeConnection(6, UP),
+                    RIGHT to CubeConnection(4, DOWN),
+                    UP to CubeConnection(1, DOWN)
+                ),
+                3 to nnMapOf(
+                    LEFT to CubeConnection(1, LEFT),
+                    DOWN to CubeConnection(5, UP),
+                    RIGHT to CubeConnection(6, LEFT),
+                    UP to CubeConnection(2, LEFT)
+                ),
+                4 to nnMapOf(
+                    LEFT to CubeConnection(1, RIGHT),
+                    DOWN to CubeConnection(2, RIGHT),
+                    RIGHT to CubeConnection(6, RIGHT),
+                    UP to CubeConnection(5, DOWN)
+                ),
+                5 to nnMapOf(
+                    LEFT to CubeConnection(1, UP),
+                    DOWN to CubeConnection(4, UP),
+                    RIGHT to CubeConnection(6, DOWN),
+                    UP to CubeConnection(3, DOWN)
+                ),
+                6 to nnMapOf(
+                    LEFT to CubeConnection(3, RIGHT),
+                    DOWN to CubeConnection(5, RIGHT),
+                    RIGHT to CubeConnection(4, RIGHT),
+                    UP to CubeConnection(2, DOWN)
                 )
             )
-            solution(cube, input)
-        }
+        )
+        solution(cube, input)
+    }
 
-        private fun part2(input: List<String>) {
-            val cube = CubeNet(
-                sideSize = SIDE_SIZE,
-                startSide = START_SIDE,
-                pattern = CUBE_PATTERN,
-                connectionMap = nnMapOf(
-                    1 to nnMapOf(
-                        LEFT to CubeConnection(3, LEFT),
-                        DOWN to CubeConnection(2, UP),
-                        RIGHT to CubeConnection(4, LEFT),
-                        UP to CubeConnection(5, LEFT)
-                    ),
-                    2 to nnMapOf(
-                        LEFT to CubeConnection(3, UP),
-                        DOWN to CubeConnection(6, UP),
-                        RIGHT to CubeConnection(4, DOWN),
-                        UP to CubeConnection(1, DOWN)
-                    ),
-                    3 to nnMapOf(
-                        LEFT to CubeConnection(1, LEFT),
-                        DOWN to CubeConnection(5, UP),
-                        RIGHT to CubeConnection(6, LEFT),
-                        UP to CubeConnection(2, LEFT)
-                    ),
-                    4 to nnMapOf(
-                        LEFT to CubeConnection(1, RIGHT),
-                        DOWN to CubeConnection(2, RIGHT),
-                        RIGHT to CubeConnection(6, RIGHT),
-                        UP to CubeConnection(5, DOWN)
-                    ),
-                    5 to nnMapOf(
-                        LEFT to CubeConnection(1, UP),
-                        DOWN to CubeConnection(4, UP),
-                        RIGHT to CubeConnection(6, DOWN),
-                        UP to CubeConnection(3, DOWN)
-                    ),
-                    6 to nnMapOf(
-                        LEFT to CubeConnection(3, RIGHT),
-                        DOWN to CubeConnection(5, RIGHT),
-                        RIGHT to CubeConnection(4, RIGHT),
-                        UP to CubeConnection(2, DOWN)
-                    )
-                )
-            )
-            solution(cube, input)
-        }
+    private fun solution(cube: CubeNet, input: List<String>) {
+        val maze = parseInput(cube, input)
+        maze.execute()
+        // Result computation
+        println(maze.getPassword())
+    }
 
-        private fun solution(cube: CubeNet, input: List<String>) {
-            val maze = parseInput(cube, input)
-            maze.execute()
-            // Result computation
-            println(maze.getPassword())
-        }
+    private fun parseInput(cubeNet: CubeNet, input: List<String>): Maze {
+        val (mapLines, instructionsLines) = input.splitByEmptyLine()
+        val instructions = parseInstructions(instructionsLines.first())
+        return parseMaze(cubeNet, mapLines, instructions)
+    }
 
-        private fun parseInput(cubeNet: CubeNet, input: List<String>): Maze {
-            val (mapLines, instructionsLines) = input.splitByEmptyLine()
-            val instructions = parseInstructions(instructionsLines.first())
-            return parseMaze(cubeNet, mapLines, instructions)
-        }
+    private fun parseMaze(cubeNet: CubeNet, lines: List<String>, instructions: List<Instruction>): Maze {
+        return Maze(
+            cubeNet = cubeNet,
+            sides = IntRange(1, 6).associateWith { parseSide(cubeNet, lines, it) }.nn(),
+            instructions = instructions,
+            position = Point(0, 0),
+            side = cubeNet.startSide,
+            rotation = RIGHT
+        )
+    }
 
-        private fun parseMaze(cubeNet: CubeNet, lines: List<String>, instructions: List<Instruction>): Maze {
-            return Maze(
-                cubeNet = cubeNet,
-                sides = IntRange(1, 6).associateWith { parseSide(cubeNet, lines, it) }.nn(),
-                instructions = instructions,
-                position = Point(0, 0),
-                side = cubeNet.startSide,
-                rotation = RIGHT
-            )
-        }
-
-        private fun parseSide(cubeNet: CubeNet, lines: List<String>, sideId: Int): CubeSide {
-            val pattern = cubeNet.pattern[sideId]
-            val map = PointMap<Boolean>(cubeNet.sideSize, cubeNet.sideSize)
-            val chunkLines = lines.subList(pattern.y * cubeNet.sideSize, (pattern.y + 1) * cubeNet.sideSize)
-            for ((y, chunkLine) in chunkLines.withIndex()) {
-                val chunkChars = chunkLine.substring(pattern.x * cubeNet.sideSize, (pattern.x + 1) * cubeNet.sideSize)
-                for ((x, char) in chunkChars.withIndex()) {
-                    val value = when (char) {
-                        '.' -> false
-                        '#' -> true
-                        else -> continue
-                    }
-                    map[Point(x, y)] = value
+    private fun parseSide(cubeNet: CubeNet, lines: List<String>, sideId: Int): CubeSide {
+        val pattern = cubeNet.pattern[sideId]
+        val map = PointMap<Boolean>(cubeNet.sideSize, cubeNet.sideSize)
+        val chunkLines = lines.subList(pattern.y * cubeNet.sideSize, (pattern.y + 1) * cubeNet.sideSize)
+        for ((y, chunkLine) in chunkLines.withIndex()) {
+            val chunkChars = chunkLine.substring(pattern.x * cubeNet.sideSize, (pattern.x + 1) * cubeNet.sideSize)
+            for ((x, char) in chunkChars.withIndex()) {
+                val value = when (char) {
+                    '.' -> false
+                    '#' -> true
+                    else -> continue
                 }
+                map[Point(x, y)] = value
             }
-            return CubeSide(sideId, cubeNet.sideSize, map, cubeNet.connectionMap[sideId])
         }
+        return CubeSide(sideId, cubeNet.sideSize, map, cubeNet.connectionMap[sideId])
+    }
 
-        private fun parseInstructions(line: String): List<Instruction> {
-            return Regex("([LR])|(\\d+)").findAll(line).map {
-                when (it.value) {
-                    "L" -> Instruction.CCW
-                    "R" -> Instruction.CW
-                    else -> Instruction.Move(it.value.toInt())
-                }
-            }.toList()
-        }
+    private fun parseInstructions(line: String): List<Instruction> {
+        return Regex("([LR])|(\\d+)").findAll(line).map {
+            when (it.value) {
+                "L" -> Instruction.CCW
+                "R" -> Instruction.CW
+                else -> Instruction.Move(it.value.toInt())
+            }
+        }.toList()
     }
 }

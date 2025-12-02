@@ -3,7 +3,7 @@ package net.nooii.adventofcode.aoc2022
 import net.nooii.adventofcode.helpers.*
 import kotlin.math.max
 
-class Day16 {
+object Day16 {
 
     private class Valve(
         val id: String,
@@ -139,109 +139,106 @@ class Day16 {
         }
     }
 
-    companion object {
+    private const val TIME_1 = 30
+    private const val TIME_2 = 26
 
-        private const val TIME_1 = 30
-        private const val TIME_2 = 26
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day16Input")
+        val valves = parseInput(input)
+        precompute(valves)
+        // Runtime ~ 300 ms
+        val yourFirstValve = part1(valves)
+        // Runtime ~ 16 seconds
+        part2(valves, yourFirstValve)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day16Input")
-            val valves = parseInput(input)
-            precompute(valves)
-            // Runtime ~ 300 ms
-            val yourFirstValve = part1(valves)
-            // Runtime ~ 16 seconds
-            part2(valves, yourFirstValve)
-        }
+    private fun part1(valves: NNMap<String, Valve>): String {
+        val startState = State1(
+            closedValves = valves.values.filter { it.flowRate > 0 }.toSet(),
+            currentValve = valves["AA"],
+            score = 0,
+            remainingTime = TIME_1
+        )
+        val finalState = solution(startState)
+        println(finalState.score)
+        // Return first visited valve to speed up part 2
+        return (finalState as State1).path.first()
+    }
 
-        private fun part1(valves: NNMap<String, Valve>): String {
-            val startState = State1(
-                closedValves = valves.values.filter { it.flowRate > 0 }.toSet(),
-                currentValve = valves["AA"],
-                score = 0,
-                remainingTime = TIME_1
-            )
-            val finalState = solution(startState)
-            println(finalState.score)
-            // Return first visited valve to speed up part 2
-            return (finalState as State1).path.first()
-        }
+    private fun part2(valves: NNMap<String, Valve>, yourFirstValve: String) {
+        val startState = State2(
+            yourFirstValve = yourFirstValve,
+            closedValves = valves.values.filter { it.flowRate > 0 }.toSet(),
+            yourCurrentValve = valves["AA"],
+            elephantCurrentValve = valves["AA"],
+            score = 0,
+            yourRemainingTime = TIME_2,
+            elephantRemainingTime = TIME_2
+        )
+        val finalState = solution(startState)
+        println(finalState.score)
+    }
 
-        private fun part2(valves: NNMap<String, Valve>, yourFirstValve: String) {
-            val startState = State2(
-                yourFirstValve = yourFirstValve,
-                closedValves = valves.values.filter { it.flowRate > 0 }.toSet(),
-                yourCurrentValve = valves["AA"],
-                elephantCurrentValve = valves["AA"],
-                score = 0,
-                yourRemainingTime = TIME_2,
-                elephantRemainingTime = TIME_2
-            )
-            val finalState = solution(startState)
-            println(finalState.score)
-        }
-
-        private fun solution(startState: State): State {
-            var remainingStates = mutableListOf(startState)
-            var finalState = startState
-            while (remainingStates.isNotEmpty()) {
-                val nextStates = mutableListOf<State>()
-                for (state in remainingStates) {
-                    if (state.score > finalState.score) {
-                        finalState = state
-                    }
-                    nextStates.addAll(state.nextStates())
+    private fun solution(startState: State): State {
+        var remainingStates = mutableListOf(startState)
+        var finalState = startState
+        while (remainingStates.isNotEmpty()) {
+            val nextStates = mutableListOf<State>()
+            for (state in remainingStates) {
+                if (state.score > finalState.score) {
+                    finalState = state
                 }
-                remainingStates = nextStates
+                nextStates.addAll(state.nextStates())
             }
-            return finalState
+            remainingStates = nextStates
         }
+        return finalState
+    }
 
-        private fun computeMoves(closedValves: Set<Valve>, time: Int, valve: Valve): Map<Valve, Int> {
-            val timeMap = mutableMapOf<Valve, Int>()
-            for (nextValve in closedValves) {
-                val nextTime = valve.timeToOpenValve[nextValve]
-                // Filter out moves that would yield zero score = not worth opening the valve.
-                if (nextValve.flowRate * (time - nextTime) > 0) {
-                    timeMap[nextValve] = time - nextTime
-                }
+    private fun computeMoves(closedValves: Set<Valve>, time: Int, valve: Valve): Map<Valve, Int> {
+        val timeMap = mutableMapOf<Valve, Int>()
+        for (nextValve in closedValves) {
+            val nextTime = valve.timeToOpenValve[nextValve]
+            // Filter out moves that would yield zero score = not worth opening the valve.
+            if (nextValve.flowRate * (time - nextTime) > 0) {
+                timeMap[nextValve] = time - nextTime
             }
-            return timeMap
         }
+        return timeMap
+    }
 
-        private fun precompute(valves: NNMap<String, Valve>) {
-            for (valve in valves.values) {
-                var time = 0
-                val visited = mutableSetOf<Valve>()
-                var currentValves = mutableListOf(valve)
-                while (currentValves.isNotEmpty()) {
-                    val nextCurrent = mutableListOf<Valve>()
-                    for (current in currentValves) {
-                        visited.add(current)
-                        valve.timeToOpenValve[current] = time + 1
-                        for (nextId in current.nextValves) {
-                            val next = valves[nextId]
-                            if (next !in visited) {
-                                nextCurrent.add(next)
-                            }
+    private fun precompute(valves: NNMap<String, Valve>) {
+        for (valve in valves.values) {
+            var time = 0
+            val visited = mutableSetOf<Valve>()
+            var currentValves = mutableListOf(valve)
+            while (currentValves.isNotEmpty()) {
+                val nextCurrent = mutableListOf<Valve>()
+                for (current in currentValves) {
+                    visited.add(current)
+                    valve.timeToOpenValve[current] = time + 1
+                    for (nextId in current.nextValves) {
+                        val next = valves[nextId]
+                        if (next !in visited) {
+                            nextCurrent.add(next)
                         }
                     }
-                    currentValves = nextCurrent
-                    time++
                 }
+                currentValves = nextCurrent
+                time++
             }
         }
+    }
 
-        private fun parseInput(input: List<String>): NNMap<String, Valve> {
-            return input.associate { line ->
-                val data = Regex("Valve (\\w+) has flow rate=(\\d+); tunnels? leads? to valves? (.*)")
-                    .captureFirstMatch(line) { it }
-                val valve = Valve(
-                    data[0], data[1].toInt(), data[2].split(", ")
-                )
-                data[0] to valve
-            }.nn()
-        }
+    private fun parseInput(input: List<String>): NNMap<String, Valve> {
+        return input.associate { line ->
+            val data = Regex("Valve (\\w+) has flow rate=(\\d+); tunnels? leads? to valves? (.*)")
+                .captureFirstMatch(line) { it }
+            val valve = Valve(
+                data[0], data[1].toInt(), data[2].split(", ")
+            )
+            data[0] to valve
+        }.nn()
     }
 }

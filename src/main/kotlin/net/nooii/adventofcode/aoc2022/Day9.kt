@@ -4,7 +4,7 @@ import net.nooii.adventofcode.helpers.*
 import kotlin.math.abs
 import kotlin.math.sign
 
-class Day9 {
+object Day9 {
 
     private class Rope(numberOfTails: Int) {
 
@@ -25,35 +25,32 @@ class Day9 {
         fun getLastTail() = tails.last()
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day9Input")
+        val directions = parseInput(input)
+        solution(directions, 1)
+        solution(directions, 9)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day9Input")
-            val directions = parseInput(input)
-            solution(directions, 1)
-            solution(directions, 9)
+    private fun solution(directions: List<PointDirection>, numberOfTails: Int) {
+        val rope = Rope(numberOfTails)
+        val lastTailPoints = mutableSetOf<Point>()
+        directions.forEach {
+            rope.move(it)
+            lastTailPoints += rope.getLastTail()
         }
+        println(lastTailPoints.size)
+    }
 
-        private fun solution(directions: List<PointDirection>, numberOfTails: Int) {
-            val rope = Rope(numberOfTails)
-            val lastTailPoints = mutableSetOf<Point>()
-            directions.forEach {
-                rope.move(it)
-                lastTailPoints += rope.getLastTail()
+    private fun parseInput(input: List<String>): List<PointDirection> {
+        val directions = mutableListOf<PointDirection>()
+        for (line in input) {
+            val (direction, step) = line.split(" ")
+            repeat(step.toInt()) {
+                directions += PointDirection.fromLetter(direction)
             }
-            println(lastTailPoints.size)
         }
-
-        private fun parseInput(input: List<String>): List<PointDirection> {
-            val directions = mutableListOf<PointDirection>()
-            for (line in input) {
-                val (direction, step) = line.split(" ")
-                repeat(step.toInt()) {
-                    directions += PointDirection.fromLetter(direction)
-                }
-            }
-            return directions
-        }
+        return directions
     }
 }

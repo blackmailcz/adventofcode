@@ -10,7 +10,7 @@ import kotlin.math.sign
 /**
  * Created by Nooii on 23.12.2021
  */
-class Day23 {
+object Day23 {
 
     private sealed class Amphipod(val x: Int, val cost: Long) {
         class Amber : Amphipod(3, 1) {
@@ -232,75 +232,72 @@ class Day23 {
 
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input1 = InputLoader(AoCYear.AOC_2021).loadStrings("Day23Input")
+        val input2 = InputLoader(AoCYear.AOC_2021).loadStrings("Day23Input2")
+        println(solution(processInput(input1)))
+        println(solution(processInput(input2)))
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input1 = InputLoader(AoCYear.AOC_2021).loadStrings("Day23Input")
-            val input2 = InputLoader(AoCYear.AOC_2021).loadStrings("Day23Input2")
-            println(solution(processInput(input1)))
-            println(solution(processInput(input2)))
-        }
-
-        private fun solution(initialState: State): Long {
-            val queue = PriorityQueue<State> { a, b -> a.cost.compareTo(b.cost) }
-            queue.add(initialState)
-            val visited = mutableSetOf<State>()
-            while (queue.isNotEmpty()) {
-                val state = queue.poll()
-                if (state in visited) {
-                    continue
-                }
-                visited.add(state)
-                if (state.isEndState()) {
-                    return state.cost
-                }
-                queue.addAll(state.getNextStates())
+    private fun solution(initialState: State): Long {
+        val queue = PriorityQueue<State> { a, b -> a.cost.compareTo(b.cost) }
+        queue.add(initialState)
+        val visited = mutableSetOf<State>()
+        while (queue.isNotEmpty()) {
+            val state = queue.poll()
+            if (state in visited) {
+                continue
             }
-            return -1
+            visited.add(state)
+            if (state.isEndState()) {
+                return state.cost
+            }
+            queue.addAll(state.getNextStates())
         }
+        return -1
+    }
 
-        private fun processInput(input: List<String>): State {
-            val fields = mutableMapOf<Point, Field>()
-            val amphipodsToPoints = mutableMapOf<Amphipod, Point>()
-            val pointsToAmphipods = mutableMapOf<Point, Amphipod>()
-            for ((y, line) in input.withIndex()) {
-                for ((x, char) in line.withIndex()) {
-                    val point = Point(x, y)
-                    val field = when (char) {
-                        '.' -> Field.Hallway(point)
-                        'A', 'B', 'C', 'D' -> Field.Room(point, xToClass(x))
-                        else -> continue
-                    }
-                    fields[point] = field
-                    if (field is Field.Room) {
-                        val amphipod = parseAmphipod(char)
-                        amphipodsToPoints[amphipod] = point
-                        pointsToAmphipods[point] = amphipod
-                    }
+    private fun processInput(input: List<String>): State {
+        val fields = mutableMapOf<Point, Field>()
+        val amphipodsToPoints = mutableMapOf<Amphipod, Point>()
+        val pointsToAmphipods = mutableMapOf<Point, Amphipod>()
+        for ((y, line) in input.withIndex()) {
+            for ((x, char) in line.withIndex()) {
+                val point = Point(x, y)
+                val field = when (char) {
+                    '.' -> Field.Hallway(point)
+                    'A', 'B', 'C', 'D' -> Field.Room(point, xToClass(x))
+                    else -> continue
+                }
+                fields[point] = field
+                if (field is Field.Room) {
+                    val amphipod = parseAmphipod(char)
+                    amphipodsToPoints[amphipod] = point
+                    pointsToAmphipods[point] = amphipod
                 }
             }
-            return State(0, fields, amphipodsToPoints, pointsToAmphipods)
         }
+        return State(0, fields, amphipodsToPoints, pointsToAmphipods)
+    }
 
-        private fun xToClass(x: Int): Class<out Amphipod> {
-            return when (x) {
-                3 -> Amphipod.Amber::class.java
-                5 -> Amphipod.Bronze::class.java
-                7 -> Amphipod.Copper::class.java
-                9 -> Amphipod.Desert::class.java
-                else -> throw IllegalStateException("Invalid room X")
-            }
+    private fun xToClass(x: Int): Class<out Amphipod> {
+        return when (x) {
+            3 -> Amphipod.Amber::class.java
+            5 -> Amphipod.Bronze::class.java
+            7 -> Amphipod.Copper::class.java
+            9 -> Amphipod.Desert::class.java
+            else -> throw IllegalStateException("Invalid room X")
         }
+    }
 
-        private fun parseAmphipod(char: Char): Amphipod {
-            return when (char) {
-                'A' -> Amphipod.Amber()
-                'B' -> Amphipod.Bronze()
-                'C' -> Amphipod.Copper()
-                'D' -> Amphipod.Desert()
-                else -> throw IllegalArgumentException("Unkown amphipod")
-            }
+    private fun parseAmphipod(char: Char): Amphipod {
+        return when (char) {
+            'A' -> Amphipod.Amber()
+            'B' -> Amphipod.Bronze()
+            'C' -> Amphipod.Copper()
+            'D' -> Amphipod.Desert()
+            else -> throw IllegalArgumentException("Unkown amphipod")
         }
     }
 

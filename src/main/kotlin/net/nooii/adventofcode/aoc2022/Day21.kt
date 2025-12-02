@@ -2,7 +2,7 @@ package net.nooii.adventofcode.aoc2022
 
 import net.nooii.adventofcode.helpers.*
 
-class Day21 {
+object Day21 {
 
     private enum class Operator(val sign: String) {
         PLUS("+"),
@@ -95,87 +95,84 @@ class Day21 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day21Input")
+        part1(parseInput(input))
+        part2(parseInput(input))
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2022).loadStrings("Day21Input")
-            part1(parseInput(input))
-            part2(parseInput(input))
-        }
+    private fun part1(monkeys: NNMap<String, Monkey>) {
+        val result = monkeys["root"].compute(monkeys)
+        println(result)
+    }
 
-        private fun part1(monkeys: NNMap<String, Monkey>) {
-            val result = monkeys["root"].compute(monkeys)
-            println(result)
-        }
-
-        private fun part2(monkeys: MutableNNMap<String, Monkey>) {
-            val root = monkeys["root"] as Monkey.Complex
-            monkeys["root"] = Monkey.Unknown("root")
-            monkeys["humn"] = Monkey.Unknown("humn")
-            val evaluatedMonkeys = MutableNNMap<String, Long>()
-            // Start in root and collect all monkeys that can be evaluated
-            var pendingMonkeys = mapOf(
-                root.left to monkeys[root.left],
-                root.right to monkeys[root.right]
-            )
-            while (pendingMonkeys.isNotEmpty()) {
-                val nextMonkeys = mutableMapOf<String, Monkey>()
-                for ((monkeyId, monkey) in pendingMonkeys) {
-                    when (monkey) {
-                        is Monkey.Simple -> evaluatedMonkeys[monkeyId] = monkey.compute(monkeys)
-                        is Monkey.Complex -> {
-                            for (child in monkey.children) {
-                                try {
-                                    evaluatedMonkeys[child] = monkeys[child].compute(monkeys)
-                                } catch (e: IllegalStateException) {
-                                    nextMonkeys[child] = monkeys[child]
-                                }
-                            }
-                            if (monkey.children.all { it in evaluatedMonkeys }) {
-                                evaluatedMonkeys[monkeyId] = monkey.compute(monkeys)
+    private fun part2(monkeys: MutableNNMap<String, Monkey>) {
+        val root = monkeys["root"] as Monkey.Complex
+        monkeys["root"] = Monkey.Unknown("root")
+        monkeys["humn"] = Monkey.Unknown("humn")
+        val evaluatedMonkeys = MutableNNMap<String, Long>()
+        // Start in root and collect all monkeys that can be evaluated
+        var pendingMonkeys = mapOf(
+            root.left to monkeys[root.left],
+            root.right to monkeys[root.right]
+        )
+        while (pendingMonkeys.isNotEmpty()) {
+            val nextMonkeys = mutableMapOf<String, Monkey>()
+            for ((monkeyId, monkey) in pendingMonkeys) {
+                when (monkey) {
+                    is Monkey.Simple -> evaluatedMonkeys[monkeyId] = monkey.compute(monkeys)
+                    is Monkey.Complex -> {
+                        for (child in monkey.children) {
+                            try {
+                                evaluatedMonkeys[child] = monkeys[child].compute(monkeys)
+                            } catch (e: IllegalStateException) {
+                                nextMonkeys[child] = monkeys[child]
                             }
                         }
-                        is Monkey.Unknown -> continue
+                        if (monkey.children.all { it in evaluatedMonkeys }) {
+                            evaluatedMonkeys[monkeyId] = monkey.compute(monkeys)
+                        }
                     }
-                }
-                pendingMonkeys = nextMonkeys
-            }
-            // Complete the equality and evaluate the unknown operand of the root
-            when {
-                root.left !in evaluatedMonkeys -> {
-                    evaluatedMonkeys[root.left] = evaluatedMonkeys[root.right]
-                    (monkeys[root.left] as Monkey.Complex).tryEvaluate(monkeys, evaluatedMonkeys)
-                }
-                root.right !in evaluatedMonkeys -> {
-                    evaluatedMonkeys[root.right] = evaluatedMonkeys[root.left]
-                    (monkeys[root.right] as Monkey.Complex).tryEvaluate(monkeys, evaluatedMonkeys)
+                    is Monkey.Unknown -> continue
                 }
             }
-            println(evaluatedMonkeys["humn"])
+            pendingMonkeys = nextMonkeys
         }
+        // Complete the equality and evaluate the unknown operand of the root
+        when {
+            root.left !in evaluatedMonkeys -> {
+                evaluatedMonkeys[root.left] = evaluatedMonkeys[root.right]
+                (monkeys[root.left] as Monkey.Complex).tryEvaluate(monkeys, evaluatedMonkeys)
+            }
+            root.right !in evaluatedMonkeys -> {
+                evaluatedMonkeys[root.right] = evaluatedMonkeys[root.left]
+                (monkeys[root.right] as Monkey.Complex).tryEvaluate(monkeys, evaluatedMonkeys)
+            }
+        }
+        println(evaluatedMonkeys["humn"])
+    }
 
-        private fun parseInput(input: List<String>): MutableNNMap<String, Monkey> {
-            val simple = Regex("(\\w+): (\\d+)")
-            val complex = Regex("(\\w+): (\\w+) (.) (\\w+)")
-            return input.associate { line ->
-                when {
-                    line.matches(simple) -> {
-                        val (id, value) = simple.captureFirstMatch(line) { it }
-                        id to Monkey.Simple(id, value.toLong())
-                    }
-                    line.matches(complex) -> {
-                        val (id, left, op, right) = complex.captureFirstMatch(line) { it }
-                        id to Monkey.Complex(
-                            id = id,
-                            left = left,
-                            right = right,
-                            operator = Operator.from(op)
-                        )
-                    }
-                    else -> error("Unknown line")
+    private fun parseInput(input: List<String>): MutableNNMap<String, Monkey> {
+        val simple = Regex("(\\w+): (\\d+)")
+        val complex = Regex("(\\w+): (\\w+) (.) (\\w+)")
+        return input.associate { line ->
+            when {
+                line.matches(simple) -> {
+                    val (id, value) = simple.captureFirstMatch(line) { it }
+                    id to Monkey.Simple(id, value.toLong())
                 }
-            }.toMutableMap().nn()
-        }
+                line.matches(complex) -> {
+                    val (id, left, op, right) = complex.captureFirstMatch(line) { it }
+                    id to Monkey.Complex(
+                        id = id,
+                        left = left,
+                        right = right,
+                        operator = Operator.from(op)
+                    )
+                }
+                else -> error("Unknown line")
+            }
+        }.toMutableMap().nn()
     }
 }

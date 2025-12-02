@@ -8,7 +8,7 @@ import kotlin.math.max
 /**
  * Created by Nooii on 21.12.2021
  */
-class Day21 {
+object Day21 {
 
     private class Part1 {
 
@@ -148,21 +148,18 @@ class Day21 {
         }
     }
 
-    companion object {
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day21Input")
-            val (p1position, p2position) = processInput(input)
-            Part1().solution(p1position, p2position)
-            Part2().solution(p1position, p2position)
-        }
-
-        private fun processInput(input: List<String>): Pair<Int, Int> {
-            return Pair(parsePosition(input[0]), parsePosition(input[1]))
-        }
-
-        private fun parsePosition(line: String) = line.split(":")[1].trim().toInt()
-
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day21Input")
+        val (p1position, p2position) = processInput(input)
+        Part1().solution(p1position, p2position)
+        Part2().solution(p1position, p2position)
     }
+
+    private fun processInput(input: List<String>): Pair<Int, Int> {
+        return Pair(parsePosition(input[0]), parsePosition(input[1]))
+    }
+
+    private fun parsePosition(line: String) = line.split(":")[1].trim().toInt()
+
 }

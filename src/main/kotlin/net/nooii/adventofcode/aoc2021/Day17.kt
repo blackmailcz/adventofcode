@@ -6,7 +6,7 @@ import net.nooii.adventofcode.helpers.InputLoader
 /**
  * Created by Nooii on 17.12.2021
  */
-class Day17 {
+object Day17 {
 
     private class Area(
         val fromX: Int,
@@ -52,42 +52,39 @@ class Day17 {
         }
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day17Input")
+        val area = processInput(input)
+        solution(area)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day17Input")
-            val area = processInput(input)
-            solution(area)
-        }
-
-        private fun solution(area: Area) {
-            var highestY = 0
-            var validVelocities = 0
-            for (vx in 0..area.toX) {
-                for (vy in area.fromY..-area.fromY) {
-                    val probe = Probe(vx, vy, area)
-                    if (probe.launch()) {
-                        validVelocities++
-                        if (probe.highestY > highestY) {
-                            highestY = probe.highestY
-                        }
+    private fun solution(area: Area) {
+        var highestY = 0
+        var validVelocities = 0
+        for (vx in 0..area.toX) {
+            for (vy in area.fromY..-area.fromY) {
+                val probe = Probe(vx, vy, area)
+                if (probe.launch()) {
+                    validVelocities++
+                    if (probe.highestY > highestY) {
+                        highestY = probe.highestY
                     }
                 }
             }
-            println(highestY)
-            println(validVelocities)
         }
-
-        private fun processInput(input: List<String>): Area {
-            val matches = Regex("x=(-?\\d+)..(-?\\d+), y=(-?\\d+)..(-?\\d+)")
-                .findAll(input.first(), 0)
-                .first()
-                .groupValues
-                .drop(1)
-                .map { it.toInt() }
-            return Area(matches[0], matches[1], matches[2], matches[3])
-        }
-
+        println(highestY)
+        println(validVelocities)
     }
+
+    private fun processInput(input: List<String>): Area {
+        val matches = Regex("x=(-?\\d+)..(-?\\d+), y=(-?\\d+)..(-?\\d+)")
+            .findAll(input.first(), 0)
+            .first()
+            .groupValues
+            .drop(1)
+            .map { it.toInt() }
+        return Area(matches[0], matches[1], matches[2], matches[3])
+    }
+
 }

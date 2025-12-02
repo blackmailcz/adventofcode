@@ -10,7 +10,7 @@ import kotlin.math.sign
 /**
  * Created by Nooii on 05.12.2021
  */
-class Day5 {
+object Day5 {
 
     private class Line(
         val from: Point,
@@ -39,46 +39,42 @@ class Day5 {
 
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day5Input")
+        val lines = parseLines(input)
+        part1(lines)
+        part2(lines)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day5Input")
-            val lines = parseLines(input)
-            part1(lines)
-            part2(lines)
-        }
+    private fun part1(lines: List<Line>) {
+        println(computeIntersectionCount(lines.filter { it.isFlat() }))
+    }
 
-        private fun part1(lines: List<Line>) {
-            println(computeIntersectionCount(lines.filter { it.isFlat() }))
-        }
+    private fun part2(lines: List<Line>) {
+        println(computeIntersectionCount(lines.filter { it.isFlat() || it.isDiagonal() }))
+    }
 
-        private fun part2(lines: List<Line>) {
-            println(computeIntersectionCount(lines.filter { it.isFlat() || it.isDiagonal() }))
-        }
-
-        private fun computeIntersectionCount(lines: List<Line>): Int {
-            val collectedPoints = mutableMapOf<Point, Int>()
-            for (line in lines) {
-                for (point in line.getPoints()) {
-                    collectedPoints[point] = (collectedPoints[point] ?: 0) + 1
-                }
-            }
-            return collectedPoints.count { it.value > 1 }
-        }
-
-        private fun parseLines(input: List<String>): List<Line> {
-            return input.map { rawLine ->
-                val points = rawLine.split(" -> ")
-                Line(parsePoint(points[0]), parsePoint(points[1]))
+    private fun computeIntersectionCount(lines: List<Line>): Int {
+        val collectedPoints = mutableMapOf<Point, Int>()
+        for (line in lines) {
+            for (point in line.getPoints()) {
+                collectedPoints[point] = (collectedPoints[point] ?: 0) + 1
             }
         }
+        return collectedPoints.count { it.value > 1 }
+    }
 
-        private fun parsePoint(pointStr: String): Point {
-            val pointNumbers = pointStr.split(",").map { it.toInt() }
-            return Point(pointNumbers[0], pointNumbers[1])
+    private fun parseLines(input: List<String>): List<Line> {
+        return input.map { rawLine ->
+            val points = rawLine.split(" -> ")
+            Line(parsePoint(points[0]), parsePoint(points[1]))
         }
+    }
 
+    private fun parsePoint(pointStr: String): Point {
+        val pointNumbers = pointStr.split(",").map { it.toInt() }
+        return Point(pointNumbers[0], pointNumbers[1])
     }
 
 }

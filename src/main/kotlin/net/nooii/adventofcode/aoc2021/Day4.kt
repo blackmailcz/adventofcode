@@ -7,7 +7,7 @@ import net.nooii.adventofcode.helpers.Point
 /**
  * Created by Nooii on 04.12.2021
  */
-class Day4 {
+object Day4 {
 
     private class Bingo(
         val numbers: List<Int>,
@@ -124,91 +124,86 @@ class Day4 {
 
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day4Input")
+        val bingo = processBingoBoards(input)
+        part1(bingo)
+        part2(bingo)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2021).loadStrings("Day4Input")
-            val bingo = processBingoBoards(input)
-            part1(bingo)
-            part2(bingo)
+    private fun part1(bingo: Bingo) {
+        var winningBoard: BingoBoard? = null
+        var winningNumber: Int? = null
+        outer@
+        for (number in bingo.numbers) {
+            for (board in bingo.boards) {
+                board.mark(number)
+                if (board.isWinning()) {
+                    winningBoard = board
+                    winningNumber = number
+                    break@outer
+                }
+            }
         }
+        if (winningNumber != null && winningBoard != null) {
+            println(winningBoard.getNonWinningSum() * winningNumber)
+        }
+    }
 
-        private fun part1(bingo: Bingo) {
-            var winningBoard: BingoBoard? = null
-            var winningNumber: Int? = null
-            outer@
-            for (number in bingo.numbers) {
-                for (board in bingo.boards) {
-                    board.mark(number)
-                    if (board.isWinning()) {
-                        winningBoard = board
-                        winningNumber = number
-                        break@outer
+    private fun part2(bingo: Bingo) {
+        val wonBoards = mutableListOf<Int>()
+        var lastWinningNumber: Int? = null
+        var lastWinningBoard: BingoBoard? = null
+        for (number in bingo.numbers) {
+            for (board in bingo.boards) {
+                if (board.id in wonBoards) {
+                    continue
+                }
+                board.mark(number)
+                if (board.isWinning()) {
+                    wonBoards.add(board.id)
+                    lastWinningBoard = board
+                    lastWinningNumber = number
+                }
+            }
+        }
+        if (lastWinningBoard != null && lastWinningNumber != null) {
+            println(lastWinningBoard.getNonWinningSum() * lastWinningNumber)
+        } else {
+            println("Multiple remaining boards")
+        }
+    }
+
+    private fun processBingoBoards(input: List<String>): Bingo {
+        val numbers = mutableListOf<Int>()
+        var boardId = 0
+        var currentBoardStart = -1
+        var currentBoard = Board.Numbers()
+        val boards = mutableListOf<BingoBoard>()
+        for ((i, line) in input.withIndex()) {
+            when {
+                i == 0 -> numbers.addAll(line.split(",").map { it.toInt() })
+                line.isBlank() -> continue
+                else -> {
+                    if (currentBoardStart == -1) {
+                        currentBoardStart = i
+                    }
+                    val r = i - currentBoardStart
+                    val row = line.split("\\s".toRegex()).filter { it.isNotBlank() }
+                    for (c in 0 until 5) {
+                        currentBoard.data[r][c] = row[c].toInt()
+                    }
+                    if (r == 4) {
+                        currentBoardStart = -1
+                        boards.add(BingoBoard(boardId, currentBoard, Board.Marks()))
+                        currentBoard = Board.Numbers()
+                        boardId++
                     }
                 }
             }
-            if (winningNumber != null && winningBoard != null) {
-                println(winningBoard.getNonWinningSum() * winningNumber)
-            }
         }
-
-        private fun part2(bingo: Bingo) {
-            val wonBoards = mutableListOf<Int>()
-            var lastWinningNumber: Int? = null
-            var lastWinningBoard: BingoBoard? = null
-            for (number in bingo.numbers) {
-                for (board in bingo.boards) {
-                    if (board.id in wonBoards) {
-                        continue
-                    }
-                    board.mark(number)
-                    if (board.isWinning()) {
-                        wonBoards.add(board.id)
-                        lastWinningBoard = board
-                        lastWinningNumber = number
-                    }
-                }
-            }
-            if (lastWinningBoard != null && lastWinningNumber != null) {
-                println(lastWinningBoard.getNonWinningSum() * lastWinningNumber)
-            } else {
-                println("Multiple remaining boards")
-            }
-        }
-
-
-        private fun processBingoBoards(input: List<String>): Bingo {
-            val numbers = mutableListOf<Int>()
-            var boardId = 0
-            var currentBoardStart = -1
-            var currentBoard = Board.Numbers()
-            val boards = mutableListOf<BingoBoard>()
-            for ((i, line) in input.withIndex()) {
-                when {
-                    i == 0 -> numbers.addAll(line.split(",").map { it.toInt() })
-                    line.isBlank() -> continue
-                    else -> {
-                        if (currentBoardStart == -1) {
-                            currentBoardStart = i
-                        }
-                        val r = i - currentBoardStart
-                        val row = line.split("\\s".toRegex()).filter { it.isNotBlank() }
-                        for (c in 0 until 5) {
-                            currentBoard.data[r][c] = row[c].toInt()
-                        }
-                        if (r == 4) {
-                            currentBoardStart = -1
-                            boards.add(BingoBoard(boardId, currentBoard, Board.Marks()))
-                            currentBoard = Board.Numbers()
-                            boardId++
-                        }
-                    }
-                }
-            }
-            return Bingo(numbers, boards)
-        }
-
+        return Bingo(numbers, boards)
     }
 
 }

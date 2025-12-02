@@ -2,7 +2,7 @@ package net.nooii.adventofcode.aoc2023
 
 import net.nooii.adventofcode.helpers.*
 
-class Day19 {
+object Day19 {
 
     private data class Item(
         val x: Int,
@@ -67,146 +67,143 @@ class Day19 {
         data object Reject : Workflow("R")
     }
 
-    companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val input = InputLoader(AoCYear.AOC_2023).loadStrings("Day19Input")
+        val workflows = processWorkflows(input)
+        val items = processItems(input)
+        part1(workflows, items)
+        part2(workflows)
+    }
 
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val input = InputLoader(AoCYear.AOC_2023).loadStrings("Day19Input")
-            val workflows = processWorkflows(input)
-            val items = processItems(input)
-            part1(workflows, items)
-            part2(workflows)
-        }
-
-        private fun part1(workflows: NNMap<String, Workflow>, items: List<Item>) {
-            var sum = 0L
-            for (item in items) {
-                var workflow: Workflow = workflows["in"]
-                wf@
-                while (true) {
-                    if (workflow is Workflow.Jump) {
-                        val jumpWorkflow = workflow
-                        for (instruction in jumpWorkflow.instructions) {
-                            if (instruction.condition.invoke(item)) {
-                                workflow = workflows[instruction.jumpTarget]
-                                break
-                            }
-                        }
-                    } else {
-                        break@wf
-                    }
-                }
-                if (workflow is Workflow.Accept) {
-                    sum += item.components().sum()
-                }
-            }
-            println(sum)
-        }
-
-        private fun part2(workflows: NNMap<String, Workflow>) {
-            val accepted = mutableSetOf<State>()
-            var states = mutableSetOf(
-                State(
-                    x = IntRange(1, 4000),
-                    m = IntRange(1, 4000),
-                    a = IntRange(1, 4000),
-                    s = IntRange(1, 4000),
-                    workflow = "in",
-                    instructionIndex = 0
-                )
-            )
-            while (states.isNotEmpty()) {
-                val nextStates = mutableSetOf<State>()
-                for (state in states) {
-                    // Process given instruction
-                    when (val workflow = workflows[state.workflow]) {
-                        is Workflow.Accept -> accepted.add(state)
-                        is Workflow.Reject -> continue
-                        is Workflow.Jump -> {
-                            val instruction = workflow.instructions.getOrNull(state.instructionIndex) ?: continue
-                            // Condition valid branch
-                            val validBranchState = constrainValidBranch(state, instruction)
-                            if (validBranchState != null) {
-                                nextStates.add(validBranchState)
-                            }
-                            // Condition invalid branch
-                            val invalidBranchState = constrainInvalidBranch(state, instruction)
-                            if (invalidBranchState != null) {
-                                nextStates.add(invalidBranchState)
-                            }
+    private fun part1(workflows: NNMap<String, Workflow>, items: List<Item>) {
+        var sum = 0L
+        for (item in items) {
+            var workflow: Workflow = workflows["in"]
+            wf@
+            while (true) {
+                if (workflow is Workflow.Jump) {
+                    val jumpWorkflow = workflow
+                    for (instruction in jumpWorkflow.instructions) {
+                        if (instruction.condition.invoke(item)) {
+                            workflow = workflows[instruction.jumpTarget]
+                            break
                         }
                     }
+                } else {
+                    break@wf
                 }
-                states = nextStates
             }
-            val sum = accepted.sumOf { state ->
-                state.components().map { it.size().toLong() }.product()
+            if (workflow is Workflow.Accept) {
+                sum += item.components().sum()
             }
-            println(sum)
         }
+        println(sum)
+    }
 
-        private fun constrainValidBranch(state: State, instruction: Instruction): State? {
-            return State(
-                x = instruction.constraint.constrainValidBranch("x", state.x) ?: return null,
-                m = instruction.constraint.constrainValidBranch("m", state.m) ?: return null,
-                a = instruction.constraint.constrainValidBranch("a", state.a) ?: return null,
-                s = instruction.constraint.constrainValidBranch("s", state.s) ?: return null,
-                workflow = instruction.jumpTarget,
+    private fun part2(workflows: NNMap<String, Workflow>) {
+        val accepted = mutableSetOf<State>()
+        var states = mutableSetOf(
+            State(
+                x = IntRange(1, 4000),
+                m = IntRange(1, 4000),
+                a = IntRange(1, 4000),
+                s = IntRange(1, 4000),
+                workflow = "in",
                 instructionIndex = 0
             )
-        }
-
-        private fun constrainInvalidBranch(state: State, instruction: Instruction): State? {
-            return State(
-                x = instruction.constraint.constrainInvalidBranch("x", state.x) ?: return null,
-                m = instruction.constraint.constrainInvalidBranch("m", state.m) ?: return null,
-                a = instruction.constraint.constrainInvalidBranch("a", state.a) ?: return null,
-                s = instruction.constraint.constrainInvalidBranch("s", state.s) ?: return null,
-                workflow = state.workflow,
-                instructionIndex = state.instructionIndex + 1
-            )
-        }
-
-        private fun processItems(input: List<String>): List<Item> {
-            val regex = Regex("x=(\\d+),m=(\\d+),a=(\\d+),s=(\\d+)")
-            return input.splitByEmptyLine()[1].map { line ->
-                val (x, m, a, s) = regex.captureFirstMatch(line) { it.toInt() }
-                Item(x, m, a, s)
-            }
-        }
-
-        private fun processWorkflows(input: List<String>): NNMap<String, Workflow> {
-            val regex = Regex("(\\w+)\\{(.*?)}")
-            val workflows = mutableListOf(Workflow.Accept, Workflow.Reject)
-            for (line in input.splitByEmptyLine()[0]) {
-                val (id, instructions) = regex.captureFirstMatch(line)
-                workflows.add(Workflow.Jump(id, instructions.split(",").map { processInstruction(it) }))
-            }
-            return workflows.associateBy { it.id }.nn()
-        }
-
-        private fun processInstruction(line: String): Instruction {
-            val compareAndJumpRegex = Regex("([xmas])([><])(\\d+):(\\w+)")
-            return if (line.matches(compareAndJumpRegex)) {
-                val (operand1S, operation, operand2S, jumpTarget) = compareAndJumpRegex.captureFirstMatch(line)
-                val operand1 = when (operand1S) {
-                    "x" -> { item: Item -> item.x }
-                    "m" -> { item: Item -> item.m }
-                    "a" -> { item: Item -> item.a }
-                    "s" -> { item: Item -> item.s }
-                    else -> error("Invalid operand: $operand1S")
-                }
-                val operand2 = operand2S.toInt()
-                Instruction(jumpTarget, Constraint(operand1S, operation, operand2)) { item ->
-                    when (operation) {
-                        ">" -> operand1.invoke(item) > operand2
-                        "<" -> operand1.invoke(item) < operand2
-                        else -> error("Invalid operation: $operation")
+        )
+        while (states.isNotEmpty()) {
+            val nextStates = mutableSetOf<State>()
+            for (state in states) {
+                // Process given instruction
+                when (val workflow = workflows[state.workflow]) {
+                    is Workflow.Accept -> accepted.add(state)
+                    is Workflow.Reject -> continue
+                    is Workflow.Jump -> {
+                        val instruction = workflow.instructions.getOrNull(state.instructionIndex) ?: continue
+                        // Condition valid branch
+                        val validBranchState = constrainValidBranch(state, instruction)
+                        if (validBranchState != null) {
+                            nextStates.add(validBranchState)
+                        }
+                        // Condition invalid branch
+                        val invalidBranchState = constrainInvalidBranch(state, instruction)
+                        if (invalidBranchState != null) {
+                            nextStates.add(invalidBranchState)
+                        }
                     }
                 }
-            } else {
-                Instruction(line)
             }
+            states = nextStates
+        }
+        val sum = accepted.sumOf { state ->
+            state.components().map { it.size().toLong() }.product()
+        }
+        println(sum)
+    }
+
+    private fun constrainValidBranch(state: State, instruction: Instruction): State? {
+        return State(
+            x = instruction.constraint.constrainValidBranch("x", state.x) ?: return null,
+            m = instruction.constraint.constrainValidBranch("m", state.m) ?: return null,
+            a = instruction.constraint.constrainValidBranch("a", state.a) ?: return null,
+            s = instruction.constraint.constrainValidBranch("s", state.s) ?: return null,
+            workflow = instruction.jumpTarget,
+            instructionIndex = 0
+        )
+    }
+
+    private fun constrainInvalidBranch(state: State, instruction: Instruction): State? {
+        return State(
+            x = instruction.constraint.constrainInvalidBranch("x", state.x) ?: return null,
+            m = instruction.constraint.constrainInvalidBranch("m", state.m) ?: return null,
+            a = instruction.constraint.constrainInvalidBranch("a", state.a) ?: return null,
+            s = instruction.constraint.constrainInvalidBranch("s", state.s) ?: return null,
+            workflow = state.workflow,
+            instructionIndex = state.instructionIndex + 1
+        )
+    }
+
+    private fun processItems(input: List<String>): List<Item> {
+        val regex = Regex("x=(\\d+),m=(\\d+),a=(\\d+),s=(\\d+)")
+        return input.splitByEmptyLine()[1].map { line ->
+            val (x, m, a, s) = regex.captureFirstMatch(line) { it.toInt() }
+            Item(x, m, a, s)
+        }
+    }
+
+    private fun processWorkflows(input: List<String>): NNMap<String, Workflow> {
+        val regex = Regex("(\\w+)\\{(.*?)}")
+        val workflows = mutableListOf(Workflow.Accept, Workflow.Reject)
+        for (line in input.splitByEmptyLine()[0]) {
+            val (id, instructions) = regex.captureFirstMatch(line)
+            workflows.add(Workflow.Jump(id, instructions.split(",").map { processInstruction(it) }))
+        }
+        return workflows.associateBy { it.id }.nn()
+    }
+
+    private fun processInstruction(line: String): Instruction {
+        val compareAndJumpRegex = Regex("([xmas])([><])(\\d+):(\\w+)")
+        return if (line.matches(compareAndJumpRegex)) {
+            val (operand1S, operation, operand2S, jumpTarget) = compareAndJumpRegex.captureFirstMatch(line)
+            val operand1 = when (operand1S) {
+                "x" -> { item: Item -> item.x }
+                "m" -> { item: Item -> item.m }
+                "a" -> { item: Item -> item.a }
+                "s" -> { item: Item -> item.s }
+                else -> error("Invalid operand: $operand1S")
+            }
+            val operand2 = operand2S.toInt()
+            Instruction(jumpTarget, Constraint(operand1S, operation, operand2)) { item ->
+                when (operation) {
+                    ">" -> operand1.invoke(item) > operand2
+                    "<" -> operand1.invoke(item) < operand2
+                    else -> error("Invalid operation: $operation")
+                }
+            }
+        } else {
+            Instruction(line)
         }
     }
 }
