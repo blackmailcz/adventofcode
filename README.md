@@ -10,7 +10,7 @@ time.
 
 [![1.png](readme_images/regular/1.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day1.kt)
 [![1.png](readme_images/regular/2.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day2.kt)
-<picture><img src="readme_images/grayscale/3.png" /></picture>
+[![1.png](readme_images/regular/3.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day3.kt)
 <picture><img src="readme_images/grayscale/4.png" /></picture>
 <picture><img src="readme_images/grayscale/5.png" /></picture><br/>
 <picture><img src="readme_images/grayscale/6.png" /></picture>
