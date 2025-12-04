@@ -288,11 +288,14 @@ fun <T : Any> forEachPoint(pointMap: PointMap<T>, callback: (point: Point, value
 /**
  * Return a list of points within the given range.
  */
-fun pointRange(xRange: IntRange, yRange: IntRange): Set<Point> {
+fun pointRange(xRange: IntRange, yRange: IntRange, filter: (Point) -> Boolean = { true }): Set<Point> {
     val points = mutableSetOf<Point>()
     for (y in yRange) {
         for (x in xRange) {
-            points.add(Point(x, y))
+            val point = Point(x, y)
+            if (filter.invoke(point)) {
+                points.add(point)
+            }
         }
     }
     return points
