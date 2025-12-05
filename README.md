@@ -3,7 +3,7 @@
 My solution of Advent Of Code puzzles in Kotlin. The aim is to have clear and readable code that executes in reasonable
 time.
 
-## 2025 - 2 ⭐
+## 2025 - 10 ⭐
 
 <details open>
 <summary><i>See details</i></summary>
