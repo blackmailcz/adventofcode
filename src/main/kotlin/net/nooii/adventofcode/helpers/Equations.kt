@@ -1,5 +1,7 @@
 package net.nooii.adventofcode.helpers
 
+import kotlin.math.sqrt
+
 /**
  * Solves a system of two linear equations represented in matrix form.
  *
@@ -29,4 +31,35 @@ fun solveTwoLinearEquations(a: LongArray, b: LongArray): Pair<Long, Long>? {
     }
     val y = yTop / yBottom
     return x to y
+}
+
+/**
+ * Solves a quadratic equation of the form ax^2 + bx + c = 0.
+ * Also handles linear equations if a = 0.
+ *
+ * @param a The coefficient of the x^2 term.
+ * @param b The coefficient of the x term.
+ * @param c The constant term.
+ * @return A list of real roots.
+ *         - Returns two roots if the discriminant is positive.
+ *         - Returns one root if the discriminant is zero or if the equation is linear.
+ *         - Returns an empty list if there are no real roots or if the equation is a contradiction (e.g., 0x^2 + 0x + 5 = 0).
+ *         - Returns a list containing [Double.NaN] if the equation is an identity (0x^2 + 0x + 0 = 0), as any number is a solution.
+ */
+fun solveQuadraticEquation(a: Double, b: Double, c: Double): List<Double> {
+    when {
+        a != 0.0 -> {
+            val discriminant = b * b - 4.0 * a * c
+            return if (discriminant > 0) {
+                listOf((-b + sqrt(discriminant)) / (2.0 * a), (-b - sqrt(discriminant)) / (2.0 * a))
+            } else if (discriminant == 0.0) {
+                listOf(-b / (2.0 * a))
+            } else {
+                listOf()
+            }
+        }
+        b != 0.0 -> return listOf(-c / b)
+        c != 0.0 -> return listOf()
+        else -> return listOf(Double.NaN)
+    }
 }

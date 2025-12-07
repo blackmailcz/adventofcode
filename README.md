@@ -150,7 +150,7 @@ time.
 [![25.png](readme_images/regular/25.png)](src/main/kotlin/net/nooii/adventofcode/aoc2021/Day25.kt)
 </details>
 
-## 2017 - 38 ⭐
+## 2017 - 40 ⭐
 
 <details>
 <summary><i>See details</i></summary>
@@ -174,7 +174,7 @@ time.
 [![17.png](readme_images/regular/17.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day17.kt)
 [![18.png](readme_images/regular/18.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day18.kt)
 [![19.png](readme_images/regular/19.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day19.kt)
-<picture><img src="readme_images/grayscale/20.png" /></picture><br/>
+[![19.png](readme_images/regular/20.png)](src/main/kotlin/net/nooii/adventofcode/aoc2017/Day20.kt)<br/>
 <picture><img src="readme_images/grayscale/21.png" /></picture>
 <picture><img src="readme_images/grayscale/22.png" /></picture>
 <picture><img src="readme_images/grayscale/23.png" /></picture>

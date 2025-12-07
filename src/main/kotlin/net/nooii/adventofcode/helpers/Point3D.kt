@@ -1,5 +1,7 @@
 package net.nooii.adventofcode.helpers
 
+import kotlin.math.abs
+
 /**
  * Represents a point in 3D space.
  */
@@ -28,6 +30,13 @@ data class Point3D(
         Point3D(x, y, z - 1),
         Point3D(x, y, z + 1)
     )
+
+    /**
+     * Computes Manhattan distance to other [Point3D].
+     */
+    fun manhattanDistance(other: Point3D): Int {
+        return abs(x - other.x) + abs(y - other.y) + abs(z - other.z)
+    }
 
     override fun toString() = "[$x,$y,$z]"
 
