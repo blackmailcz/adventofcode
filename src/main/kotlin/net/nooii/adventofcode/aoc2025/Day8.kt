@@ -75,8 +75,8 @@ object Day8 {
 
     private fun processInput(input: List<String>): Set<Point3D> {
         return input.map { line ->
-            val (x, y, z) = line.split(",")
-            Point3D(x.toInt(), y.toInt(), z.toInt())
+            val (x, y, z) = line.split(",").map { it.toInt() }
+            Point3D(x, y, z)
         }.toSet()
     }
 }
