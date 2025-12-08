@@ -47,6 +47,9 @@ object Day8 {
         val distances = TreeMap<Double, Pair<Point3D, Point3D>>()
         for ((p1, p2) in points.combinations(2)) {
             val distance = p1.euclideanDistance(p2)
+            if (distances.contains(distance)) {
+                error("Solution ambiguity - multiple points have the same distance: $distance")
+            }
             distances[distance] = Pair(p1, p2)
         }
         return distances
