@@ -1,6 +1,8 @@
 package net.nooii.adventofcode.helpers
 
 import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * Represents a point in 3D space.
@@ -36,6 +38,15 @@ data class Point3D(
      */
     fun manhattanDistance(other: Point3D): Int {
         return abs(x - other.x) + abs(y - other.y) + abs(z - other.z)
+    }
+
+    /**
+     * Computes Euclidean distance to other [Point3D].
+     */
+    fun euclideanDistance(other: Point3D): Double {
+        return sqrt(
+            (x - other.x).toDouble().pow(2) + (y - other.y).toDouble().pow(2) + (z - other.z).toDouble().pow(2)
+        )
     }
 
     override fun toString() = "[$x,$y,$z]"
