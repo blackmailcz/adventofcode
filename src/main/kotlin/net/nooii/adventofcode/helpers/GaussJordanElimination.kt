@@ -155,12 +155,12 @@ class GaussJordanElimination(A: Array<DoubleArray>, b: DoubleArray) {
                 var sum = 0.0
                 for (j in 0 until n) {
                     sum += A[i][j] * x!![j]
-                    println("s $sum || ${A[i][j] * x!![j]}")
+//                    println("s $sum || ${A[i][j] * x!![j]}")
                 }
-                println(">>>>> $sum ${b[i]}")
+//                println(">>>>> $sum ${b[i]}")
                 if (abs(sum - b[i]) > EPSILON) {
-                    println("not feasible")
-                    System.out.printf("b[%d] = %8.3f, sum = %8.3f\n", i, b[i], sum)
+//                    println("not feasible")
+//                    System.out.printf("b[%d] = %8.3f, sum = %8.3f\n", i, b[i], sum)
                     return false
                 }
             }
@@ -173,8 +173,8 @@ class GaussJordanElimination(A: Array<DoubleArray>, b: DoubleArray) {
                     sum += A[i][j] * y!![i]
                 }
                 if (abs(sum) > EPSILON) {
-                    println("invalid certificate of infeasibility")
-                    System.out.printf("sum = %8.3f\n", sum)
+//                    println("invalid certificate of infeasibility")
+//                    System.out.printf("sum = %8.3f\n", sum)
                     return false
                 }
             }
@@ -183,8 +183,8 @@ class GaussJordanElimination(A: Array<DoubleArray>, b: DoubleArray) {
                 sum += y!![i] * b[i]
             }
             if (abs(sum) < EPSILON) {
-                println("invalid certificate of infeasibility")
-                System.out.printf("yb  = %8.3f\n", sum)
+//                println("invalid certificate of infeasibility")
+//                System.out.printf("yb  = %8.3f\n", sum)
                 return false
             }
             return true
