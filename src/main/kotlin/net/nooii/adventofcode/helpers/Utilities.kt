@@ -64,6 +64,13 @@ fun hexToBin(hex: String): String {
 }
 
 /**
+ * Converts binary number in [String] form to a decimal number [BigDecimal].
+ */
+fun Long.toBinString(length: Int = 64): String {
+    return toString(2).padStart(length, '0')
+}
+
+/**
  * Returns all captures from target [String] based on this [Regex] and [transform]s them to a single type.
  */
 fun <T> Regex.captureFirstMatch(input: String, transform: (String) -> T): List<T> {
