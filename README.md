@@ -5,6 +5,9 @@ time.
 
 ## 2026 - 0 ⭐
 
+<details open>
+<summary><i>See details</i></summary>
+
 <picture><img src="readme_images/grayscale/1.png" /></picture>
 <picture><img src="readme_images/grayscale/2.png" /></picture>
 <picture><img src="readme_images/grayscale/3.png" /></picture>
@@ -18,9 +21,11 @@ time.
 <picture><img src="readme_images/grayscale/11.png" /></picture>
 <picture><img src="readme_images/grayscale/12.png" /></picture>
 
+</details>
+
 ## 2025 - 22 ⭐
 
-<details open>
+<details>
 <summary><i>See details</i></summary>
 
 [![1.png](readme_images/regular/1.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day1.kt)
