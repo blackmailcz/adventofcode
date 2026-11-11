@@ -3,6 +3,21 @@
 My solution of Advent Of Code puzzles in Kotlin. The aim is to have clear and readable code that executes in reasonable
 time.
 
+## 2026 - 0 ⭐
+
+<picture><img src="readme_images/grayscale/1.png" /></picture>
+<picture><img src="readme_images/grayscale/2.png" /></picture>
+<picture><img src="readme_images/grayscale/3.png" /></picture>
+<picture><img src="readme_images/grayscale/4.png" /></picture><br/>
+<picture><img src="readme_images/grayscale/5.png" /></picture>
+<picture><img src="readme_images/grayscale/6.png" /></picture>
+<picture><img src="readme_images/grayscale/7.png" /></picture>
+<picture><img src="readme_images/grayscale/8.png" /></picture><br/>
+<picture><img src="readme_images/grayscale/9.png" /></picture>
+<picture><img src="readme_images/grayscale/10.png" /></picture>
+<picture><img src="readme_images/grayscale/11.png" /></picture>
+<picture><img src="readme_images/grayscale/12.png" /></picture>
+
 ## 2025 - 22 ⭐
 
 <details open>
@@ -11,15 +26,15 @@ time.
 [![1.png](readme_images/regular/1.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day1.kt)
 [![1.png](readme_images/regular/2.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day2.kt)
 [![1.png](readme_images/regular/3.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day3.kt)
-[![1.png](readme_images/regular/4.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day4.kt)
-[![1.png](readme_images/regular/5.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day5.kt)<br/>
+[![1.png](readme_images/regular/4.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day4.kt)<br/>
+[![1.png](readme_images/regular/5.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day5.kt)
 [![1.png](readme_images/regular/6.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day6.kt)
 [![1.png](readme_images/regular/7.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day7.kt)
-[![1.png](readme_images/regular/8.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day8.kt)
+[![1.png](readme_images/regular/8.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day8.kt)<br/>
 [![1.png](readme_images/regular/9.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day9.kt)
-[![1.png](readme_images/regular/10.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day10.kt)<br/>
+[![1.png](readme_images/regular/10.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day10.kt)
 [![1.png](readme_images/regular/11.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day11.kt)
-<picture><img src="readme_images/grayscale/12.png" /></picture>
+[![1.png](readme_images/regular/12.png)](src/main/kotlin/net/nooii/adventofcode/aoc2025/Day12.kt)
 </details>
 
 ## 2024 - 50 ⭐
